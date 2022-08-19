@@ -32,7 +32,7 @@ function Recomended({ className }: { className: string }) {
                     <span className="text-xs md:text-base font-light cursor-pointer hover:scale-105 hover:-translate-x-1 transition-all">更多文章⋯⋯</span>
                 </Link>
             </div>
-            <div className="px-5 md:px-12 md:pt-[-2em] border-2 border-main">
+            <div className="px-3 md:px-12 md:pt-[-2em] border-4 border-main">
                 {posts.map((post, key) => (
                     <div key={key} className="my-9 md:mt-11 flex flex-col md:flex-row items-center">
                         <div className="relative w-full h-auto aspect-[16/9] md:h-24 md:w-auto">
