@@ -6,7 +6,7 @@ import { Global } from "./global"
 function About({ className }: { className: string }) {
     return (
         <div className={`${className} max-w-full h-max border-2 border-main px-6 md:px-8 mt-8 md:mt-0 mb-8 md:mb-0 md:h-[532px]`}>
-            <div className="relative w-full h-12 mt-9 rounded-lg overflow-clip">
+            <div className="relative w-full h-12 mt-9 rounded-lg overflow-hidden">
                 <Image src="/logo.jpg" alt="不要把滑鼠放在我身上，很敏感" layout="fill" objectFit="cover" />
             </div>
             <p className="mt-8 text-lg md:text-base xl:text-lg">慈中後生團隊是由一群熱愛自由的人所創立的。而在座的各位思考的是你還有幾年『黃金時間』可以轉職。溫水煮青蛙雖然比較不痛。</p>

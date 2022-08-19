@@ -13,8 +13,8 @@ const Home: NextPage = () => {
   // console.log(session)
   const [onTop, setOnTop] = useState(true)
   const handleScroll = () => {
-    if(onTop != window.scrollY > 54) setOnTop(true)
-    if(onTop != window.scrollY < 54) setOnTop(false)
+    if(onTop != window.scrollY > 38) setOnTop(true)
+    if(onTop != window.scrollY < 38) setOnTop(false)
   }
   useEffect(()=>{
     window.addEventListener("scroll", handleScroll); 
