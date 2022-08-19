@@ -25,4 +25,4 @@ const TellUs: NextPage = () => {
   );
 };
 
-export default PostIt;
+export default TellUs;
