@@ -21,30 +21,6 @@ export default NextAuth({
         async signIn({
             user, account, profile, email, credentials,
         }) {
-            const userFind = await getDocs(query(collection(db, 'users'), where(`linked.${account.provider}`, '==', account.providerAccountId)));
-            if (userFind.empty) {
-                const info = encrypt(account.providerAccountId);
-                const linked: linkedProvider = {};
-                linked[account.provider as 'google'] = account.providerAccountId;
-                addDoc(collection(db, 'users'), {
-                    username: '',
-                    email: profile.email,
-                    name: profile.name,
-                    password: '',
-                    avatar: user.image,
-                    linked,
-                    bio: '',
-                    type: 'public',
-                    website: '',
-                    pronouns: '',
-                } as Users);
-                return true;
-            }
-            const userProfile = userFind.docs[0].data();
-            if (userProfile.password == '') {
-                const info = encrypt(account.providerAccountId);
-                return true;
-            }
             return true;
         },
 
