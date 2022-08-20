@@ -9,7 +9,7 @@ function Slide() {
         </div>
         <div className="flex flex-row items-center">
             <RiArrowLeftFill className="flex-1 text-main h-4 w-4 cursor-pointer hover:scale-110 hover:-translate-x-2 transition-all"/>
-            <span className="flex-2">本季主題：秋・無咎</span>
+            <span className="flex-2 text-main2">本季主題：秋・無咎</span>
             <RiArrowRightFill className="flex-1 text-main h-4 w-4 cursor-pointer hover:scale-110 hover:translate-x-2 transition-all"/>
         </div>
     </div>

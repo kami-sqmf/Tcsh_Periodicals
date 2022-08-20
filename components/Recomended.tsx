@@ -29,10 +29,10 @@ function Recomended({ className }: { className: string }) {
             <div className="text-main mb-4 md:mb-9 flex flex-row items-baseline justify-between">
                 <span className="text-lg md:text-3xl font-medium">精選文章</span>
                 <Link href={Global.webMap.posts.href}>
-                    <span className="text-xs md:text-base font-light cursor-pointer hover:scale-105 hover:-translate-x-1 transition-all">更多文章⋯⋯</span>
+                    <span className="text-main2 text-xs md:text-base font-light cursor-pointer hover:scale-105 hover:-translate-x-1 transition-all">更多文章⋯⋯</span>
                 </Link>
             </div>
-            <div className="px-3 md:px-12 md:pt-[-2em] border-4 border-main">
+            <div className="px-4 md:px-12 md:pt-[-2em] border-2 border-main">
                 {posts.map((post, key) => (
                     <div key={key} className="my-9 md:mt-11 flex flex-col md:flex-row items-center">
                         <div className="relative w-full h-auto aspect-[16/9] md:h-24 md:w-auto">
@@ -40,7 +40,7 @@ function Recomended({ className }: { className: string }) {
                         </div>
                         <div className="md:ml-6 md:-mt-2">
                             <p className="text-sm text-main font-medium mt-2">{post.category}</p>
-                            <p className="text-base font-medium mt-1.5 line-clamp-2">{post.title}</p>
+                            <p className="text-base text-gray-700 font-medium mt-1.5 line-clamp-2">{post.title}</p>
                         </div>
                     </div>
                 ))}
