@@ -285,7 +285,7 @@ export default class MessageObject {
     }
 }
 
-export function cleanObj(obj) {
+export function cleanObj(obj: any) {
     for (const key in obj) {
         if (obj[key] === undefined || obj[key] === "") {
             delete obj[key];
