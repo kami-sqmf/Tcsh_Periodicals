@@ -1,9 +1,12 @@
+import { type } from "os";
+
 // Class eg: [J33, S21]
 type classLevel = "1" | "2" | "3";
 type classIndexJunior = "1" | "2" | "3" | "4" | "5" | "6" | "7";
 type classIndexSenior = "1" | "2" | "3" | "4" | "5";
-export type Class = `J${classLevel}${classIndexJunior}` | `S${classLevel}${classIndexSenior}`
+export type Class = `J${classLevel}${classIndexJunior}` | `S${classLevel}${classIndexSenior}` | "Teacher"
 export const classParser = function (clas2: Class) {
+    if(clas2 == "Teacher") return "老師x"
     let clas2Res = "";
     clas2Res += (clas2[0] == "J" ? "國" : "高");
     switch (clas2[1]) {
@@ -45,13 +48,16 @@ export const classParser = function (clas2: Class) {
 
 // Accounts Firestore
 export interface Accounts {
-    username: string;
+    uid?: string;
+    customTitle: string | null;
+    username: string | null;
+    insta: string | null;
     name: string;
     avatar: string;
-    bio: string;
+    bio: string | null;
     membership: "admin" | "colleague" | "golden" | "starter";
     email: string;
-    class: Class;
+    class: Class | "Teacher";
 }
 
 // Role Firestroe
@@ -68,5 +74,11 @@ export interface Members {
     role: 100 | 101 | 200 | 201 | 202 | 300 | 301 | 302 | 400 | 401 | 500 | 501 | 600 | 601;
     class: Class;
     insta: string;
-    customTitle: string;
+    customTitle: string | null;
+}
+
+export type canChangeProfile = "avatar" | "bio" | "name" | "username" | "insta" | "customTitle" | "class"
+
+export function instanceOfMembers(object: any): object is Members {
+    return 'role' in object;
 }

@@ -36,6 +36,19 @@ export const Global = {
             href: "https://linktr.ee/tcsh_periodicals",
             title: "立即投稿",
             child: []
+        },
+        accounts: {
+            name: "accounts",
+            href: "/accounts",
+            title: "帳號",
+            child: {
+                signIn: {
+                    name: "signIn",
+                    href: "/accounts/signin",
+                    title: "登入",
+                    child: []
+                },
+            }
         }
     },
     insta: "tcsh_periodicals",

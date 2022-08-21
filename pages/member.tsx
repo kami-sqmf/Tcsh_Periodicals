@@ -2,6 +2,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import type { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next';
 import { useEffect, useState } from 'react';
 import { RiArrowRightSLine, RiGroup2Line } from 'react-icons/ri';
+import { Global } from '../components/global';
 import HeadUni from '../components/HeadUni';
 import Members from '../components/Members';
 import Navbar from '../components/Navbar';
@@ -22,7 +23,7 @@ const Member: NextPage = ({membersData}: InferGetStaticPropsType<typeof getStati
   }, [])
   return (
     <div className='min-h-screen bg-background/90 py-4'>
-      <HeadUni title='首頁' description='歡迎光臨後生團隊！請問今天想要來點什麼呢？投稿還是投訴⋯⋯' pages='member' />
+      <HeadUni title={Global.webMap.member.title.slice(-2)} description='歡迎光臨後生團隊！請問今天想要來點什麼呢？投稿還是投訴⋯⋯' pages='member' />
       <div className='max-w-xs md:max-w-2xl lg:max-w-4xl xl:max-w-6xl mx-auto pb-8'>
         <Navbar onTop={onTop} />
         <Notification className="md:hidden mt-6" />
