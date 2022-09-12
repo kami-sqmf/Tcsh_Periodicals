@@ -11,7 +11,7 @@ import ScrollToTop from '../components/scrollTop';
 import { Members as MembersType } from '../types/firestore';
 import { db } from '../utils/firebase';
 
-const Member: NextPage = ({membersData}: InferGetStaticPropsType<typeof getStaticProps>) => {
+const Member: NextPage = ({membersData}) => {
   const [onTop, setOnTop] = useState(true)
   const handleScroll = () => {
     if(onTop != window.scrollY > 38) setOnTop(true)
