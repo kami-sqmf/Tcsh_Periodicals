@@ -41,7 +41,7 @@ const Member: NextPage = ({membersData}: InferGetStaticPropsType<typeof getStati
 
 export default Member;
 
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getServerSideProps: getServerSideProps = async (context) => {
   const snapshot = await getDocs(collection(db, "Members"))
   const data: MembersType[] = []
   snapshot.forEach(doc => {
