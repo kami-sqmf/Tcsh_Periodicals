@@ -6,7 +6,7 @@ type classIndexJunior = "1" | "2" | "3" | "4" | "5" | "6" | "7";
 type classIndexSenior = "1" | "2" | "3" | "4" | "5";
 export type Class = `J${classLevel}${classIndexJunior}` | `S${classLevel}${classIndexSenior}` | "Teacher"
 export const classParser = function (clas2: Class) {
-    if(clas2 == "Teacher") return "老師x"
+    if(clas2 == "Teacher") return "老師"
     let clas2Res = "";
     clas2Res += (clas2[0] == "J" ? "國" : "高");
     switch (clas2[1]) {
