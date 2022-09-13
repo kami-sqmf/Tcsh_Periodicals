@@ -7,6 +7,7 @@ import { Global } from "./global";
 
 function Navbar({ onTop = false }: { onTop: boolean }) {
     const session = useSession()
+    console.log(session)
     return (
         <div className={`flex flex-row h-8 md:h-16 w-full relative z-50 justify-between items-center ${onTop ? "" : "navTop"} transition-all`}>
             <RiMenu4Line className="text-main h-7 w-7 md:h-10 md:w-10 cursor-pointer" />
