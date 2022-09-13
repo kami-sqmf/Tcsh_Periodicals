@@ -9,7 +9,7 @@ function About({ className }: { className: string }) {
             <div className="relative w-full h-12 mt-9 rounded-lg overflow-hidden">
                 <Image src="/logo.jpg" alt="不要把滑鼠放在我身上，很敏感" layout="fill" objectFit="cover" />
             </div>
-            <p className="mt-8 text-lg md:text-base xl:text-lg">慈中後生團隊是由一群熱愛自由的人所創立的。而在座的各位思考的是你還有幾年『黃金時間』可以轉職。溫水煮青蛙雖然比較不痛。</p>
+            <p className="mt-8 text-lg md:text-base xl:text-lg text-gray-700">慈中後生團隊是由一群熱愛自由的人所創立的。而在座的各位思考的是你還有幾年『黃金時間』可以轉職。溫水煮青蛙雖然比較不痛。</p>
             <div className="flex flex-col mt-6 space-y-4">
                 <Link href={Global.webMap.member.href}>
                     <div className="flex flex-row items-center text-xl md:text-xs lg:text-lg xl:text-xl text-main font-medium space-x-4 cursor-pointer hover:scale-105 hover:translate-x-2 transition-all">
