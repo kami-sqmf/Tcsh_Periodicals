@@ -1,5 +1,5 @@
 import { collection, getDocs } from 'firebase/firestore';
-import type { GetStaticProps, InferGetServerSidePropsType, NextPage } from 'next';
+import type { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next';
 import { useEffect, useState } from 'react';
 import { RiArrowRightSLine, RiGroup2Line } from 'react-icons/ri';
 import { Global } from '../components/global';
@@ -11,7 +11,7 @@ import ScrollToTop from '../components/scrollTop';
 import { Members as MembersType } from '../types/firestore';
 import { db } from '../utils/firebase';
 
-const Member: NextPage = ({membersData}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const Member: NextPage = ({membersData}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const [onTop, setOnTop] = useState(true)
   const handleScroll = () => {
     if(onTop != window.scrollY > 38) setOnTop(true)
@@ -41,7 +41,7 @@ const Member: NextPage = ({membersData}: InferGetServerSidePropsType<typeof getS
 
 export default Member;
 
-export const getServerSideProps = async (context) => {
+export const getStaticProps: GetStaticProps = async (context) => {
   const snapshot = await getDocs(collection(db, "Members"))
   const data: MembersType[] = []
   snapshot.forEach(doc => {
@@ -51,15 +51,6 @@ export const getServerSideProps = async (context) => {
     props: {
       membersData: data
     },
+    revalidate: 60,
   }
 }
-
-// const doit = async () => {
-//   const data = await getDocs(collection(db, "Role"))
-//   const store: any = {}
-//   data.forEach((doc) => {
-//     const da = doc.data()
-//     store[da.id] = {key: doc.id, ...doc.data()}
-//   });
-//   console.log(store)
-// }
