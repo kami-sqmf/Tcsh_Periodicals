@@ -1,14 +1,14 @@
-import { getToken } from "next-auth/jwt"
-import { NextRequest, NextResponse } from "next/server"
+import { withAuth } from "next-auth/middleware"
 
-const secret = process.env.NEXTAUTH_SECRET;
+export default withAuth({
+  callbacks: {
+    authorized({ req, token }) {
+    //   if (req.nextUrl.pathname === "/accounts") {
+    //     return token?.userRole === "accounts"
+    //   }
+      return !!token
+    },
+  },
+})
 
-export async function middleware(req: NextRequest) {
-    const url = req.nextUrl.clone()
-    if (url.pathname == "/accounts") {
-        const session = await getToken({ req, secret });
-        if (!session) return NextResponse.redirect(new URL("/accounts/signin", req.url))
-    }
-
-    return NextResponse.next()
-}
+export const config = { matcher: ["/accounts"] }
