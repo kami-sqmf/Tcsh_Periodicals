@@ -12,7 +12,7 @@ function SignIn({ providers }: { providers: any }) {
             <Image layout="fill" src={Global.logo} objectFit="cover" alt="後生 LOGO" />
           </div>
           {Object.values(providers).map(((provider: any) => (
-            <div className="my-5">
+            <div key={provider.id} className="my-5">
               <div className="group flex flex-row space-x-2 items-center max-w-max mt-2 mb-3 cursor-pointer" onClick={() => signIn(provider.id, { callbackUrl: '/' })}>
                 <Image src="/signin/GoL.svg" height={20} width={20} objectFit="contain" alt="使用 Google 帳號登入" />
                 <span className="text-sm text-blue-800 group-hover:text-blue-900 font-semibold">使用 慈中 Gooogle 帳號登入</span>
