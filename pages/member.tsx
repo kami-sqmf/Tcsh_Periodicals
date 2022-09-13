@@ -1,5 +1,5 @@
 import { collection, getDocs } from 'firebase/firestore';
-import type { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next';
+import type { GetStaticProps, InferGetServerSidePropsType, NextPage } from 'next';
 import { useEffect, useState } from 'react';
 import { RiArrowRightSLine, RiGroup2Line } from 'react-icons/ri';
 import { Global } from '../components/global';
@@ -11,7 +11,7 @@ import ScrollToTop from '../components/scrollTop';
 import { Members as MembersType } from '../types/firestore';
 import { db } from '../utils/firebase';
 
-const Member: NextPage = ({membersData}) => {
+const Member: NextPage = ({membersData}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [onTop, setOnTop] = useState(true)
   const handleScroll = () => {
     if(onTop != window.scrollY > 38) setOnTop(true)
