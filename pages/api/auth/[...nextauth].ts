@@ -32,16 +32,24 @@ export default NextAuth({
             return "/";
         },
 
+        async redirect({ url, baseUrl }) {
+            // Allows relative callback URLs
+            if (url.startsWith("/")) return `${baseUrl}${url}`
+            // Allows callback URLs on the same origin
+            else if (new URL(url).origin === baseUrl) return url
+            return baseUrl
+        },
+
         async session({ session, token, user }) {
             session.accessToken = token.accessToken;
             const querySnapshot = await getDocs(query(collection(db, "Accounts"), where("email", "==", session.user?.email)))
             querySnapshot.forEach((doc) => {
-                session.firestore = {uid: doc.id, ...doc.data() as Accounts}
+                session.firestore = { uid: doc.id, ...doc.data() as Accounts }
             });
-            if(!session.firestore){
+            if (!session.firestore) {
                 const querySnapshot = await getDocs(query(collection(db, "Members"), where("email", "==", session.user?.email)))
                 querySnapshot.forEach((doc) => {
-                    session.firestore = {uid: doc.id, ...doc.data() as Members}
+                    session.firestore = { uid: doc.id, ...doc.data() as Members }
                 });
             }
             return session;
