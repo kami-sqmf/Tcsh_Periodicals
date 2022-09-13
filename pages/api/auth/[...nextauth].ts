@@ -15,8 +15,8 @@ export default NextAuth({
     ],
 
     pages: {
-        signIn: 'accounts/signin',
-        signOut: 'accounts/signout'
+        signIn: '/accounts/signin',
+        signOut: '/accounts/signout'
     },
 
     callbacks: {
