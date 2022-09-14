@@ -34,7 +34,7 @@ function Navbar({ onTop = false }: { onTop: boolean }) {
                 {session.status == "authenticated" ?
                     <Link href={Global.webMap.accounts.href}>
                         <div className="relative text-main cursor-pointer group h-7 w-7 md:w-10 md:h-10">
-                            <Image src={session.data!.user!.image!} layout="fill" objectFit="cover" className="rounded-full overflow-hidden" />
+                            <Image src={session.data!.user!.image!} layout="fill" objectFit="cover" className="rounded-full overflow-hidden" alt="大頭貼" />
                             <div className="absolute w-max px-2 py-1 text-xs bg-background2 rounded-md hidden opacity-0 group-hover:block group-hover:opacity-90 transition-opacity -translate-x-[10%] -bottom-7">
                                 <span>{session.data!.user!.name!}</span>
                             </div>
@@ -57,10 +57,10 @@ function Navbar({ onTop = false }: { onTop: boolean }) {
                     if (index.nav.show) {
                         if (index.nav.admin) {
                             if (admin) {
-                                return (<NavLink nav={index} router={router} />)
+                                return (<NavLink key={index.name} nav={index} router={router} />)
                             }
                         } else {
-                            return (<NavLink nav={index} router={router} />)
+                            return (<NavLink key={index.name} nav={index} router={router} />)
                         }
                     }
                     return (<></>)
