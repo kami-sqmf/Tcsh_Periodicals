@@ -18,8 +18,8 @@ function Navbar({ onTop = false }: { onTop: boolean }) {
         }
     }, [session.status])
     return (
-        <div>
-            <div className={`flex flex-row h-8 md:h-16 w-full relative z-50 justify-between items-center ${onTop ? "" : "navTop"} transition-all`}>
+        <div className={`${onTop ? "" : "navTop"} z-50 `}>
+            <div className={`flex flex-row h-8 md:h-16 w-full relative justify-between items-center transition-all`}>
                 <RiMenu4Line className="text-main h-7 w-7 md:h-10 md:w-10 cursor-pointer" onClick={(e) => {setHidden(!hidden)}} />
                 <Link href={`/`}>
                     <div className="relative w-36 h-8 rounded-lg overflow-hidden ring-1 ring-main md:absolute md:ml-14 md:h-12 md:w-52 md:ring-0 cursor-pointer">
