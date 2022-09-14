@@ -15,7 +15,6 @@ import { Accounts, canChangeProfile, Members } from '../../types/firestore';
 import Image from 'next/image';
 import { doc, setDoc, updateDoc } from 'firebase/firestore';
 import { db, storage } from '../../utils/firebase';
-import { useRouter } from 'next/router';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 
 const Page = ({ session }: { session: Session }) => {

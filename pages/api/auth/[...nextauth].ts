@@ -15,7 +15,8 @@ export default NextAuth({
     ],
 
     pages: {
-        signIn: 'accounts/signin',
+        signIn: '/accounts/signin',
+        signOut: '/accounts/signout'
     },
 
     callbacks: {
@@ -31,10 +32,24 @@ export default NextAuth({
             return "/";
         },
 
-        async jwt({ token, account }) {
-            // Persist the OAuth access_token to the token right after signin
-            if (account) {
-                token.accessToken = account.access_token;
+        async redirect({ url, baseUrl }) {
+            // Allows relative callback URLs
+            if (url.startsWith("/")) return `${baseUrl}${url}`
+            // Allows callback URLs on the same origin
+            else if (new URL(url).origin === baseUrl) return url
+            return baseUrl
+        },
+
+        async jwt({ token }) {
+            const querySnapshot = await getDocs(query(collection(db, "Accounts"), where("email", "==", token.email)))
+            querySnapshot.forEach((doc) => {
+                token.firestore = { uid: doc.id, ...doc.data() as Accounts }
+            });
+            if (!token.firestore) {
+                const querySnapshot = await getDocs(query(collection(db, "Members"), where("email", "==", token.email)))
+                querySnapshot.forEach((doc) => {
+                    token.firestore = { uid: doc.id, ...doc.data() as Members }
+                });
             }
             return token;
         },
@@ -43,12 +58,12 @@ export default NextAuth({
             session.accessToken = token.accessToken;
             const querySnapshot = await getDocs(query(collection(db, "Accounts"), where("email", "==", session.user?.email)))
             querySnapshot.forEach((doc) => {
-                session.firestore = {uid: doc.id, ...doc.data() as Accounts}
+                session.firestore = { uid: doc.id, ...doc.data() as Accounts }
             });
-            if(!session.firestore){
+            if (!session.firestore) {
                 const querySnapshot = await getDocs(query(collection(db, "Members"), where("email", "==", session.user?.email)))
                 querySnapshot.forEach((doc) => {
-                    session.firestore = {uid: doc.id, ...doc.data() as Members}
+                    session.firestore = { uid: doc.id, ...doc.data() as Members }
                 });
             }
             return session;

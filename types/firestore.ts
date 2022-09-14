@@ -61,7 +61,7 @@ export interface Accounts {
 }
 
 // Role Firestroe
-export type RoleNum = 1 | 100 | 101 | 200 | 201 | 202 | 300 | 301 | 302 | 400 | 401 | 500 | 501 | 600 | 601;
+export type RoleNum = 1 | 100 | 101 | 200 | 201 | 202 | 300 | 301 | 302 | 400 | 401 | 500 | 501 | 600 | 601 | 700;
 
 // Members Firestroe
 export interface Members {
@@ -71,7 +71,7 @@ export interface Members {
     bio: string;
     membership: "admin" | "colleague" | "golden" | "starter";
     email: string;
-    role: 100 | 101 | 200 | 201 | 202 | 300 | 301 | 302 | 400 | 401 | 500 | 501 | 600 | 601;
+    role: 100 | 101 | 200 | 201 | 202 | 300 | 301 | 302 | 400 | 401 | 500 | 501 | 600 | 601 | 700;
     class: Class;
     insta: string;
     customTitle: string | null;
