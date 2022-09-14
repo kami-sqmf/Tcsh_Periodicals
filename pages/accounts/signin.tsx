@@ -5,15 +5,10 @@ import { useRouter } from "next/router";
 import { Global } from "../../components/global";
 import HeadUni from "../../components/HeadUni";
 import { UserAgent, useUserAgent } from 'next-useragent'
-import Link from "next/link";
+
 function SignIn({ providers, uaString }: { providers: any; uaString: string }) {
   const router = useRouter()
-  let ua: UserAgent;
-  if (uaString) {
-    ua = useUserAgent(uaString)
-  } else {
-    ua = useUserAgent(window.navigator.userAgent)
-  }
+  let ua: UserAgent = useUserAgent(uaString || window.navigator.userAgent);
   return (
     <div className="relative flex justify-center items-center w-full bg-background min-h-screen py-24">
       <HeadUni title={Global.webMap.accounts.child.signIn.title} description="登入慈中後生！" pages={Global.webMap.accounts.child.signIn.href} />
