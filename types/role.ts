@@ -83,5 +83,10 @@ export default {
         "key": "GMsQeQbzBQjXgn0vrP3M",
         "id": 601,
         "name": "總務"
+    },
+    700: {
+        "key": "Asj3DIjsa4iwJadR8d8B",
+        "id": 700,
+        "name": "顧問"
     }
 }

@@ -9,3 +9,9 @@ declare module "next-auth" {
     firestore: Accounts | Members
   }
 }
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    firestore: Accounts | Members
+  }
+}

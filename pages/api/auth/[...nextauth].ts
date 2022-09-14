@@ -40,6 +40,20 @@ export default NextAuth({
             return baseUrl
         },
 
+        async jwt({ token }) {
+            const querySnapshot = await getDocs(query(collection(db, "Accounts"), where("email", "==", token.email)))
+            querySnapshot.forEach((doc) => {
+                token.firestore = { uid: doc.id, ...doc.data() as Accounts }
+            });
+            if (!token.firestore) {
+                const querySnapshot = await getDocs(query(collection(db, "Members"), where("email", "==", token.email)))
+                querySnapshot.forEach((doc) => {
+                    token.firestore = { uid: doc.id, ...doc.data() as Members }
+                });
+            }
+            return token;
+        },
+
         async session({ session, token, user }) {
             session.accessToken = token.accessToken;
             const querySnapshot = await getDocs(query(collection(db, "Accounts"), where("email", "==", session.user?.email)))

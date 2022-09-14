@@ -13,6 +13,7 @@ specifiers:
   firebase: ^9.9.4
   next: 12.2.5
   next-auth: ^4.10.3
+  next-useragent: ^2.8.0
   postcss: ^8.4.16
   react: 18.2.0
   react-dom: 18.2.0
@@ -28,6 +29,7 @@ dependencies:
   firebase: 9.9.4
   next: 12.2.5_biqbaboplfbrettd7655fr4n2y
   next-auth: 4.10.3_biqbaboplfbrettd7655fr4n2y
+  next-useragent: 2.8.0_next@12.2.5
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-icons: 4.4.0_react@18.2.0
@@ -2198,6 +2200,15 @@ packages:
       uuid: 8.3.2
     dev: false
 
+  /next-useragent/2.8.0_next@12.2.5:
+    resolution: {integrity: sha512-SDmIfqdBg0Uxk9L/mHX+P3XPdjS7hPGkhdQJjgUa+f0pFORO33FS632A0C2BsIOHr0Eu/bZF3D/kAUrzl/3aYA==}
+    peerDependencies:
+      next: '>=10'
+    dependencies:
+      next: 12.2.5_biqbaboplfbrettd7655fr4n2y
+      ua-parser-js: 0.7.31
+    dev: false
+
   /next/12.2.5_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-tBdjqX5XC/oFs/6gxrZhjmiq90YWizUYU6qOWAfat7zJwrwapJ+BYgX2PmiacunXMaRpeVT4vz5MSPSLgNkrpA==}
     engines: {node: '>=12.22.0'}
@@ -2972,6 +2983,10 @@ packages:
     engines: {node: '>=4.2.0'}
     hasBin: true
     dev: true
+
+  /ua-parser-js/0.7.31:
+    resolution: {integrity: sha512-qLK/Xe9E2uzmYI3qLeOmI0tEOt+TBBQyUIAh4aAgU05FVYzeZrKUdkAZfBNVGRaHVgV0TDkdEngJSw/SyQchkQ==}
+    dev: false
 
   /unbox-primitive/1.0.2:
     resolution: {integrity: sha512-61pPlCD9h51VoreyJ0BReideM3MDKMKnh6+V9L08331ipq6Q8OFXZYiqP6n/tbHx4s5I9uRhcye6BrbkizkBDw==}
