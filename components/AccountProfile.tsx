@@ -5,14 +5,16 @@ import { RiInstagramLine } from 'react-icons/ri';
 import { Accounts, canChangeProfile, classParser, instanceOfMembers, Members } from '../types/firestore';
 import Image from 'next/image';
 import { useRecoilState } from 'recoil';
-import { accountIndexModalSection, accountIndexModalState } from '../atoms/AccountModal';
+import { accountIndexModalSection, accountIndexModalState, adminSelectProfile } from '../atoms/AccountModal';
 
 const AccountProfile = ({ profile, rounded = true, owned = false }: { profile: Accounts | Members, rounded?: boolean, owned: boolean }) => {
     const [modalOpen, setModalOpen] = useRecoilState(accountIndexModalState)
     const [modalSection, setModalSection] = useRecoilState(accountIndexModalSection)
+    const [adminSelect, setAdminSelect] = useRecoilState(adminSelectProfile)
     const setChange = (sec: canChangeProfile[]) => {
         setModalOpen(true)
         setModalSection(sec)
+        setAdminSelect(profile as any)
     }
     return (
         <div className={`${rounded ? "rounded-2xl" : ""} flex flex-col w-full min-w-72 min-h-[32em] max-h-[38em] bg-white-light shadow-xl overflow-hidden bg-background2/90`}>
