@@ -1,23 +1,23 @@
+import { Dialog, Transition } from '@headlessui/react';
 import { addDoc, collection, doc, DocumentData, onSnapshot, orderBy, query, QueryDocumentSnapshot, updateDoc } from 'firebase/firestore';
+import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 import type { NextPage } from 'next';
 import { useSession } from 'next-auth/react';
+import Image from 'next/image';
+import Link from 'next/link';
 import { ChangeEvent, Fragment, MouseEvent, useEffect, useRef, useState } from 'react';
+import { RiAdminLine, RiArrowRightSLine } from 'react-icons/ri';
+import { SetterOrUpdater, useRecoilState } from 'recoil';
+import { accountIndexModalConfirm, accountIndexModalSection, accountIndexModalState, adminSelectProfile, operatingPage } from '../../atoms/AccountModal';
+import AccountProfile from '../../components/AccountProfile';
 import { Global } from '../../components/global';
 import HeadUni from '../../components/HeadUni';
 import Navbar from '../../components/Navbar';
-import AccountProfile from '../../components/AccountProfile';
-import Notification from '../../components/Notification';
 import { Accounts, canChangeProfile, instanceOfMembers, Members } from '../../types/firestore';
-import { db, storage } from '../../utils/firebase';
-import { SetterOrUpdater, useRecoilState } from 'recoil';
-import { accountIndexModalConfirm, accountIndexModalSection, accountIndexModalState, adminSelectProfile } from '../../atoms/AccountModal';
-import { Session } from 'next-auth';
-import { getDownloadURL, ref, uploadString } from 'firebase/storage';
-import Image from 'next/image';
-import { Dialog, Transition } from '@headlessui/react';
 import role from '../../types/role';
+import { db, storage } from '../../utils/firebase';
 
-function Modal({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: SetterOrUpdater<boolean> }) {
+function Modal({ isOpen, setIsOpen, setOperate }: { isOpen: boolean, setIsOpen: SetterOrUpdater<boolean>, setOperate: SetterOrUpdater<boolean> }) {
   const [adminSelect, setAdminSelect] = useRecoilState(adminSelectProfile)
   const [modalSection, setModalSection] = useRecoilState(accountIndexModalSection)
   const [modalConfirm, setModalConfirm] = useRecoilState(accountIndexModalConfirm)
@@ -86,19 +86,24 @@ function Modal({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: SetterOrUpda
     for (const input of document.querySelectorAll("input") as any) {
       if (input.name.includes("Add")) { }
       else if (input.type == "file") {
+        setOperate(true)
         const imageRef = ref(storage, `${instanceOfMembers(adminSelect) ? "Members" : "Accounts"}/Avatar/${adminSelect.uid}.jpg`)
         await uploadString(imageRef, profileAvatar as any, "data_url").then(async snapshot => {
           const downloadUrl = await getDownloadURL(imageRef)
           await updateDoc(doc(db, `${instanceOfMembers(adminSelect) ? "Members" : "Accounts"}/${adminSelect.uid}`,), {
             avatar: downloadUrl
           })
+          setOperate(false)
           setIsOpen(false)
         })
       }
       else if (input.id == "bio" || input.id == "name" || input.id == "username" || input.id == "insta" || input.id == "customTitle" || input.id == "class") {
+
         const data: any = {}
         data[input.id] = input.value
+        setOperate(true)
         await updateDoc(doc(db, `${instanceOfMembers(adminSelect) ? "Members" : "Accounts"}/${adminSelect.uid}`), data)
+        setOperate(false)
         setIsOpen(false)
       }
     }
@@ -122,7 +127,7 @@ function Modal({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: SetterOrUpda
   const modalContent = {
     "avatar": (profile: Accounts | Members) => {
       return (
-        <div className="relative w-[256px] h-[256px] rounded-lg overflow-hidden group cursor-pointer" onClick={() => filePickerRef.current!.click()}>
+        <div key={profile.uid} className="relative w-[256px] h-[256px] rounded-lg overflow-hidden group cursor-pointer" onClick={() => filePickerRef.current!.click()}>
           <Image width={256} height={256} src={profileAvatar} objectFit="contain" alt="你的大大大頭貼！" />
           <div className='absolute opacity-0 group-hover:opacity-100 bottom-0 w-full h-6 bg-gray-600 bg-opacity-75 text-white text-xs text-center py-1 transition-opacity'>更換</div>
           <input type={"file"} hidden ref={filePickerRef} onChange={changeAvatar}></input>
@@ -130,21 +135,21 @@ function Modal({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: SetterOrUpda
       )
     },
     "bio": (profile: Accounts | Members) => {
-      return (<div className="relative w-[256px] ">
+      return (<div key={profile.uid} className="relative w-[256px] ">
         <input type="text" id="bio" name="bio" onChange={(e) => changeListener("bio")} className="block rounded-sm w-full h-[38px] px-3 pt-5 border border-gray-200 text-xs text-gray-800 bg-gray-50 appearance-none focus:outline-none focus:ring-0 focus:border-gray-400 peer" placeholder=" " defaultValue={profile.bio ? profile.bio : ""} />
         <label className="absolute text-xs text-gray-400 duration-300 transform -translate-y-2.5 scale-75 top-3 z-10 origin-[0] left-3 peer-focus:text-gray-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-2.5">自我介紹</label>
         <p id="bioErr" className='mx-3 mt-0.5 text-xs text-main2 text-start'></p>
       </div>)
     },
     "name": (profile: Accounts | Members) => {
-      return (<div className="relative w-[256px] ">
+      return (<div key={profile.uid} className="relative w-[256px] ">
         <input type="text" id="name" name="name" onChange={(e) => changeListener("name")} className="block rounded-sm w-full h-[38px] px-3 pt-5 border border-gray-200 text-xs text-gray-800 bg-gray-50 appearance-none focus:outline-none focus:ring-0 focus:border-gray-400 peer" placeholder=" " defaultValue={profile.name} />
         <label htmlFor="name" className="absolute text-xs text-gray-400 duration-300 transform -translate-y-2.5 scale-75 top-3 z-10 origin-[0] left-3 peer-focus:text-gray-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-2.5">名稱</label>
         <p id="nameErr" className='mx-3 mt-0.5 text-xs text-main2 text-start'></p>
       </div>)
     },
     "username": (profile: Accounts | Members) => {
-      return !instanceOfMembers(profile) ? (<div className="relative w-[256px] ">
+      return !instanceOfMembers(profile) ? (<div key={profile.uid} className="relative w-[256px] ">
         <input type="text" id="username" name="username" onChange={(e) => changeListener("username")} className="block rounded-sm w-full h-[38px] px-3 pt-5 border border-gray-200 text-xs text-gray-800 bg-gray-50 appearance-none focus:outline-none focus:ring-0 focus:border-gray-400 peer" placeholder=" " defaultValue={profile.username ? profile.username : ""} />
         <label htmlFor="name" className="absolute text-xs text-gray-400 duration-300 transform -translate-y-2.5 scale-75 top-3 z-10 origin-[0] left-3 peer-focus:text-gray-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-2.5">用戶名稱</label>
         <p id="usernameErr" className='mx-3 mt-0.5 text-xs text-main2 text-start'></p>
@@ -152,14 +157,14 @@ function Modal({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: SetterOrUpda
     },
     "insta": (profile: Accounts | Members) => {
 
-      return (<div className="relative w-[256px] ">
+      return (<div key={profile.uid} className="relative w-[256px] ">
         <input type="text" id="insta" name="insta" onChange={(e) => changeListener("insta")} className="block rounded-sm w-full h-[38px] px-3 pt-5 border border-gray-200 text-xs text-gray-800 bg-gray-50 appearance-none focus:outline-none focus:ring-0 focus:border-gray-400 peer" placeholder=" " defaultValue={profile.insta ? profile.insta : ""} />
         <label htmlFor="name" className="absolute text-xs text-gray-400 duration-300 transform -translate-y-2.5 scale-75 top-3 z-10 origin-[0] left-3 peer-focus:text-gray-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-2.5">Instagram 帳號</label>
         <p id="instaErr" className='mx-3 mt-0.5 text-xs text-main2 text-start'></p>
       </div>)
     },
     "customTitle": (profile: Accounts | Members) => {
-      return (<div className="relative w-[256px] ">
+      return (<div key={profile.uid} className="relative w-[256px] ">
         <input type="text" id="customTitle" name="customTitle" onChange={(e) => changeListener("customTitle")} className="block rounded-sm w-full h-[38px] px-3 pt-5 border border-gray-200 text-xs text-gray-800 bg-gray-50 appearance-none focus:outline-none focus:ring-0 focus:border-gray-400 peer" placeholder=" " defaultValue={profile.customTitle ? profile.customTitle : "自我介紹："} />
         <label htmlFor="name" className="absolute text-xs text-gray-400 duration-300 transform -translate-y-2.5 scale-75 top-3 z-10 origin-[0] left-3 peer-focus:text-gray-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-2.5">更改自我介紹標題</label>
         <p id="customTitleErr" className='mx-3 mt-0.5 text-xs text-main2 text-start'></p>
@@ -167,7 +172,7 @@ function Modal({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: SetterOrUpda
     },
     "class": (profile: Accounts | Members) => {
 
-      return (<div className="relative w-[256px] ">
+      return (<div key={profile.uid} className="relative w-[256px] ">
         <input type="text" id="class" name="class" onChange={(e) => changeListener("class")} className="block rounded-sm w-full h-[38px] px-3 pt-5 border border-gray-200 text-xs text-gray-800 bg-gray-50 appearance-none focus:outline-none focus:ring-0 focus:border-gray-400 peer" placeholder=" " defaultValue={profile.class} />
         <label htmlFor="name" className="absolute text-xs text-gray-400 duration-300 transform -translate-y-2.5 scale-75 top-3 z-10 origin-[0] left-3 peer-focus:text-gray-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-2.5">班級 （請輸入班級代號，如 J11、S11）</label>
         <p id="classErr" className='mx-3 mt-0.5 text-xs text-main2 text-start'></p>
@@ -218,7 +223,7 @@ function Modal({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: SetterOrUpda
   )
 }
 
-const AddProfile = () => {
+const AddProfile = ({ setOperate }: { setOperate: SetterOrUpdater<boolean> }) => {
   const [modalConfirm, setModalConfirm] = useState(0 as number)
   const filePickerRef = useRef<HTMLInputElement | null>(null);
   const [profileAvatar, setProfileAvatar] = useState("/defaultProfile.png")
@@ -302,6 +307,7 @@ const AddProfile = () => {
   }
   const sendAdd = async () => {
     if (changeListener("name") && changeListener("bio") && changeListener("customTitle") && changeListener("insta") && changeListener("class")) {
+      setOperate(true)
       const data = {
         name: (document.getElementsByName(`nameAdd`)[0] as HTMLInputElement).value,
         customTitle: (document.getElementsByName(`customTitleAdd`)[0] as HTMLInputElement).value,
@@ -313,6 +319,7 @@ const AddProfile = () => {
         avatar: profileAvatar
       }
       const docu = await addDoc(collection(db, `Members`), data);
+      setOperate(false)
       const imageRef = ref(storage, `${"Members"}/Avatar/${docu.id}.jpg`)
       await uploadString(imageRef, profileAvatar as any, "data_url").then(async snapshot => {
         const downloadUrl = await getDownloadURL(imageRef)
@@ -343,7 +350,7 @@ const AddProfile = () => {
       <div className="relative aspect-square w-72 h-72 overflow-hidden group cursor-pointer" onClick={() => filePickerRef.current!.click()}>
         <Image alt={`大頭照！！`} src={profileAvatar} layout="fill" objectFit='cover' />
         <div className='absolute opacity-0 group-hover:opacity-100 bottom-0 w-full h-6 bg-gray-600 bg-opacity-75 text-white text-xs text-center py-1 transition-opacity'>更換</div>
-        <input type={"file"} hidden ref={filePickerRef} onChange={changeAvatar}></input>
+        <input name='imageAdd' type={"file"} hidden ref={filePickerRef} onChange={changeAvatar}></input>
       </div>
     </div>
     <div className='flex flex-col px-5 py-6 space-y-4'>
@@ -360,7 +367,7 @@ const AddProfile = () => {
           <p className='text-main2 text-sm'>選取組別：</p>
           <select name="role" id="role" className='text-main text-sm py-1 my-1'>
             {Object.values(role).map((role) => (
-              role.id == 0 ? <></> : <option value={role.id}>{role.name}</option>
+              role.id == 0 ? <></> : <option key={role.id} value={role.id}>{role.name}</option>
             ))}
           </select>
         </div>
@@ -401,6 +408,7 @@ const Home: NextPage = () => {
   const session = useSession();
   const [onTop, setOnTop] = useState(true)
   const [isOpen, setIsOpen] = useRecoilState(accountIndexModalState)
+  const [operating, setOperating] = useRecoilState(operatingPage)
   const handleScroll = () => {
     if (onTop != window.scrollY > 38) setOnTop(true)
     if (onTop != window.scrollY < 38) setOnTop(false)
@@ -420,7 +428,13 @@ const Home: NextPage = () => {
       <HeadUni title={Global.webMap.admin.child.members.title} description='你是怎麼知道這個網頁的，不過我猜你開不起來。但你也不要駭我，因為會很痛！' pages={Global.webMap.admin.child.members.href} />
       <div className='max-w-xs md:max-w-2xl lg:max-w-4xl xl:max-w-6xl mx-auto'>
         <Navbar onTop={onTop} />
-        <Notification className="md:hidden mt-6" />
+        <div className='mt-4 flex flex-row items-center text-main space-x-2'>
+          <RiArrowRightSLine className='h-4 w-4 md:h-5 md:w-5' />
+          <RiAdminLine className='h-5 w-5 md:h-6 md:w-6' />
+          <Link href="/admin"><span className='text-base md:text-lg font-medium cursor-pointer hover:text-main2'>管理員</span></Link>
+          <RiArrowRightSLine className='h-4 w-4 md:h-5 md:w-5' />
+          <span className='text-base md:text-lg font-medium'>管理成員</span>
+        </div>
         <div id="stuList" className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 mt-6 max-w-full gap-y-12 justify-items-center'>
           {!membersList[0] ? <div className='flex flex-row items-center justify-center text-2xl animate-pulse'>頁面正在載入中</div> : <></>}
           {membersList.map((memberProfile => (
@@ -428,10 +442,11 @@ const Home: NextPage = () => {
               <AccountProfile profile={{ ...memberProfile.data() as Members, uid: memberProfile.id }} rounded={true} owned={true} />
             </div>
           )))}
-          <AddProfile />
+          <AddProfile setOperate={setOperating} />
         </div>
       </div>
-      {isOpen ? <Modal isOpen={isOpen} setIsOpen={setIsOpen} /> : <></>}
+      {isOpen ? <Modal isOpen={isOpen} setIsOpen={setIsOpen} setOperate={setOperating} /> : <></>}
+      {operating ? <div className='fixed z-[80] top-0 left-0 w-screen h-screen bg-gray-200/40 duration-400 animate-opacity cursor-wait'></div> : <></>}
     </div>
   );
 };

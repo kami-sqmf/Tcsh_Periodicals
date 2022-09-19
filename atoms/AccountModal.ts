@@ -21,3 +21,8 @@ export const adminSelectProfile = atom({
     key: "adminSelectProfile",
     default: undefined as any,
 })
+
+export const operatingPage = atom({
+    key: "operating",
+    default: false,
+})

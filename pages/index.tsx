@@ -1,4 +1,5 @@
-import type { NextPage } from 'next';
+import { collection, getDocs } from 'firebase/firestore';
+import type { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next';
 import { useSession } from 'next-auth/react';
 import { UIEvent, useEffect, useState } from 'react';
 import About from '../components/About';
@@ -8,18 +9,19 @@ import Navbar from '../components/Navbar';
 import Notification from '../components/Notification';
 import Recomended from '../components/Recomended';
 import Slide from '../components/Slide';
+import { db } from '../utils/firebase';
 
-const Home: NextPage = () => {
-  const { data: session } = useSession();
-  // console.log(session)
+const Home: NextPage = ({data}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const [onTop, setOnTop] = useState(true)
   const handleScroll = () => {
-    if(onTop != window.scrollY > 38) setOnTop(true)
-    if(onTop != window.scrollY < 38) setOnTop(false)
+    if (onTop != window.scrollY > 38) setOnTop(true)
+    if (onTop != window.scrollY < 38) setOnTop(false)
   }
-  useEffect(()=>{
-    window.addEventListener("scroll", handleScroll); 
+  console.log(data)
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   return (
     <div className='min-h-screen bg-background/90 py-4'>
@@ -30,7 +32,7 @@ const Home: NextPage = () => {
         <Slide />
         <div className='grid grid-cols-1 md:grid-cols-3 mt-9 md:mt-16'>
           <Recomended className="md:col-span-2" />
-          <About className="md:ml-11"/>
+          <About className="md:ml-11" data={data.About} />
         </div>
       </div>
     </div>
@@ -38,3 +40,17 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+export const getStaticProps: GetStaticProps = async (context) => {
+  const querySnapshot = await getDocs(collection(db, "Global"));
+  const data: any = {}
+  querySnapshot.forEach((doc) => {
+    data[doc.id] = doc.data()
+  });
+  return {
+    props: {
+      data: data
+    },
+    revalidate: 900,
+  }
+}

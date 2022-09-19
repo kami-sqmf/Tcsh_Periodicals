@@ -17,9 +17,10 @@ const Member: NextPage = ({membersData}: InferGetStaticPropsType<typeof getStati
     if(onTop != window.scrollY > 38) setOnTop(true)
     if(onTop != window.scrollY < 38) setOnTop(false)
   }
-  useEffect(()=>{
-    window.addEventListener("scroll", handleScroll); 
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   return (
     <div className='min-h-screen bg-background/90 py-4'>

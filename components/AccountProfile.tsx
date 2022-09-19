@@ -1,11 +1,11 @@
 
-import role from '../types/role';
+import Image from 'next/image';
 import Link from 'next/link';
 import { RiInstagramLine } from 'react-icons/ri';
-import { Accounts, canChangeProfile, classParser, instanceOfMembers, Members } from '../types/firestore';
-import Image from 'next/image';
 import { useRecoilState } from 'recoil';
 import { accountIndexModalSection, accountIndexModalState, adminSelectProfile } from '../atoms/AccountModal';
+import { Accounts, canChangeProfile, classParser, instanceOfMembers, Members } from '../types/firestore';
+import role from '../types/role';
 
 const AccountProfile = ({ profile, rounded = true, owned = false }: { profile: Accounts | Members, rounded?: boolean, owned: boolean }) => {
     const [modalOpen, setModalOpen] = useRecoilState(accountIndexModalState)
