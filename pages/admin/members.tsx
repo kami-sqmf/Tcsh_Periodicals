@@ -16,6 +16,7 @@ import Navbar from '../../components/Navbar';
 import { Accounts, canChangeProfile, instanceOfMembers, Members } from '../../types/firestore';
 import role from '../../types/role';
 import { db, storage } from '../../utils/firebase';
+import { useScroll } from '../../utils/useScroll';
 
 function Modal({ isOpen, setIsOpen, setOperate }: { isOpen: boolean, setIsOpen: SetterOrUpdater<boolean>, setOperate: SetterOrUpdater<boolean> }) {
   const [adminSelect, setAdminSelect] = useRecoilState(adminSelectProfile)
@@ -409,25 +410,19 @@ const Home: NextPage = () => {
   const [onTop, setOnTop] = useState(true)
   const [isOpen, setIsOpen] = useRecoilState(accountIndexModalState)
   const [operating, setOperating] = useRecoilState(operatingPage)
-  const handleScroll = () => {
-    if (onTop != window.scrollY > 38) setOnTop(true)
-    if (onTop != window.scrollY < 38) setOnTop(false)
-  }
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [])
+  const { scrollX, scrollY, scrollDirection } = useScroll();
   const [membersList, setMembersList] = useState([] as QueryDocumentSnapshot<DocumentData>[])
   useEffect(() => {
     return onSnapshot(query(collection(db, 'Members'), orderBy("role", 'asc')), snapshot => {
       setMembersList(snapshot.docs)
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [db])
   return (
     <div className='min-h-screen bg-background/90 py-4'>
       <HeadUni title={Global.webMap.admin.child.members.title} description='你是怎麼知道這個網頁的，不過我猜你開不起來。但你也不要駭我，因為會很痛！' pages={Global.webMap.admin.child.members.href} />
       <div className='max-w-xs md:max-w-2xl lg:max-w-4xl xl:max-w-6xl mx-auto'>
-        <Navbar onTop={onTop} />
+        <Navbar onTop={scrollY < 38} />
         <div className='mt-4 flex flex-row items-center text-main space-x-2'>
           <RiArrowRightSLine className='h-4 w-4 md:h-5 md:w-5' />
           <RiAdminLine className='h-5 w-5 md:h-6 md:w-6' />

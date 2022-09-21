@@ -15,6 +15,7 @@ import Navbar from '../../components/Navbar';
 import Notification from '../../components/Notification';
 import { Accounts, canChangeProfile, instanceOfMembers, Members } from '../../types/firestore';
 import { db, storage } from '../../utils/firebase';
+import { useScroll } from '../../utils/useScroll';
 
 const Page = ({ session }: { session: Session }) => {
   return (
@@ -238,27 +239,18 @@ const Accounts: NextPage = () => {
   const [onTop, setOnTop] = useState(true)
   const [operating, setOperating] = useRecoilState(operatingPage)
   const [page, setPage] = useState(<div className='flex flex-row items-center justify-center text-2xl animate-pulse'>頁面正在載入中</div>)
-  const handleScroll = () => {
-    if (onTop != window.scrollY > 38) setOnTop(true)
-    if (onTop != window.scrollY < 38) setOnTop(false)
-  }
+  const { scrollX, scrollY, scrollDirection } = useScroll();
   useEffect(() => {
     if (session.status == "authenticated") {
       setPage(<Page session={session.data} />)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session.status])
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
   return (
     <div className='min-h-screen bg-background/90 py-4'>
       <HeadUni title={Global.webMap.accounts.title} description='慈中後生帳號管理中心' pages={Global.webMap.accounts.href} />
       <div className='max-w-xs md:max-w-2xl lg:max-w-4xl xl:max-w-6xl mx-auto'>
-        <Navbar onTop={onTop} />
-        <Notification className="md:hidden mt-6" />
+        <Navbar onTop={scrollY < 38} />
         {page}
       </div>
       {session.status == "authenticated" ? <Modal session={session.data} setOperate={setOperating} /> : <></>}
