@@ -1,21 +1,62 @@
 import Link from "next/link"
-import { RiAlarmWarningLine } from "react-icons/ri"
-import { Global } from "./global"
+import { RiAlarmWarningLine, RiErrorWarningLine, RiThumbUpLine } from "react-icons/ri"
+import { notiType } from "../pages/admin/notification"
 
-function Notification({ className }: { className: string }) {
-    return (
-        <div className={`${className} flex flex-row items-center justify-between group w-full h-8 rounded text-white text-xs font-bold px-3 bg-main2/40`}>
-            <div className="flex flex-row items-center">
-                <RiAlarmWarningLine className="h-4 w-4 mr-2 animate-bright" />
-                <p className="pt-0.5">2022 年 - 秋・無咎，正在編製中</p>
+function Notification({ className, data }: { className: string, data: notiType[] }) {
+    if (Array.isArray(data)) {
+        return (
+            <div className={`${className} flex flex-col space-y-2`}>
+                {data.map((noti, i) => (
+                    <Noti data={noti} key={i} />
+                ))}
             </div>
+        )
+    } else {
+        return <></>
+    }
+}
 
-            <Link href={Global.webMap.postIt.href}>
-                <button className="border-b border-white">{Global.webMap.postIt.title}</button>
-            </Link>
+function Noti({ data }: { data: notiType }) {
+    let Color = "bg-main2/40"
+    let Icon = RiAlarmWarningLine
+    if (data.type && data.title && data.button) {
+        switch (data.type) {
+            case "error":
+                Color = "bg-red-600/80"
+                Icon = RiErrorWarningLine
+                break;
+            case "success":
+                Color = "bg-green-700/40"
+                Icon = RiThumbUpLine
+                break;
+        }
+        if (data.button.href && data.button.text) {
+            switch (data.type) {
+                case "error":
+                    Color = "bg-red-600/80"
+                    Icon = RiErrorWarningLine
+                    break;
+                case "success":
+                    Color = "bg-green-700/40"
+                    Icon = RiThumbUpLine
+                    break;
+            }
+            return (
+                <div className={`flex flex-row items-center justify-between group w-full h-8 rounded text-white text-xs font-bold px-3 ${Color}`}>
+                    <div className="flex flex-row items-center">
+                        <Icon className="h-4 w-4 mr-2 animate-bright" />
+                        <p className="pt-0.5">{data.title}</p>
+                    </div>
 
-        </div>
-    )
+                    <Link href={data.button.href}>
+                        <button className="border-b border-white">{data.button.text}</button>
+                    </Link>
+                </div>
+            )
+        }
+
+    }
+    return <></>
 }
 
 export default Notification

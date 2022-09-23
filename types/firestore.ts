@@ -80,5 +80,9 @@ export interface Members {
 export type canChangeProfile = "avatar" | "bio" | "name" | "username" | "insta" | "customTitle" | "class"
 
 export function instanceOfMembers(object: any): object is Members {
-    return 'role' in object;
+    try{
+        return 'role' in object;
+    }catch(err){
+        return false
+    }
 }

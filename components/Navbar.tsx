@@ -16,6 +16,7 @@ function Navbar({ onTop = false }: { onTop: boolean }) {
         if (session.status == "authenticated") {
             setAdmin(isAdmin(session.data.firestore))
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [session.status])
     return (
         <div className={`${onTop ? "" : "navTop"} z-50 `}>

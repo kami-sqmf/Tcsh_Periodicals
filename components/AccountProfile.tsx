@@ -1,18 +1,20 @@
 
-import role from '../types/role';
+import Image from 'next/image';
 import Link from 'next/link';
 import { RiInstagramLine } from 'react-icons/ri';
-import { Accounts, canChangeProfile, classParser, instanceOfMembers, Members } from '../types/firestore';
-import Image from 'next/image';
 import { useRecoilState } from 'recoil';
-import { accountIndexModalSection, accountIndexModalState } from '../atoms/AccountModal';
+import { accountIndexModalSection, accountIndexModalState, adminSelectProfile } from '../atoms/AccountModal';
+import { Accounts, canChangeProfile, classParser, instanceOfMembers, Members } from '../types/firestore';
+import role from '../types/role';
 
 const AccountProfile = ({ profile, rounded = true, owned = false }: { profile: Accounts | Members, rounded?: boolean, owned: boolean }) => {
     const [modalOpen, setModalOpen] = useRecoilState(accountIndexModalState)
     const [modalSection, setModalSection] = useRecoilState(accountIndexModalSection)
+    const [adminSelect, setAdminSelect] = useRecoilState(adminSelectProfile)
     const setChange = (sec: canChangeProfile[]) => {
         setModalOpen(true)
         setModalSection(sec)
+        setAdminSelect(profile as any)
     }
     return (
         <div className={`${rounded ? "rounded-2xl" : ""} flex flex-col w-full min-w-72 min-h-[32em] max-h-[38em] bg-white-light shadow-xl overflow-hidden bg-background2/90`}>
@@ -36,7 +38,7 @@ const AccountProfile = ({ profile, rounded = true, owned = false }: { profile: A
                         </div>
                         {owned ? <p className='text-gray-400/80 text-sm font-bold cursor-pointer' onClick={(e)=>setChange(["class"])} >點此更改-班級</p> : <></> }
                     </div>
-                    {profile.customTitle && profile.bio ?
+                    {profile.bio ?
                         <div className='flex flex-col'>
                             <p className='text-main2 text-sm'>{profile.customTitle ? profile.customTitle : "自我介紹："}</p>
                             <p className='text-main whitespace-pre-line'>{profile.bio.replaceAll("\\n", " \n ")}</p>

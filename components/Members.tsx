@@ -35,6 +35,7 @@ function Members({ memberData }: { memberData: MembersType[] }) {
             return Math.floor(e.role / 100) == Math.floor(memberFilter / 100)
         }))
       return () => {}
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [memberFilter])
     
     return (

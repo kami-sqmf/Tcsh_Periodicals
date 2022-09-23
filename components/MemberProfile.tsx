@@ -1,8 +1,8 @@
-import role from '../types/role';
+import Image from 'next/image';
 import Link from 'next/link';
 import { RiInstagramLine } from 'react-icons/ri';
 import { classParser, Members } from '../types/firestore';
-import Image from 'next/image';
+import role from '../types/role';
 
 const MemberProfile = ({ profile }: { profile: Members }) => {
     try {

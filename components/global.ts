@@ -1,4 +1,4 @@
-import { RiAccountBoxFill, RiAccountBoxLine, RiAdminFill, RiAdminLine, RiChatForwardFill, RiChatForwardLine, RiEditFill, RiEditLine, RiGroup2Fill, RiGroup2Line, RiHome2Fill, RiHome2Line, RiHome8Fill, RiHome8Line, RiHomeFill, RiHomeLine, RiInstagramFill, RiInstagramLine } from "react-icons/ri";
+import { RiAccountBoxFill, RiAccountBoxLine, RiAdminFill, RiAdminLine, RiChatForwardFill, RiChatForwardLine, RiEditFill, RiEditLine, RiGroup2Fill, RiGroup2Line, RiHome2Fill, RiHome2Line, RiInstagramFill, RiInstagramLine } from "react-icons/ri";
 
 export const Global = {
     domain: "kami.tw",
@@ -110,6 +110,24 @@ export const Global = {
                     name: "members",
                     href: "/admin/members",
                     title: "管理團隊",
+                    child: []
+                },
+                website: {
+                    name: "website",
+                    href: "/admin/website",
+                    title: "網站設定",
+                    child: []
+                },
+                banner: {
+                    name: "banner",
+                    href: "/admin/banner",
+                    title: "焦點！",
+                    child: []
+                },
+                notification: {
+                    name: "notification",
+                    href: "/admin/notification",
+                    title: "通知設定",
                     child: []
                 },
             }

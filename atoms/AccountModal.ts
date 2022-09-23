@@ -1,3 +1,4 @@
+import { Session } from "next-auth";
 import { atom } from "recoil";
 import { canChangeProfile } from "../types/firestore";
 
@@ -14,4 +15,14 @@ export const accountIndexModalSection = atom({
 export const accountIndexModalConfirm = atom({
     key: "modalConfirm",
     default: true,
+})
+
+export const adminSelectProfile = atom({
+    key: "adminSelectProfile",
+    default: undefined as any,
+})
+
+export const operatingPage = atom({
+    key: "operating",
+    default: false,
 })

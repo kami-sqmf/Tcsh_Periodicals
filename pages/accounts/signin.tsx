@@ -1,10 +1,10 @@
 import { GetServerSidePropsContext } from "next";
 import { getProviders, signIn } from "next-auth/react";
+import { UserAgent, useUserAgent } from 'next-useragent';
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { Global } from "../../components/global";
 import HeadUni from "../../components/HeadUni";
-import { UserAgent, useUserAgent } from 'next-useragent'
 
 function SignIn({ providers, uaString }: { providers: any; uaString: string }) {
   const router = useRouter()
