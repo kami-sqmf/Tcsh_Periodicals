@@ -4,7 +4,7 @@ import { Accounts, instanceOfMembers, Members } from "./types/firestore"
 export default withAuth({
   callbacks: {
     authorized({ req, token }) {
-      if (req.nextUrl.pathname === "/accounts/signin" || req.nextUrl.pathname === "/accounts/signout") {
+      if (req.nextUrl.pathname === "/accounts/signin" || req.nextUrl.pathname === "/accounts/signout" || req.nextUrl.pathname === "/accounts/signup") {
         return true
       }
       if (req.nextUrl.pathname.startsWith("/admin")) {

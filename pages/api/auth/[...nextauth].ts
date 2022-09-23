@@ -1,6 +1,6 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
-import { addDoc, collection, doc, getDocs, query, setDoc, where } from 'firebase/firestore';
+import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../../utils/firebase';
 import { encrypt } from '../../../utils/crypt';
 import { Accounts, Members } from '../../../types/firestore';
@@ -25,11 +25,38 @@ export default NextAuth({
         }) {
             if (account.provider == "google" && account.type == "oauth") {
                 if (profile.hd) {
-                    if (profile.hd == "tcsh.hlc.edu.tw") return true;
+                    if (profile.hd == "tcsh.hlc.edu.tw") {
+                        let result = {}
+                        const querySnapshot = await getDocs(query(collection(db, "Accounts"), where("email", "==", profile.email)))
+                        querySnapshot.forEach((doc) => {
+                            result = { uid: doc.id, ...doc.data() as Accounts }
+                        });
+                        if (Object.getOwnPropertyNames(result).length === 0) {
+                            const querySnapshot = await getDocs(query(collection(db, "Members"), where("email", "==", profile.email)))
+                            querySnapshot.forEach((doc) => {
+                                result = { uid: doc.id, ...doc.data() as Members }
+                            });
+                        }
+                        if(Object.getOwnPropertyNames(result).length === 0){
+                            const secretR = await addDoc(collection(db, "Temp"), {
+                                avatar: profile.picture,
+                                bio: null,
+                                class: null,
+                                customTitle: null,
+                                email: profile.email,
+                                insta: null,
+                                username: profile.name,
+                                name: profile.name,
+                            })
+                            const secret = encrypt(secretR.id)
+                            return `/accounts/signup?i=${secret.iv}&c=${secret.content}`
+                        }else{
+                            return true;
+                        }
+                    }
                 }
             }
-            // alert("登入失敗，請使用慈大附中 Email")
-            return "/";
+            return "/?error=1";
         },
 
         async redirect({ url, baseUrl }) {

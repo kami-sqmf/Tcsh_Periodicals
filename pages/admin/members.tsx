@@ -407,7 +407,6 @@ const AddProfile = ({ setOperate }: { setOperate: SetterOrUpdater<boolean> }) =>
 
 const Home: NextPage = () => {
   const session = useSession();
-  const [onTop, setOnTop] = useState(true)
   const [isOpen, setIsOpen] = useRecoilState(accountIndexModalState)
   const [operating, setOperating] = useRecoilState(operatingPage)
   const { scrollX, scrollY, scrollDirection } = useScroll();

@@ -10,7 +10,7 @@ import { db } from '../../utils/firebase';
 import { useScroll } from '../../utils/useScroll';
 
 const Home: NextPage = () => {
-    const [onTop, setOnTop] = useState(true)
+    
     const [disable, setDisable] = useState({
         description: true,
         email: true,

@@ -1,7 +1,6 @@
 import { collection, getDocs } from 'firebase/firestore';
 import type { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next';
-import { useSession } from 'next-auth/react';
-import { UIEvent, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import About from '../components/About';
 import { Global } from '../components/global';
 import HeadUni from '../components/HeadUni';
@@ -12,7 +11,18 @@ import Slide from '../components/Slide';
 import { db } from '../utils/firebase';
 import { useScroll } from '../utils/useScroll';
 
-const Home: NextPage = ({data}: InferGetStaticPropsType<typeof getStaticProps>) => {
+const Home: NextPage = ({ data }: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const router = useRouter()
+  switch (router.query.error) {
+    case "1":
+      alert("請使用慈中帳號登入！若非本校學生或老師，請聯繫我們的信箱。")
+      router.replace("/")
+      break;
+    case "Oau)Dl,waJ":
+      alert("你是這麼到那裡去的！。")
+      router.replace("/")
+      break;
+  }
   const { scrollX, scrollY, scrollDirection } = useScroll();
   return (
     <div className='min-h-screen bg-background/90 py-4'>
@@ -22,7 +32,7 @@ const Home: NextPage = ({data}: InferGetStaticPropsType<typeof getStaticProps>) 
         <Notification data={data.Notification.Now} className="md:hidden mt-6" />
         <Slide />
         <div className='grid grid-cols-1 md:grid-cols-3 mt-9 md:mt-16'>
-          <Recomended className="md:col-span-2" />
+          <Recomended className="md:col-span-2" posts={data.Posts.posts} />
           <About className="md:ml-11" data={data.About} />
         </div>
       </div>

@@ -28,7 +28,7 @@ const App = ({ info }: { info: { name: string, icon: IconType, iconHover: IconTy
 )
 
 const Home: NextPage = () => {
-    const [onTop, setOnTop] = useState(true)
+    
     const { scrollX, scrollY, scrollDirection } = useScroll();
     return (
         <div className='min-h-screen bg-background/90 py-4'>

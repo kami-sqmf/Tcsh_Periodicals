@@ -1,7 +1,7 @@
 import { Dialog, Transition } from '@headlessui/react';
-import { doc, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
-import type { NextPage } from 'next';
+import type { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next';
 import { Session } from 'next-auth';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
@@ -12,15 +12,15 @@ import AccountProfile from '../../components/AccountProfile';
 import { Global } from '../../components/global';
 import HeadUni from '../../components/HeadUni';
 import Navbar from '../../components/Navbar';
-import Notification from '../../components/Notification';
+import Recomended from '../../components/Recomended';
 import { Accounts, canChangeProfile, instanceOfMembers, Members } from '../../types/firestore';
 import { db, storage } from '../../utils/firebase';
 import { useScroll } from '../../utils/useScroll';
 
-const Page = ({ session }: { session: Session }) => {
+const Page = ({ session, data }: { session: Session, data: any }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 h-max">
-      <div className='inline-grid md:col-span-3 border-2 border-main'>在等等，還在設計中</div>
+    <div className="grid grid-cols-1 md:grid-cols-4 h-max items-end">
+      <div className='inline-grid md:col-span-3'>{<Recomended className='pt-8 pr-4' posts={data.Posts.posts} />}</div>
       <div className='inline-grid mt-2 md:mt-0 md:ml-2 border-2 border-main justify-center overflow-hidden'>
         <AccountProfile profile={session.firestore} rounded={false} owned={true} />
       </div>
@@ -234,15 +234,15 @@ function Modal({ session, setOperate }: { session: Session, setOperate: SetterOr
   )
 }
 
-const Accounts: NextPage = () => {
+const Accounts: NextPage = ({ data }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const session = useSession();
-  const [onTop, setOnTop] = useState(true)
+  
   const [operating, setOperating] = useRecoilState(operatingPage)
   const [page, setPage] = useState(<div className='flex flex-row items-center justify-center text-2xl animate-pulse'>頁面正在載入中</div>)
   const { scrollX, scrollY, scrollDirection } = useScroll();
   useEffect(() => {
     if (session.status == "authenticated") {
-      setPage(<Page session={session.data} />)
+      setPage(<Page session={session.data} data={data} />)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session.status])
@@ -260,3 +260,17 @@ const Accounts: NextPage = () => {
 };
 
 export default Accounts;
+
+export const getStaticProps: GetStaticProps = async (context) => {
+  const querySnapshot = await getDocs(collection(db, "Global"));
+  const data: any = {}
+  querySnapshot.forEach((doc) => {
+    data[doc.id] = doc.data()
+  });
+  return {
+    props: {
+      data: data
+    },
+    revalidate: 900,
+  }
+}

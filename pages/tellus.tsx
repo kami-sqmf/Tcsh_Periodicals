@@ -8,7 +8,7 @@ import type { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next';
 import { useScroll } from '../utils/useScroll';
 
 const TellUs: NextPage = ({data}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const [onTop, setOnTop] = useState(true)
+  
   const { scrollX, scrollY, scrollDirection } = useScroll();
   return (
     <div className='min-h-screen bg-background/90 py-4'>

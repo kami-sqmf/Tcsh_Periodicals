@@ -6,8 +6,9 @@ const nextConfig = {
     domains: [
       "platform-lookaside.fbsbx.com",
       "lh3.googleusercontent.com",
-      "firebasestorage.googleapis.com"
-    ]
+      "firebasestorage.googleapis.com",
+      "scontent-hel3-1.cdninstagram.com"
+    ],
   },
 }
 

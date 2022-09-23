@@ -13,7 +13,7 @@ import { useScroll } from '../../utils/useScroll';
 export type notiType = { button: { href: string, text: string }, title: string, type: "error" | "success" | "alert" }
 
 const Home: NextPage = () => {
-    const [onTop, setOnTop] = useState(true)
+    
     const [disable, setDisable] = useState({
         Add: true,
         Edit: [true],

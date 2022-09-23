@@ -2,28 +2,39 @@ import Image from "next/image";
 import Link from "next/link";
 import { Global } from "./global";
 
-const posts: {
+const postsX: {
+    url: string
     thumbnail: string;
     title: string;
-    category: string;
+    categories: string[];
 }[] = [
         {
+            url: "/",
             thumbnail: "/1.JPG",
             title: "讓一間座落在台中的古厝現代化？如何從古老變為經典",
-            category: "旅遊"
+            categories: ["旅遊"]
         }, {
+            url: "/",
             thumbnail: "/2.jpeg",
             title: "城市中到處可見的塗鴨？不同年齡層的看法",
-            category: "城市"
+            categories: ["城市"]
         }
         , {
+            url: "/",
             thumbnail: "/3.png",
             title: "中國限電，哪些價格又要飆 | Fed會議紀要說了什麼?",
-            category: "國際"
+            categories: ["國際"]
         }
     ]
 
-function Recomended({ className }: { className: string }) {
+function Recomended({ className, posts = postsX }: {
+    className: string, posts?: {
+        url: string,
+        thumbnail: string,
+        categories: string[],
+        title: string
+    }[]
+}) {
     return (
         <div className={`${className} `}>
             <div className="text-main mb-4 md:mb-9 flex flex-row items-baseline justify-between">
@@ -33,16 +44,22 @@ function Recomended({ className }: { className: string }) {
                 </Link>
             </div>
             <div className="px-4 md:px-12 md:pt-[-2em] border-2 border-main">
-                {posts.map((post, key) => (
-                    <div key={key} className="my-9 md:mt-11 flex flex-col md:flex-row items-center">
-                        <div className="relative w-full h-auto aspect-[16/9] md:h-24 md:w-auto">
-                            <Image src={post.thumbnail} layout="fill" objectFit="cover" alt="你看到這個的話那可能是你網路太爛了" />
+                {posts.filter((item, index) => item.title.length > 18).filter((item, index) => index < 3).map((post, key) => (
+                    <Link key={key} href={post.url}>
+                        <div className="my-9 md:mt-11 flex flex-col md:flex-row items-center cursor-pointer hover:scale-[1.01] transition-all">
+                            <div className="relative w-full h-auto aspect-[16/9] md:h-24 md:w-auto">
+                                <Image src={post.thumbnail} layout="fill" objectFit="cover" alt="你看到這個的話那可能是你網路太爛了" />
+                            </div>
+                            <div className="md:ml-6 md:-mt-2">
+                                <div className="text-sm text-main font-medium mt-1.5 flex flex-row">
+                                    {post.categories.filter((item, index) => index < 3).map((category, key) => (
+                                        <p className="mr-2" key={key}>{post.categories.length > 1 ? "#" : ""}{category.replaceAll(" ", "  ")}</p>
+                                    ))}
+                                </div>
+                                <p className="text-base text-gray-700 font-medium mt-1.5 line-clamp-2">{post.title}</p>
+                            </div>
                         </div>
-                        <div className="md:ml-6 md:-mt-2">
-                            <p className="text-sm text-main font-medium mt-2">{post.category}</p>
-                            <p className="text-base text-gray-700 font-medium mt-1.5 line-clamp-2">{post.title}</p>
-                        </div>
-                    </div>
+                    </Link>
                 ))}
             </div>
         </div>
