@@ -3,12 +3,25 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: [
-      "platform-lookaside.fbsbx.com",
-      "lh3.googleusercontent.com",
-      "firebasestorage.googleapis.com",
-      "scontent-hel3-1.cdninstagram.com"
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.googleusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.cdninstagram.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'firebasestorage.googleapis.com',
+        pathname: '/v0/b/tcsh-periodicals.appspot.com/**',
+      },
     ],
+  },
+  i18n: {
+    locales: ['en', 'zh', 'de'],
+    defaultLocale: 'zh',
   },
 }
 

@@ -3,7 +3,8 @@ import GoogleProvider from 'next-auth/providers/google';
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../../utils/firebase';
 import { encrypt } from '../../../utils/crypt';
-import { Accounts, Members } from '../../../types/firestore';
+import { getAccount } from '../../../utils/getFirestore';
+// import { Accounts, Members } from '../../../types/firestore';
 
 export default NextAuth({
 
@@ -20,24 +21,12 @@ export default NextAuth({
     },
 
     callbacks: {
-        async signIn({
-            user, account, profile, email, credentials,
-        }) {
+        async signIn({ account, profile }) {
             if (account.provider == "google" && account.type == "oauth") {
-                if (profile.hd) {
+                if (profile.hd && profile.email) {
                     if (profile.hd == "tcsh.hlc.edu.tw") {
-                        let result = {}
-                        const querySnapshot = await getDocs(query(collection(db, "Accounts"), where("email", "==", profile.email)))
-                        querySnapshot.forEach((doc) => {
-                            result = { uid: doc.id, ...doc.data() as Accounts }
-                        });
-                        if (Object.getOwnPropertyNames(result).length === 0) {
-                            const querySnapshot = await getDocs(query(collection(db, "Members"), where("email", "==", profile.email)))
-                            querySnapshot.forEach((doc) => {
-                                result = { uid: doc.id, ...doc.data() as Members }
-                            });
-                        }
-                        if(Object.getOwnPropertyNames(result).length === 0){
+                        const res = await getAccount(profile.email)
+                        if (!res) {
                             const secretR = await addDoc(collection(db, "Temp"), {
                                 avatar: profile.picture,
                                 bio: null,
@@ -50,8 +39,8 @@ export default NextAuth({
                             })
                             const secret = encrypt(secretR.id)
                             return `/accounts/signup?i=${secret.iv}&c=${secret.content}`
-                        }else{
-                            return true;
+                        } else {
+                            return true
                         }
                     }
                 }
@@ -60,38 +49,32 @@ export default NextAuth({
         },
 
         async redirect({ url, baseUrl }) {
-            // Allows relative callback URLs
             if (url.startsWith("/")) return `${baseUrl}${url}`
-            // Allows callback URLs on the same origin
             else if (new URL(url).origin === baseUrl) return url
             return baseUrl
         },
 
-        async jwt({ token }) {
-            const querySnapshot = await getDocs(query(collection(db, "Accounts"), where("email", "==", token.email)))
-            querySnapshot.forEach((doc) => {
-                token.firestore = { uid: doc.id, ...doc.data() as Accounts }
-            });
-            if (!token.firestore) {
-                const querySnapshot = await getDocs(query(collection(db, "Members"), where("email", "==", token.email)))
-                querySnapshot.forEach((doc) => {
-                    token.firestore = { uid: doc.id, ...doc.data() as Members }
-                });
-            }
-            return token;
-        },
+        // async jwt({ token }) {
+        //     const querySnapshot = await getDocs(query(collection(db, "Accounts"), where("email", "==", token.email)))
+        //     querySnapshot.forEach((doc) => {
+        //         token.firestore = { uid: doc.id, ...doc.data() as Accounts }
+        //     });
+        //     if (!token.firestore) {
+        //         const querySnapshot = await getDocs(query(collection(db, "Members"), where("email", "==", token.email)))
+        //         querySnapshot.forEach((doc) => {
+        //             token.firestore = { uid: doc.id, ...doc.data() as Members }
+        //         });
+        //     }
+        //     return token;
+        // },
 
-        async session({ session, token, user }) {
+        async session({ session, token }) {
             session.accessToken = token.accessToken;
-            const querySnapshot = await getDocs(query(collection(db, "Accounts"), where("email", "==", session.user?.email)))
-            querySnapshot.forEach((doc) => {
-                session.firestore = { uid: doc.id, ...doc.data() as Accounts }
-            });
-            if (!session.firestore) {
-                const querySnapshot = await getDocs(query(collection(db, "Members"), where("email", "==", session.user?.email)))
-                querySnapshot.forEach((doc) => {
-                    session.firestore = { uid: doc.id, ...doc.data() as Members }
-                });
+            if(session.user){
+                if(session.user.email){
+                    const res = await getAccount(session.user.email);
+                    res ? session.firestore = res : 0;
+                }
             }
             return session;
         },

@@ -1,92 +1,126 @@
-export default {
+import { langCode, _t } from "../language/lang"
+import { Class } from "./firestore"
+
+export const MemberRole = {
     1: {
-        "key": "hSd4aUsygfAsu34hsiud",
         "id": 0,
-        "name": "團隊總覽"
+        "name": (lang: langCode) => _t(lang).role[1],
     },
     100: {
-        "key": "85YMm7HnDPLlXhtwy2Vy",
         "id": 100,
-        "name": "總編輯"
+        "name": (lang: langCode) => _t(lang).role[100],
     },
     101: {
-        "key": "85YMm7HnDPLlXhtwy2Vy",
         "id": 100,
-        "name": "組長"
+        "name": (lang: langCode) => _t(lang).role[101],
     },
     102: {
-        "key": "nkNVV2MvtedTxxeJJinD",
-        "name": "主編",
+        "name": (lang: langCode) => _t(lang).role[102],
         "id": 101
     },
     200: {
-        "key": "TdCaYAhSdNHBMwlENDwC",
-        "name": "編輯委員長",
+        "name": (lang: langCode) => _t(lang).role[200],
         "id": 200
     },
     201: {
-        "key": "TVOpzsGtUzxgoRoxrWkO",
-        "name": "編輯委員",
+        "name": (lang: langCode) => _t(lang).role[201],
         "id": 201
     },
     203: {
-        "key": "TVOpzsGtUzxgoRoxrWkO",
-        "name": "編輯委員（文案）",
+        "name": (lang: langCode) => _t(lang).role[203],
         "id": 201
     },
     202: {
-        "key": "gOB13nfFw6LTOqmedTU7",
-        "name": "編輯委員（版面）",
+        "name": (lang: langCode) => _t(lang).role[202],
         "id": 202
     },
     300: {
-        "key": "3hMoGybtGibiP32YZZv7",
-        "name": "公關長",
+        "name": (lang: langCode) => _t(lang).role[300],
         "id": 300
     },
     301: {
-        "key": "vVSwIjMoZpJL3kLt7qsg",
-        "id": 301,
-        "name": "公關"
+        "name": (lang: langCode) => _t(lang).role[301],
+        "id": 301, 
     },
     302: {
-        "key": "EHLlBmb8tQX9FxDJjHQf",
+        "name": (lang: langCode) => _t(lang).role[302],
         "id": 302,
-        "name": "公關（社群經營）"
     },
     400: {
-        "key": "6EZ81O8OqJw7gZvYaRPr",
+        "name": (lang: langCode) => _t(lang).role[400],
         "id": 400,
-        "name": "美編長"
     },
     401: {
-        "key": "GhQllfyHtwSF68taMRuz",
+        "name": (lang: langCode) => _t(lang).role[401],
         "id": 401,
-        "name": "美編"
     },
     500: {
-        "key": "FSJfW65BqLS8GbOfV5Pa",
-        "name": "資訊長",
+        "name": (lang: langCode) => _t(lang).role[500],
         "id": 500
     },
     501: {
-        "key": "xHkJYu7tQNthLDFvf7dA",
-        "name": "資訊",
+        "name": (lang: langCode) => _t(lang).role[501],
         "id": 501
     },
     600: {
-        "key": "lKEkU2MFkqXXLov1B8C9",
+        "name": (lang: langCode) => _t(lang).role[600],
         "id": 600,
-        "name": "總務長"
     },
     601: {
-        "key": "GMsQeQbzBQjXgn0vrP3M",
+        "name": (lang: langCode) => _t(lang).role[601],
         "id": 601,
-        "name": "總務"
     },
     700: {
-        "key": "Asj3DIjsa4iwJadR8d8B",
+        "name": (lang: langCode) => _t(lang).role[700],
         "id": 700,
-        "name": "顧問"
     }
+}
+
+export type MemberRoleKey = keyof typeof MemberRole
+
+export type MemberRole = {
+    [key in MemberRoleKey]: {
+        id: key
+        name: string
+    }
+}
+
+export const classParser = function (clas2: Class) {
+    let clas2Res = "";
+    clas2Res += (clas2[0] == "J" ? "國" : "高");
+    switch (clas2[1]) {
+        case "1":
+            clas2Res += "一"
+            break;
+        case "2":
+            clas2Res += "二"
+            break;
+        case "3":
+            clas2Res += "三"
+            break;
+    }
+    switch (clas2[2]) {
+        case "1":
+            clas2Res += "知足"
+            break;
+        case "2":
+            clas2Res += "感恩"
+            break;
+        case "3":
+            clas2Res += "善解"
+            break;
+        case "4":
+            clas2Res += "包容"
+            break;
+        case "5":
+            clas2Res += "大愛"
+            break;
+        case "6":
+            clas2Res += "合心"
+            break;
+        case "7":
+            clas2Res += "協力"
+            break;
+    }
+    return clas2Res
 }
