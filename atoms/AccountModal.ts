@@ -1,6 +1,4 @@
-import { Session } from "next-auth";
 import { atom } from "recoil";
-import { canChangeProfile } from "../types/firestore";
 
 export const accountIndexModalState = atom({
     key: "isOpen",
@@ -9,7 +7,7 @@ export const accountIndexModalState = atom({
 
 export const accountIndexModalSection = atom({
     key: "modalSection",
-    default: ["avatar"] as canChangeProfile[],
+    default: ["avatar"],
 })
 
 export const accountIndexModalConfirm = atom({
