@@ -7,7 +7,7 @@ import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }: AppProps<{ session: Session; }>) {
   return (
-    <SessionProvider session={pageProps.session}>
+    <SessionProvider session={pageProps.session} refetchInterval={5 * 60}>
       <RecoilRoot>
         <Component {...pageProps} />
         <Analytics />

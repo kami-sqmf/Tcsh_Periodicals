@@ -24,7 +24,7 @@ function SignIn({ providers, lang, userAgent }: InferGetServerSidePropsType<type
                             :
                             <div className="flex flex-col justify-center">
                                 <div className="group flex flex-row space-x-2 items-center max-w-max mt-2 mb-2 cursor-pointer" onClick={() => signIn(provider.id, { callbackUrl: router.query.callbackUrl ? router.query.callbackUrl as string : '/' })}>
-                                    <Image src={GoogleLogo} height={20} width={20} objectFit="contain" alt="使用 Google 帳號登入" />
+                                    <Image src={GoogleLogo} height={20} width={20} className="object-contain" alt="使用 Google 帳號登入" />
                                     <span className="text-sm text-blue-800 group-hover:text-blue-900 font-semibold">使用 慈中 Gooogle 帳號登入</span>
                                 </div>
                                 <span onClick={() => signIn(provider.id, { callbackUrl: router.query.callbackUrl ? router.query.callbackUrl as string : '/' })} className="text-xs text-gray-400 text-center cursor-pointer hover:text-gray-500">或是其他教育帳號</span>

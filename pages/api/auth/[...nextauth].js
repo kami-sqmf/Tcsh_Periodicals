@@ -1,17 +1,16 @@
+import { addDoc, collection } from 'firebase/firestore';
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
-import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
-import { db } from '../../../utils/firebase';
 import { encrypt } from '../../../utils/crypt';
+import { db } from '../../../utils/firebase';
 import { getAccount } from '../../../utils/get-firestore';
-// import { Accounts, Members } from '../../../types/firestore';
 
 export default NextAuth({
-
+    secret: process.env.NEXTAUTH_SECRET,
     providers: [
         GoogleProvider({
-            clientId: process.env.GOOGLE_CLIENT_ID!,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         }),
     ],
 
@@ -55,7 +54,7 @@ export default NextAuth({
         },
 
         async jwt({ token }) {
-            if(token.email){
+            if (token.email) {
                 const res = await getAccount(token.email);
                 res ? token.firestore = res : 0;
             }
@@ -64,8 +63,8 @@ export default NextAuth({
 
         async session({ session, token }) {
             session.accessToken = token.accessToken;
-            if(session.user){
-                if(session.user.email){
+            if (session.user) {
+                if (session.user.email) {
                     const res = await getAccount(session.user.email);
                     res ? session.firestore = res : 0;
                 }

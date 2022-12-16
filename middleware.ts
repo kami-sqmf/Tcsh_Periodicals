@@ -1,5 +1,5 @@
 import { withAuth } from "next-auth/middleware"
-import { Accounts, AccountsUni } from "./types/firestore"
+import { AccountsUni } from "./types/firestore"
 
 export default withAuth({
   callbacks: {

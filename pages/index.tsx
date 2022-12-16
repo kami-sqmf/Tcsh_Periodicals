@@ -5,8 +5,11 @@ import { Recomended } from '../components/recomended';
 import { Slide } from '../components/slide';
 import { Global } from '../types/global';
 import { getPropsGlobalDB } from '../utils/get-firestore';
+import { useRouter } from 'next/router';
 
 const Home = ({data, lang}: InferGetStaticPropsType<typeof getPropsGlobalDB>) => {
+  const router = useRouter();
+  if(router.query.error === "1") alert("請使用教育帳號！")
   return (
       <PageWrapper lang={lang} page={Global.webMap.index} withNavbar={true} operating={false} Noti={data.Notification}>
         <Slide slides={data.Slide.slide} />
