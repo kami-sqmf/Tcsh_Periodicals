@@ -54,19 +54,13 @@ export default NextAuth({
             return baseUrl
         },
 
-        // async jwt({ token }) {
-        //     const querySnapshot = await getDocs(query(collection(db, "Accounts"), where("email", "==", token.email)))
-        //     querySnapshot.forEach((doc) => {
-        //         token.firestore = { uid: doc.id, ...doc.data() as Accounts }
-        //     });
-        //     if (!token.firestore) {
-        //         const querySnapshot = await getDocs(query(collection(db, "Members"), where("email", "==", token.email)))
-        //         querySnapshot.forEach((doc) => {
-        //             token.firestore = { uid: doc.id, ...doc.data() as Members }
-        //         });
-        //     }
-        //     return token;
-        // },
+        async jwt({ token }) {
+            if(token.email){
+                const res = await getAccount(token.email);
+                res ? token.firestore = res : 0;
+            }
+            return token;
+        },
 
         async session({ session, token }) {
             session.accessToken = token.accessToken;

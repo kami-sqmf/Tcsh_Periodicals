@@ -6,3 +6,9 @@ declare module "next-auth" {
     firestore: AccountsUni
   }
 }
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    firestore: AccountsUni
+  }
+}
