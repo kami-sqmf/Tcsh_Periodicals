@@ -8,6 +8,7 @@ interface Accounts<Type extends "Member" | "Account"> {
 type AccountsUni = Accounts<"Account"> | Accounts<"Member">
 
 interface Member {
+    uid: string;
     avatar: string;
     bio: string;
     class: Class;
@@ -19,6 +20,7 @@ interface Member {
 };
 
 interface Account {
+    uid: string;
     avatar: string;
     bio: string | null;
     class: Class | "Teacher" | null;
@@ -70,13 +72,13 @@ interface Post {
 };
 
 interface Slides {
-    title: string;
     slide: Slide[];
 };
 
 interface Slide {
     href: string;
     image: string;
+    title: string;
 };
 
 interface DB {

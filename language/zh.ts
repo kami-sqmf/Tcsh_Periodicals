@@ -1,4 +1,4 @@
-export default {
+const config = {
     webMap: {
         index: {
             title: "首頁",
@@ -72,8 +72,13 @@ export default {
     profile: {
         class: "班級：",
         bio: "自我介紹：",
+        customTitle: "自我介紹標題",
+        classChange: "班級 （請輸入班級代號，如 J11、S11）",
+        customTitleChange: "更改自我介紹標題",
         name: "名稱",
+        username: "用戶名稱",
         noBio: "ta很懶，沒有留下任何東西",
+        insta: "Instagram 帳號",
         teacher: "老師",
         prefixClickChange: "點此",
     },
@@ -84,3 +89,5 @@ export default {
     contactUs: "聯絡我們",
     loading: "正在努力載入中！！"
 }
+
+export default config;

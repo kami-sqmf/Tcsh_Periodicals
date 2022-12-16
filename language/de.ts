@@ -1,4 +1,4 @@
-export default {
+const config = {
     webMap: {
         index: {
             title: "Homepage",
@@ -74,7 +74,12 @@ export default {
         bio: "Steckbrief:",
         noBio: "Er/Sie niedergeschrieben Null",
         name: "Name",
+        username: "Kontoname",
+        customTitle: "Nachsteckbrief",
+        customTitleChange: "Nachsteckbrief anpassen",
+        classChange: "Klasse (Klassenummer engänzen, Bleispiel: J11, S11)",
         teacher: "Lerher/Lerherin",
+        insta: "Konto von Instagram",
         prefixClickChange: "Klick heir ",
     },
     add: "ergänzen",
@@ -84,3 +89,5 @@ export default {
     contactUs: "Kontaktiere uns",
     loading: "Jetzt präsentieren...?"
 }
+
+export default config;

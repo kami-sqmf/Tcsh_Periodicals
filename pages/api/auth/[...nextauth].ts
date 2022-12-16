@@ -3,7 +3,7 @@ import GoogleProvider from 'next-auth/providers/google';
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../../utils/firebase';
 import { encrypt } from '../../../utils/crypt';
-import { getAccount } from '../../../utils/getFirestore';
+import { getAccount } from '../../../utils/get-firestore';
 // import { Accounts, Members } from '../../../types/firestore';
 
 export default NextAuth({

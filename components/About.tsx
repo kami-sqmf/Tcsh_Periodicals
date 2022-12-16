@@ -4,13 +4,13 @@ import { RiArrowRightFill, RiInstagramLine, RiMailSendLine } from "react-icons/r
 import { langCode, _t } from "../language/lang"
 import { About as AboutType } from "../types/firestore"
 import { Global } from "../types/global"
-import { Language } from "./Language"
+import { Language } from "./language"
 
-export const About = ({ className, about, lang }: { className: string, about: AboutType, lang: langCode  }) => {
+export const About = ({ className, about, lang }: { className: string, about: AboutType, lang: langCode }) => {
     return (
         <div className={`${className} max-w-full h-max border-2 border-main px-6 md:px-8 mt-8 md:mt-0 mb-8 md:mb-0 md:h-[532px]`}>
             <div className="relative w-full h-12 mt-9 rounded-lg overflow-hidden">
-                <Image src="/logo.jpg" alt={_t(lang).imageAlt} title="不要把滑鼠放在我身上，很敏感" layout="fill" objectFit="cover" />
+                <Image className="object-cover" src={Global.logo} fill={true} alt="慈中後生 Logo" sizes="(max-width: 1024px) 272px, (max-width: 768px) 188vw, 268vw" />
             </div>
             <p className="mt-8 text-lg md:text-base xl:text-lg text-gray-700">{about.description}</p>
             <div className="flex flex-col mt-6 space-y-4">

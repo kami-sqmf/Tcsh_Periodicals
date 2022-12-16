@@ -1,4 +1,4 @@
-export default {
+const config = {
     webMap: {
         index: {
             title: "Home",
@@ -73,7 +73,12 @@ export default {
         class: "Class:",
         name: "Name",
         bio: "Bio:",
+        username: "Username",
+        classChange: "Class (Enter Class Number, eg. J11, S11)",
+        customTitle: "Custom Title",
+        customTitleChange: "Edit Custom Title",
         noBio: "He/She wrote down absolutely zilch",
+        insta: "Instagram Account",
         teacher: "Teacher",
         prefixClickChange: "Click here to ",
     },
@@ -84,3 +89,5 @@ export default {
     contactUs: "Contact us",
     loading: "I'm getting this very hard!"
 }
+
+export default config;

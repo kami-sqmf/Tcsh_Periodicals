@@ -9,9 +9,9 @@ export const _t = (code: langCode) => {
 export type langCode = "zh" | "en" | "de"
 
 export const langIcons = {
-    zh: <Image src="/language/zh.svg" height={18} width={18} />,
-    en: <Image src="/language/en.svg" height={18} width={18} />,
-    de: <Image src="/language/de.svg" height={18} width={18} />,
+    zh: <Image src="/language/zh.svg" alt={`Flags of Taiwan`} height={18} width={18} />,
+    en: <Image src="/language/en.svg" alt={`Flags of United States`} height={18} width={18} />,
+    de: <Image src="/language/de.svg" alt={`Flags of Germany`} height={18} width={18} />,
 }
 
 export const langNames = {

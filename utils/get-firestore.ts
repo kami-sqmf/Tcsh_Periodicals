@@ -46,7 +46,7 @@ export async function getAccount(email: string): Promise<AccountsUni | null> {
             const typeName = (doc == "Accounts") ? "Account" : "Member";
             res = {
                 type: typeName,
-                data: result.docs[0].data() as any
+                data: {...result.docs[0].data() as any, uid: result.docs[0].id}
             }
             return res
         }
