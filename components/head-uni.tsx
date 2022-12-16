@@ -1,15 +1,16 @@
 import Head from 'next/head';
-import { Global } from './global';
+import { langCode } from '../language/lang';
+import { Global } from '../types/global';
 
 const url = `https://${Global.subdomian ? Global.subdomian + "." : "" }${Global.domain}/`
 
 function HeadUni({
-  title, description, pages
-}: {title: string, description: string; pages: string}) {
+  title, description, pages, lang
+}: {title: string, description: string; pages: string, lang: langCode}) {
   const data = {
     description: description,
     url: `${url}/${pages}`,
-    title: `${title} • 慈中後生-文學季刊`,
+    title: `${title} • ${lang == "zh" ? "慈中後生-文學季刊" : "Tzuchi Senior Periodicals"}`,
   };
   return (
         <Head>

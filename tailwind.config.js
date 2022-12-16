@@ -22,11 +22,17 @@ module.exports = {
         spinIG: 'spin 1.4s ease infinite',
         mailFly: 'mailFly 1.4s ease infinite',
       },
-      colors:{
-        main: "#6D505D",
-        main2: "#8C3F3F",
-        background: "#E2D4B7",
-        background2: "#F2EDE4",
+      // spring-colors:{
+      //   main: "#6D505D",
+      //   main2: "#8C3F3F",
+      //   background: "#E2D4B7",
+      //   background2: "#F2EDE4",
+      // },
+      colors: {
+        main: "#475259",
+        main2: "#5D7CA6",
+        background: "#BACDD9",
+        background2: "#E4EAF2",
       },
       flexBasis: {
         '1/9': '11.1111111%',
@@ -42,8 +48,6 @@ module.exports = {
     },
   },
   plugins: [
-    require('@tailwindcss/forms'),
-    require('tailwind-scrollbar-hide'),
     require('@tailwindcss/line-clamp'),
   ],
 }

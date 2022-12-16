@@ -1,51 +1,42 @@
-import type { NextPage } from 'next';
+import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 import { IconType } from 'react-icons';
-import { RiAdminLine, RiArrowRightSLine, RiNotification2Line, RiSlideshowFill, RiSlideshowLine, RiUserSettingsFill, RiUserSettingsLine, RiWindow2Fill, RiWindow2Line } from 'react-icons/ri';
-import { Global } from '../../components/global';
-import HeadUni from '../../components/HeadUni';
-import Navbar from '../../components/Navbar';
-import { useScroll } from '../../utils/useScroll';
+import { RiAdminLine, RiArrowRightSLine } from 'react-icons/ri';
+import { Breadcrumb } from '../../components/breadcrumb';
+import { PageWrapper } from '../../components/page-wrapper';
+import { langCode } from '../../language/lang';
+import { Global, webInfo } from '../../types/global';
 
-const app = [
-    { name: "成員", icon: RiUserSettingsLine, iconHover: RiUserSettingsFill, href: "/admin/members" },
-    { name: "網站", icon: RiWindow2Line, iconHover: RiWindow2Fill, href: "/admin/website" },
-    { name: "焦點！", icon: RiSlideshowLine, iconHover: RiSlideshowFill, href: "/admin/banner" },
-    { name: "通知", icon: RiNotification2Line, iconHover: RiNotification2Line, href: "/admin/notification" },
-]
-
-const App = ({ info }: { info: { name: string, icon: IconType, iconHover: IconType, href: string } }) => (
-    <Link href={info.href}>
-        <div className='group bg-background2 px-8 py-6 flex flex-col justify-center items-center cursor-pointer' key={info.name}>
-            <div className='text-main group-hover:text-main2'>
-                <info.icon className='group-hover:hidden w-16 h-16' />
-                <info.iconHover className='hidden group-hover:block w-16 h-16' />
-            </div>
-            <p className='pt-2 -pb-2 text-center text-lg text-main group-hover:text-main2 group-hover:font-medium'>{info.name}</p>
-        </div>
-    </Link>
+const App = ({ info, lang }: { lang: langCode, info: webInfo }) => (
+  <Link href={info.href}>
+    <div className='group bg-background2 px-8 py-6 flex flex-col justify-center items-center cursor-pointer'>
+      {info.nav && <div className='text-main group-hover:text-main2'>
+        {info.nav.icon && <info.nav.icon className='group-hover:hidden w-16 h-16' />}
+        {info.nav.iconHover && <info.nav.iconHover className='hidden group-hover:block w-16 h-16' />}
+      </div>}
+      <p className='pt-2 -pb-2 text-center text-lg text-main group-hover:text-main2 group-hover:font-medium'>{info.title(lang)}</p>
+    </div>
+  </Link>
 )
 
-const Home: NextPage = () => {
-    
-    const { scrollX, scrollY, scrollDirection } = useScroll();
-    return (
-        <div className='min-h-screen bg-background/90 py-4'>
-            <HeadUni title={Global.webMap.admin.title} description='你是怎麼知道這個網頁的，不過我猜你開不起來。但你也不要駭我，因為會很痛！' pages={Global.webMap.admin.href} />
-            <div className='max-w-xs md:max-w-2xl lg:max-w-4xl xl:max-w-6xl mx-auto'>
-                <Navbar onTop={scrollY < 38} />
-                <div className='mt-4 flex flex-row items-center text-main space-x-2'>
-                    <RiArrowRightSLine className='h-4 w-4 md:h-5 md:w-5' />
-                    <RiAdminLine className='h-5 w-5 md:h-6 md:w-6' />
-                    <span className='text-base md:text-lg font-medium'>管理員</span>
-                </div>
-                <div id="appList" className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 mt-6 max-w-full gap-12'>
-                    {app.map((info) => (<App key={info.name} info={info} />))}
-                </div>
-            </div>
-        </div>
-    );
-};
+function Index({ lang }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  return (
+    <PageWrapper lang={lang} page={Global.webMap.admin} withNavbar={true} operating={false}>
+      <Breadcrumb args={[{ title: "管理員", href: "/admin", icon: RiAdminLine }]} />
+      <div id="appList" className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 mt-6 max-w-full gap-12'>
+        {Object.values(Global.webMap.admin.child).map((info, key) => (<App key={key} lang={lang} info={info} />))}
+      </div>
+    </PageWrapper>
 
-export default Home;
+  );
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  return {
+    props: {
+      lang: (context.locale ? context.locale : "zh") as langCode,
+    },
+  };
+}
+
+export default Index

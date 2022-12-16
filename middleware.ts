@@ -1,5 +1,5 @@
 import { withAuth } from "next-auth/middleware"
-import { Accounts, instanceOfMembers, Members } from "./types/firestore"
+import { AccountsUni } from "./types/firestore"
 
 export default withAuth({
   callbacks: {
@@ -19,7 +19,7 @@ export default withAuth({
 
 export const config = { matcher: ["/admin/:path*", "/accounts"] }
 
-export function isAdmin(firestore: Members | Accounts){
-  if(!instanceOfMembers(firestore)) return false
-  return Math.trunc(firestore.role / 100) == 5 || firestore.role % 100 == 0
+export function isAdmin(firestore: AccountsUni){
+  if(firestore.type != "Member") return false
+  return Math.trunc(firestore.data.role / 100) == 5 || firestore.data.role % 100 == 0
 }

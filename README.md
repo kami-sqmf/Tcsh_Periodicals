@@ -1,34 +1,95 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+# 慈中後生官方網站
+![Algorithm schema](https://i.imgur.com/YKKC6xE.png)
 
-First, run the development server:
+## 目錄
+* [概覽](#概覽)
+* [網站地圖](#網站地圖)
+* [更新日誌](#更新日誌)
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+## 概覽
+本網站為慈中後生資訊組團隊負責設計以及撰寫程式碼，目的是要讓所有人都可以輕鬆且便利的透過科技的力量，來與整個後生團隊做一個橋樑，作為溝通的橋樑。而選擇開源的原因，是因為想讓世界中的大家也可以輕易的搭建網站（雖然你還要設定一堆有的沒有的東西:]），不過也希望其他程式高玩能夠幫忙檢查程式碼有沒有漏洞或是錯誤。
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 網站地圖
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+> ### 公開頁面
+>  - [x] 首頁
+>  - [x] 成員
+>  - [ ] 投稿
+>  - [ ] 文章
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+> ### 帳號中心
+>  - [x] 註冊
+>  - [x] 登入
+>  - [ ] 管理文章
+>  - [x] 管理帳號
+>  - [x] 登出
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+> ### 管理員中心
+> - [x] 成員管理
+> - [x] 網站設定
+> - [] 焦點管理
+> - [x] 手機版「通知」管理
+> - [ ] 投稿文章管理
 
-## Learn More
+## 更新日誌
 
-To learn more about Next.js, take a look at the following resources:
+### Stable 紀錄（正式版階段）
+> ⚠️ 注意：好像沒有什麼好注意的？
+> 💻 <- 代表曾發布到[正式伺服器](https://periodicals.kami.tw/)，其餘僅發佈在[測試伺服器](https://periodicalsalpha.kami.tw/)。
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+#### Stable 1.0.0 💻
+- 所有程式碼重新建構與檢查邏輯
+- 使用更詳細的型態定義
+- 增加登出
+- 管理員頁面修復
+- 通知橫幅修復
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+#### Stable Alpha 0.0.1 - 1.0.0
+- 程式碼重新建構
+ 
+### PreAlpha 紀錄 （最早開發階段）
 
-## Deploy on Vercel
+> ⚠️ 注意：只對重大改變進行記錄
+> 💻 <- 代表曾發布到[正式伺服器](https://periodicals.kami.tw/)，其餘僅發佈在[測試伺服器](https://periodicalsalpha.kami.tw/)。
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+#### PreAlpha 2.6.0 💻
+ - 新增管理員中心 - 網站設定
+ - 新增管理員架構 - 焦點管理、手機版「通知」管理
+ - 修復成員管理中的程式碼 “key” 問題
+ - 修復 EsLint 在導覽行特效中的 警告
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+#### PreAlpha 2.5.0
+ - 新增管理員中心 - 網站設定
+ - 新增管理員架構 - 焦點管理、手機版「通知」管理
+ - 修復成員管理中的程式碼 “key” 問題
+ - 修復 EsLint 在導覽行特效中的 警告
+
+#### PreAlpha 2.4.0
+ - 新增管理員中心 - 網站設定
+ - 新增管理員架構 - 焦點管理、手機版「通知」管理
+ - 修復成員管理中的程式碼 “key” 問題
+ - 修復 EsLint 在導覽行特效中的 警告
+
+#### PreAlpha 2.3.0
+ - 新增管理員中心 - 成員管理
+
+#### PreAlpha 2.2.x 💻
+ - 新增導覽行選單功能 （附加圖示）
+
+#### PreAlpha 2.1.0
+ - 修復登入頁面跳轉錯誤
+
+#### PreAlpha 2.0.x 💻
+ - 新增帳號中心 - 登入與帳號管理
+ - PreAlpha 2.0.0 與 2.0.1 中間有人亂入
+ - PreAlpha 2.0.0 與 2.0.8 為登入頁面測試
+
+#### PreAlpha 1.0.x 💻
+ - 新增成員頁面
+ - 增加手機版導覽行特效
+ - 修改程式型態定義
+
+#### PreAlpha 0.0.x
+ - 組織大略架構
+ - 完成純設計首頁
