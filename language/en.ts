@@ -2,7 +2,7 @@ const config = {
     webMap: {
         index: {
             title: "Home",
-            description: "Welcome to Tzuchi Senior Periodicals, this is a place to pursue your dream. Even cross out the step to a new and unknown zone! Why are you hesitating? Let's Go!!",
+            description: "Welcome to Tzuchi Senior Periodicals. This is a magazine made by several literature lovers. With 'HouSheng' you may touch the youth in the figurative language, and also with the art of abstract.",
         },
         member: {
             title: "Members",
@@ -16,6 +16,9 @@ const config = {
         },
         postIt: {
             title: "Post Now",
+        },
+         youtube: {
+            title: "Youtube Channel"
         },
         accounts: {
             title: "Accounts",

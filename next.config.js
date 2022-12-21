@@ -14,6 +14,10 @@ const nextConfig = {
       },
       {
         protocol: 'https',
+        hostname: '**.fbcdn.net',
+      },
+      {
+        protocol: 'https',
         hostname: 'firebasestorage.googleapis.com',
         pathname: '/v0/b/tcsh-periodicals.appspot.com/**',
       },
