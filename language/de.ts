@@ -2,11 +2,11 @@ const config = {
     webMap: {
         index: {
             title: "Homepage",
-            description: "Herzlich Willkommen in Tzuchi Senior Periodicals, verfolgen dein Traum auf dies Platz. Gehen Sie sogar in eine neue Gegend, in der Siie noch nie waren! Warum zögerst du? Los geht's!!",
+            description: "Herzlich Willkommen bei Tzuchi Senior Periodicals, das ist eine Zeitschrift, das von mehreren Literaturliebhabern erstellt wurde. Mit „HouSheng“ können Sie die Jugend in der figurativen Sprache und auch in der abstrakten Kunst berühren.",
         },
         member: {
             title: "Konzern",
-            description: "Willkommen in Tzuchi Senior Periodicals! Was möchtest du heute machen? Beiträgen oder beschwerde...",
+            description: "Willkommen im Tzuchi Senior Periodicals Konzern! Was möchtest du heute machen? Beiträgen oder beschwerde...",
         },
         tellUs: {
             title: "Feedback",
@@ -16,6 +16,9 @@ const config = {
         },
         postIt: {
             title: "Jetzt beiträgen",
+        },
+         youtube: {
+            title: "Youtube Kanäle"
         },
         accounts: {
             title: "Konto",

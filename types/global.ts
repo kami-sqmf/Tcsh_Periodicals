@@ -1,5 +1,5 @@
 import { IconType } from "react-icons";
-import { RiAccountBoxFill, RiAccountBoxLine, RiAdminFill, RiAdminLine, RiChatForwardFill, RiChatForwardLine, RiEditFill, RiEditLine, RiGroup2Fill, RiGroup2Line, RiHome2Fill, RiHome2Line, RiInstagramFill, RiInstagramLine, RiNotification2Line, RiSlideshowFill, RiSlideshowLine, RiUserSettingsFill, RiUserSettingsLine, RiWindow2Fill, RiWindow2Line } from "react-icons/ri";
+import { RiAccountBoxFill, RiAccountBoxLine, RiAdminFill, RiAdminLine, RiChatForwardFill, RiChatForwardLine, RiEditFill, RiEditLine, RiGroup2Fill, RiGroup2Line, RiHome2Fill, RiHome2Line, RiInstagramFill, RiInstagramLine, RiNotification2Line, RiSlideshowFill, RiSlideshowLine, RiUserSettingsFill, RiUserSettingsLine, RiWindow2Fill, RiWindow2Line, RiYoutubeFill, RiYoutubeLine } from "react-icons/ri";
 import { langCode, _t } from "../language/lang";
 import logo from "../public/logo.jpg"
 
@@ -58,6 +58,16 @@ export const Global = {
                 admin: false,
                 icon: RiInstagramLine,
                 iconHover: RiInstagramFill,
+            },
+        },
+        youtube: {
+            href: "https://www.youtube.com/@tcsh_periodicals",
+            title: (lang: langCode) => _t(lang).webMap.youtube.title,
+            nav: {
+                show: true,
+                admin: false,
+                icon: RiYoutubeLine,
+                iconHover: RiYoutubeFill,
             },
         },
         postIt: {

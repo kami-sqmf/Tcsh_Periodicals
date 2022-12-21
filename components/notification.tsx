@@ -42,7 +42,7 @@ function Noti({ data }: { data: Notification }) {
           break;
       }
       return (
-        <div className={`flex flex-row items-center justify-between group w-full h-8 rounded text-white text-xs font-bold px-3 ${Color}`}>
+        <div className={`flex flex-row items-center justify-between group w-full h-8 rounded text-white text-xs font-bold px-3 py-6 md:py-0 ${Color}`}>
           <div className="flex flex-row items-center">
             <Icon className="h-4 w-4 mr-2 animate-bright" />
             <p className="pt-0.5">{data.title}</p>
