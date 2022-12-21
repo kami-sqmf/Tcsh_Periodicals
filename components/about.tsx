@@ -8,7 +8,7 @@ import { Language } from "./language"
 
 export const About = ({ className, about, lang }: { className: string, about: AboutType, lang: langCode }) => {
     return (
-        <div className={`${className} max-w-full h-max border-2 border-main px-6 md:px-8 mt-8 md:mt-0 mb-7 md:mb-0 md:h-[532px]`}>
+        <div className={`${className} max-w-full h-max border-2 border-main px-6 md:px-8 mt-8 md:mt-0 mb-7 md:mb-0 md:h-max`}>
             <div className="relative w-full h-12 mt-8 rounded-lg overflow-hidden">
                 <Image className="object-cover" src={Global.logo} fill={true} alt="慈中後生 Logo" sizes="(max-width: 1024px) 272px, (max-width: 768px) 188vw, 268vw" />
             </div>

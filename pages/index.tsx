@@ -18,7 +18,7 @@ const Home = ({ data, lang }: InferGetStaticPropsType<typeof getPropsGlobalDB>) 
   return (
     <PageWrapper lang={lang} page={Global.webMap.index} withNavbar={true} operating={false} Noti={data.Notification}>
       <Slide slides={data.Slide.slide} />
-      <div className='grid grid-cols-1 md:grid-cols-3 mt-9 md:mt-16'>
+      <div className='grid grid-cols-1 md:grid-cols-3 mt-9 md:mt-16 justify-end items-end'>
         <Recomended className="md:col-span-2" posts={data.Posts.posts} lang={lang} />
         <About className="md:ml-11" about={data.About} lang={lang} />
       </div>

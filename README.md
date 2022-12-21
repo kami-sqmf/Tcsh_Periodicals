@@ -38,7 +38,11 @@
 > ⚠️ 注意：好像沒有什麼好注意的？
 > 💻 <- 代表曾發布到[正式伺服器](https://periodicals.kami.tw/)，其餘僅發佈在[測試伺服器](https://periodicalsalpha.kami.tw/)。
 
-#### Stable 1.1.0 💻
+#### Stable 1.1.1 💻
+- 更改介紹的高度溢位問題
+- 更改手機版推薦文章縮圖至正方形
+
+#### PreStable 1.1.0 💻
 - 冬季主題！
 - 更改手機版推薦文章縮圖至正方形
 - 新增 Youtube 按鈕
