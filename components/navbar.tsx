@@ -36,7 +36,7 @@ export const Navbar = () => {
                 </Link>
                 {session.status == "authenticated" ?
                     <Link href={Global.webMap.accounts.href} className="relative text-main cursor-pointer group h-7 w-7 md:w-10 md:h-10">
-                        <Image src={session.data!.user!.image!} fill={true} className="rounded-full overflow-hidden object-cover" alt="大頭貼" />
+                        <Image placeholder='blur' blurDataURL="./defaultProfile.png" src={session.data!.user!.image!} fill={true} className="rounded-full overflow-hidden object-cover" alt="大頭貼" />
                         <div className="absolute w-max px-2 py-1 text-xs z-40 bg-background2 rounded-md hidden opacity-0 group-hover:block group-hover:opacity-90 transition-opacity -translate-x-[10%] -bottom-7">
                             <span>{session.data!.user!.name!}</span>
                         </div>

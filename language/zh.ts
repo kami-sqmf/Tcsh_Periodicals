@@ -11,6 +11,10 @@ const config = {
         tellUs: {
             title: "給予匿名回饋",
         },
+        ebook: {
+            title: "電子書",
+            description: '你是不是想要來 GET 你的電子書了？ 趕快點進來吧！',
+        },
         posts: {
             title: "更多文章",
         },
@@ -84,6 +88,14 @@ const config = {
         insta: "Instagram 帳號",
         teacher: "老師",
         prefixClickChange: "點此",
+    },
+    ebook: {
+        unpublished: "敬請期待...",
+        select: "請選擇平台",
+        epub: "EPUB 格式",
+        epubCompressed: "EPUB 格式 - 壓縮版",
+        pdf: "PDF 格式",
+        pdfCompressed: "PDF 格式 - 壓縮版",
     },
     add: "新增",
     edit: "編輯",

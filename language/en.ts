@@ -11,6 +11,10 @@ const config = {
         tellUs: {
             title: "Feedback",
         },
+        ebook: {
+            title: "eBook",
+            description: "We know you're excited for the Ebook, just click me!",
+        },
         posts: {
             title: "More Articles",
         },
@@ -84,6 +88,10 @@ const config = {
         insta: "Instagram Account",
         teacher: "Teacher",
         prefixClickChange: "Click here to ",
+    },
+    ebook: {
+        unpublished: "Upcoming...",
+        select: "Please select your platform"
     },
     add: "add",
     edit: "edit",

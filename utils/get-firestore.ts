@@ -28,6 +28,18 @@ export async function getProps_Global_Members_DB(ctx: GetStaticPropsContext) {
     }
 }
 
+export async function getProps_Global_Books_DB(ctx: GetStaticPropsContext) {
+    const lang = await ctx.locale
+    return {
+        props: {
+            data: await getDBObject("Global") as GlobalDB,
+            books: Object.values(await getDBObject("books")),
+            lang: lang ? lang as langCode : "zh"
+        },
+        revalidate: 60000,
+    }
+}
+
 export async function getDBObject(collectionName: keyof DB): Promise<ValueOf<DB>> {
     const querySnapshot = await getDocs(collection(db, collectionName));
     const data: any = {};

@@ -11,13 +11,17 @@ const config = {
         tellUs: {
             title: "Feedback",
         },
+        ebook: {
+            title: "E-Book",
+            description: "Wir weiß du aufregend, wegen dem buck, klick mich!",
+        },
         posts: {
             title: "Mehr Artikel",
         },
         postIt: {
             title: "Jetzt beiträgen",
         },
-         youtube: {
+        youtube: {
             title: "Youtube Kanäle"
         },
         accounts: {
@@ -84,6 +88,10 @@ const config = {
         teacher: "Lerher/Lerherin",
         insta: "Konto von Instagram",
         prefixClickChange: "Klick heir ",
+    },
+    ebook: {
+        unpublished: "Aufkommende...",
+        select: "Wälen Sie deine Platform, bitte"
     },
     add: "ergänzen",
     edit: "bearbeiten",
