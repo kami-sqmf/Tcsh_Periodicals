@@ -7,6 +7,8 @@ import { Global } from '../../types/global';
 import { getProps_Global_Books_DB } from '../../utils/get-firestore';
 import dynamic from 'next/dynamic';
 import { Dispatch, SetStateAction, useState } from 'react';
+import { Language } from '../../components/language';
+import { Breadcrumb } from '../../components/breadcrumb';
 
 const Modal = dynamic(() => import('../../components/ebook-modal').then((res) => res.ModalEbook), {
   ssr: false,
@@ -18,10 +20,14 @@ const Ebook = ({ data, books, lang }: InferGetStaticPropsType<typeof getProps_Gl
   return (
     <div>
       <PageWrapper lang={lang} page={Global.webMap.ebook} withNavbar={true} operating={false} Noti={data.Notification}>
+        <Breadcrumb args={[{ title: Global.webMap.ebook.title(lang), href: "/ebook", icon: Global.webMap.ebook.nav.icon }]} />
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 justify-items-center my-4 px-8 py-12 bg-background2 rounded'>
           {books.sort((a: EBooks, b: EBooks) => a.timestamp - b.timestamp).map((book, key) => (
             <Book key={key} book={book} lang={lang} setBook={setBook} setModalOpen={setModal} />
           ))}
+        </div>
+        <div className="my-3 flex justify-end">
+          <Language lang={lang} />
         </div>
       </PageWrapper>
       <Modal files={book!} lang={lang} modalOpen={modal} setModalOpen={setModal} />

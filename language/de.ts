@@ -91,7 +91,11 @@ const config = {
     },
     ebook: {
         unpublished: "Aufkommende...",
-        select: "Wälen Sie deine Platform, bitte"
+        select: "Wälen Sie deine Platform, bitte",
+        epub: "EPUB",
+        epubCompressed: "EPUB - Gezippte",
+        pdf: "PDF",
+        pdfCompressed: "PDF - Gezippte",
     },
     add: "ergänzen",
     edit: "bearbeiten",
