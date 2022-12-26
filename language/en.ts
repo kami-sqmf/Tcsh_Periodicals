@@ -91,11 +91,14 @@ const config = {
     },
     ebook: {
         unpublished: "Upcoming...",
-        select: "Please select your platform",
+        selectPlatform: "Please select your platform",
+        selectCompressed: "Please select the version",
         epub: "EPUB",
         epubCompressed: "EPUB - Compressed",
         pdf: "PDF",
         pdfCompressed: "PDF - Compressed",
+        platformApple: "Apple evices",
+        platformOther: "Other Platforms"
     },
     add: "add",
     edit: "edit",

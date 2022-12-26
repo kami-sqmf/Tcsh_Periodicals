@@ -91,11 +91,14 @@ const config = {
     },
     ebook: {
         unpublished: "敬請期待...",
-        select: "請選擇平台",
+        selectPlatform: "請選擇平台",
+        selectCompressed: "請選擇版本",
         epub: "EPUB 格式",
         epubCompressed: "EPUB 格式 - 壓縮版",
         pdf: "PDF 格式",
         pdfCompressed: "PDF 格式 - 壓縮版",
+        platformApple: "蘋果裝置",
+        platformOther: "其他平台"
     },
     add: "新增",
     edit: "編輯",

@@ -91,11 +91,14 @@ const config = {
     },
     ebook: {
         unpublished: "Aufkommende...",
-        select: "Wälen Sie deine Platform, bitte",
+        selectPlatform: "Wälen Sie deine Platform, bitte",
+        selectCompressed: "Wälen Sie die Version, bitte",
         epub: "EPUB",
         epubCompressed: "EPUB - Gezippte",
         pdf: "PDF",
         pdfCompressed: "PDF - Gezippte",
+        platformApple: "Apple-Geräte",
+        platformOther: "Andrere Plattform"
     },
     add: "ergänzen",
     edit: "bearbeiten",
