@@ -20,6 +20,6 @@ export default withAuth({
 export const config = { matcher: ["/admin/:path*", "/accounts"] }
 
 export function isAdmin(firestore: AccountsUni){
-  if(firestore.type != "Member") return false
+  if(firestore?.type != "Member") return false
   return Math.trunc(firestore.data.role / 100) == 5 || firestore.data.role % 100 == 0
 }

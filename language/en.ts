@@ -11,6 +11,10 @@ const config = {
         tellUs: {
             title: "Feedback",
         },
+        ebook: {
+            title: "eBook",
+            description: "We know you're excited for the Ebook, just click me!",
+        },
         posts: {
             title: "More Articles",
         },
@@ -85,12 +89,51 @@ const config = {
         teacher: "Teacher",
         prefixClickChange: "Click here to ",
     },
+    ebook: {
+        unpublished: "Upcoming...",
+        selectPlatform: "Please select your platform",
+        selectCompressed: "Please select the version",
+        epub: "EPUB",
+        epubCompressed: "EPUB - Compressed",
+        pdf: "PDF",
+        pdfCompressed: "PDF - Compressed",
+        platformApple: "Apple evices",
+        platformOther: "Other Platforms",
+        unpublishedCover: "Unreleased",
+        downloadFree: "Free Download",
+        downloadNow: "Download Now",
+        buy: "Purchase",
+        purchase: {
+            chooseMethod: "Payment type",
+            voucher: {
+                title: "Redeem Voucher",
+                use: "Redeem Voucher",
+                input: "Enter Voucher",
+            },
+            message: {
+                notExist: "Error！ This book doesn't exist.",
+                unmatched: "THe voucher code is wrong.",
+                success: "Purchase Completed！Thank you for choosing Periodicals TCSH！"
+            }
+        }
+    },
+    login: {
+        requiredLogin: "You must login first!",
+        googleAccountTCSH: "Login with TCSH Gooogle Account",
+        otherAccountEDU: "or other EDU Account",
+    },
+    form: {
+        back: "Back",
+        send: "Submit",
+        cancel: "Cancel",
+    },
     add: "add",
     edit: "edit",
     imageAlt: "The image cannot be loaded.",
     followInsta: "Instagram",
     contactUs: "Contact us",
-    loading: "I'm getting this very hard!"
+    loading: "I'm getting this very hard!",
+    processing: "Processing"
 }
 
 export default config;

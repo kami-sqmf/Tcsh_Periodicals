@@ -11,13 +11,17 @@ const config = {
         tellUs: {
             title: "Feedback",
         },
+        ebook: {
+            title: "E-Book",
+            description: "Wir weiß du aufregend, wegen dem buck, klick mich!",
+        },
         posts: {
             title: "Mehr Artikel",
         },
         postIt: {
             title: "Jetzt beiträgen",
         },
-         youtube: {
+        youtube: {
             title: "Youtube Kanäle"
         },
         accounts: {
@@ -85,12 +89,51 @@ const config = {
         insta: "Konto von Instagram",
         prefixClickChange: "Klick heir ",
     },
+    ebook: {
+        unpublished: "Aufkommende...",
+        selectPlatform: "Wälen Sie deine Platform, bitte",
+        selectCompressed: "Wälen Sie die Version, bitte",
+        epub: "EPUB",
+        epubCompressed: "EPUB - Gezippte",
+        pdf: "PDF",
+        pdfCompressed: "PDF - Gezippte",
+        platformApple: "Apple-Geräte",
+        platformOther: "Andrere Plattform",
+        unpublishedCover: "Unveröffentlichten",
+        downloadFree: "Kostenfreier Download",
+        downloadNow: "Jetzt Download",
+        buy: "Kaufen",
+        purchase: {
+            chooseMethod: "Zahlungsart",
+            voucher: {
+                title: "Gutschein einlösen",
+                use: "Gutschein",
+                input: "Gutschein eingeben",
+            },
+            message: {
+                notExist: "Error！ Das Buch ist nicht vorhanden.",
+                unmatched: "Der eingegebene Gutschein ist ungültig.",
+                success: "Kauf abgeschlossen！ Vielen Dank von Periodicals TCSH！"
+            }
+        }
+    },
+    login: {
+        requiredLogin: "Sie müssen sich zuerst einloggen!",
+        googleAccountTCSH: "Anmeldung min TCSH-Gooogle-Konto",
+        otherAccountEDU: "oder anderes EDU-Knoto",
+    },
+    form: {
+        back: "Zurück",
+        send: "Einreichen",
+        cancel: "Abbrechen",
+    },
     add: "ergänzen",
     edit: "bearbeiten",
     imageAlt: "Die Bilder kann nicht geladen werden.",
     followInsta: "Instagram",
     contactUs: "Kontaktiere uns",
-    loading: "Jetzt präsentieren...?"
+    loading: "Jetzt präsentieren...?",
+    processing: "wird bearbeitet"
 }
 
 export default config;

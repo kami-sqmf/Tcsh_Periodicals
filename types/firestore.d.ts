@@ -1,12 +1,70 @@
 import { MemberRoleKey } from "./role";
 
+/** Collections */
+interface DB {
+    Global: GlobalDB;
+    Members: Member[];
+    Accounts: Account[];
+    books: Books[];
+}
+
+/** Col: Global */
+interface GlobalDB {
+    About: About;
+    Notification: Notifications;
+    Posts: Posts;
+    Slide: Slides;
+};
+/** Col: Global => Doc: About */
+interface About {
+    description: string;
+    email: string;
+    insta: string;
+};
+/** Col: Global => Doc: Notifications */
+interface Notifications {
+    Now: Notification[];
+};
+/** Col: Global => Doc: Notifications Inner */
+interface Notification {
+    button: {
+        href: string;
+        text: string;
+    }
+    title: string;
+    type: "alert" | "error" | "success";
+};
+/** Col: Global => Doc: Posts */
+interface Posts {
+    posts: Post[];
+};
+/** Col: Global => Doc: Posts Inner */
+interface Post {
+    categories: string[],
+    thumbnail: string;
+    title: string;
+    url: string;
+};
+/** Col: Global => Doc: Slides */
+interface Slides {
+    slide: Slide[];
+};
+/** Col: Global => Doc: Slides Inner*/
+interface Slide {
+    href: string;
+    image: string;
+    title: string;
+};
+/** Col: Accounts or Member */
+type AccountsUni = Accounts<"Account"> | Accounts<"Member">;
 interface Accounts<Type extends "Member" | "Account"> {
     type: Type;
     data: Type extends "Member" ? Member : Account;
 };
 
-type AccountsUni = Accounts<"Account"> | Accounts<"Member">
-
+type classLevel = "1" | "2" | "3";
+type Class = `J${classLevel}${"1" | "2" | "3" | "4" | "5" | "6" | "7"}` | `S${classLevel}${"1" | "2" | "3" | "4" | "5"}`
+/** Col: Members' Doc */
 interface Member {
     uid: string;
     avatar: string;
@@ -18,7 +76,7 @@ interface Member {
     name: string;
     role: MemberRoleKey;
 };
-
+/** Col: Accounts' Doc */
 interface Account {
     uid: string;
     avatar: string;
@@ -31,58 +89,27 @@ interface Account {
     username: string;
 };
 
-type classLevel = "1" | "2" | "3";
-type Class = `J${classLevel}${"1" | "2" | "3" | "4" | "5" | "6" | "7"}` | `S${classLevel}${"1" | "2" | "3" | "4" | "5"}`
-
-interface GlobalDB {
-    About: About;
-    Notification: Notifications;
-    Posts: Posts;
-    Slide: Slides;
-};
-
-interface About {
-    description: string;
-    email: string;
-    insta: string;
-};
-
-interface Notifications {
-    Now: Notification[];
-};
-
-interface Notification {
-    button: {
-        href: string;
-        text: string;
-    }
-    title: string;
-    type: "alert" | "error" | "success";
-};
-
-interface Posts {
-    posts: Post[];
-};
-
-interface Post {
-    categories: string[],
+/** Col: Ebooks' Doc */
+interface EBooks {
+    name: string;
     thumbnail: string;
     title: string;
-    url: string;
+    published: boolean;
+    timestamp: EpochTimeStamp;
+    locked: boolean;
+    owner: string[];
+    price: number;
+    files?: EbookFile;
 };
-
-interface Slides {
-    slide: Slide[];
+/** Col: Ebooks' Doc files */
+type EbookFile = {
+    "pdf": EbookFileInfo;
+    "pdf-compressed": EbookFileInfo;
+    "epub": EbookFileInfo;
+    "epub-compressed": EbookFileInfo;
+    "bookId": string;
 };
-
-interface Slide {
-    href: string;
-    image: string;
-    title: string;
+type EbookFileInfo = {
+    link: string;
+    size: number;
 };
-
-interface DB {
-    Global: GlobalDB;
-    Members: Member[];
-    Accounts: Account[];
-}

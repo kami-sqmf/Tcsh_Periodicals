@@ -38,6 +38,19 @@
 > ⚠️ 注意：好像沒有什麼好注意的？
 > 💻 <- 代表曾發布到[正式伺服器](https://periodicals.kami.tw/)，其餘僅發佈在[測試伺服器](https://periodicalsalpha.kami.tw/)。
 
+#### Stable Alpha 1.2.3
+- 新增兌換碼以及購買的部分功能
+
+#### Stable Alpha 1.2.2
+- 應團隊需求更改電子書下載樣式
+
+#### Stable Alpha 1.2.1
+- 電子書頁面新增翻譯選項
+- 修復 Head 中縮圖的問題
+
+#### Stable Alpha 1.2.0
+- 新增電子書頁面
+
 #### Stable 1.1.1 💻
 - 更改介紹的高度溢位問題
 - 更改手機版推薦文章縮圖至正方形

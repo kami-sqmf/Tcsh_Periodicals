@@ -11,6 +11,10 @@ const config = {
         tellUs: {
             title: "給予匿名回饋",
         },
+        ebook: {
+            title: "電子書",
+            description: '你是不是想要來 GET 你的電子書了？ 趕快點進來吧！',
+        },
         posts: {
             title: "更多文章",
         },
@@ -85,12 +89,51 @@ const config = {
         teacher: "老師",
         prefixClickChange: "點此",
     },
+    ebook: {
+        unpublished: "敬請期待...",
+        selectPlatform: "請選擇平台",
+        selectCompressed: "請選擇版本",
+        epub: "EPUB 格式",
+        epubCompressed: "EPUB 格式 - 壓縮版",
+        pdf: "PDF 格式",
+        pdfCompressed: "PDF 格式 - 壓縮版",
+        platformApple: "蘋果裝置",
+        platformOther: "其他平台",
+        unpublishedCover: "向未推出",
+        downloadFree: "免費下載刊物",
+        downloadNow: "立即下載刊物",
+        buy: "購買刊物",
+        purchase: {
+            chooseMethod: "請選擇付款方式！",
+            voucher: {
+                title: "兌換序號！",
+                use: "使用序號",
+                input: "請在此輸入序號⋯⋯",
+            },
+            message: {
+                notExist: "系統錯誤！本書不存在！",
+                unmatched: "序號錯誤，請檢查序號⋯⋯",
+                success: "購買成功！感謝您選擇慈中後生！"
+            }
+        }
+    },
+    login: {
+        requiredLogin: "您必須先登入！",
+        googleAccountTCSH: "使用 慈中 Gooogle 帳號登入",
+        otherAccountEDU: "或是其他教育帳號",
+    },
+    form: {
+        back: "返回",
+        send: "送出",
+        cancel: "取消",
+    },
     add: "新增",
     edit: "編輯",
     imageAlt: "照片目前無法載入！",
     followInsta: "追蹤 IG",
     contactUs: "聯絡我們",
-    loading: "正在努力載入中！！"
+    loading: "正在努力載入中！！",
+    processing: "正在處理中⋯⋯",
 }
 
 export default config;

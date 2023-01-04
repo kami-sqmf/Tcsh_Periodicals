@@ -1,9 +1,10 @@
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { GetStaticPropsContext } from "next";
+import { GetServerSidePropsContext, GetStaticPropsContext } from "next";
 import { ValueOf } from "next/dist/shared/lib/constants";
 import { langCode } from "../language/lang";
 import { AccountsUni, DB, GlobalDB, Member } from "../types/firestore";
 import { db } from "./firebase";
+import { getProviders } from "next-auth/react";
 
 export async function getPropsGlobalDB(ctx: GetStaticPropsContext) {
     const lang = await ctx.locale
@@ -28,6 +29,20 @@ export async function getProps_Global_Members_DB(ctx: GetStaticPropsContext) {
     }
 }
 
+export async function getProps_Global_Books_DB(ctx: GetServerSidePropsContext) {
+    const lang = await ctx.locale;
+    const providers = await getProviders();
+    return {
+        props: {
+            providers,
+            data: await getDBObject("Global") as GlobalDB,
+            books: Object.values(await getDBObject("books")),
+            lang: lang ? lang as langCode : "zh",
+            userAgent: ctx.req.headers['user-agent']
+        },
+    }
+}
+
 export async function getDBObject(collectionName: keyof DB): Promise<ValueOf<DB>> {
     const querySnapshot = await getDocs(collection(db, collectionName));
     const data: any = {};
@@ -46,7 +61,7 @@ export async function getAccount(email: string): Promise<AccountsUni | null> {
             const typeName = (doc == "Accounts") ? "Account" : "Member";
             res = {
                 type: typeName,
-                data: {...result.docs[0].data() as any, uid: result.docs[0].id}
+                data: { ...result.docs[0].data() as any, uid: result.docs[0].id }
             }
             return res
         }
@@ -55,8 +70,6 @@ export async function getAccount(email: string): Promise<AccountsUni | null> {
 }
 
 export function isAdmin(firestore: AccountsUni): boolean {
-    if (firestore.type != "Account") {
-        return Math.trunc(firestore.data.role / 100) == 5 || firestore.data.role % 100 == 0;
-    }
-    return false
+    if (firestore.type != "Member") return false
+    return Math.trunc(firestore.data.role / 100) == 5 || firestore.data.role % 100 == 0
 }
