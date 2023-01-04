@@ -14,7 +14,7 @@ module.exports = {
         mailFly: {
           '0%, 100%': { transform: 'translateX(0%)' },
           '50%': { transform: 'translateX(50%) skewX(4deg) scale(1.2, 1.2)' },
-        }
+        },
       },
       animation: {
         bright: 'bright 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;',

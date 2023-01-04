@@ -98,14 +98,42 @@ const config = {
         pdf: "PDF",
         pdfCompressed: "PDF - Gezippte",
         platformApple: "Apple-Geräte",
-        platformOther: "Andrere Plattform"
+        platformOther: "Andrere Plattform",
+        unpublishedCover: "Unveröffentlichten",
+        downloadFree: "Kostenfreier Download",
+        downloadNow: "Jetzt Download",
+        buy: "Kaufen",
+        purchase: {
+            chooseMethod: "Zahlungsart",
+            voucher: {
+                title: "Gutschein einlösen",
+                use: "Gutschein",
+                input: "Gutschein eingeben",
+            },
+            message: {
+                notExist: "Error！ Das Buch ist nicht vorhanden.",
+                unmatched: "Der eingegebene Gutschein ist ungültig.",
+                success: "Kauf abgeschlossen！ Vielen Dank von Periodicals TCSH！"
+            }
+        }
+    },
+    login: {
+        requiredLogin: "Sie müssen sich zuerst einloggen!",
+        googleAccountTCSH: "Anmeldung min TCSH-Gooogle-Konto",
+        otherAccountEDU: "oder anderes EDU-Knoto",
+    },
+    form: {
+        back: "Zurück",
+        send: "Einreichen",
+        cancel: "Abbrechen",
     },
     add: "ergänzen",
     edit: "bearbeiten",
     imageAlt: "Die Bilder kann nicht geladen werden.",
     followInsta: "Instagram",
     contactUs: "Kontaktiere uns",
-    loading: "Jetzt präsentieren...?"
+    loading: "Jetzt präsentieren...?",
+    processing: "wird bearbeitet"
 }
 
 export default config;

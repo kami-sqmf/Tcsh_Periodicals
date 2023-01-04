@@ -5,14 +5,18 @@ import { Fragment, useState } from "react"
 import { SetterOrUpdater } from "recoil"
 import Link from "next/link"
 import Image from "next/image"
-import { RiArrowUpSFill } from "react-icons/ri"
+import { RiArrowUpSFill, RiCheckDoubleFill, RiClipboardFill, RiClipboardLine } from "react-icons/ri"
+import { arrayUnion, doc, updateDoc } from "firebase/firestore"
+import { db } from "../utils/firebase"
 
-export const ModalEbook = ({ files, lang, modalOpen, setModalOpen }: { files: EbookFile; lang: langCode; modalOpen: boolean; setModalOpen: SetterOrUpdater<boolean> }) => {
-  const [section, setSection] = useState(0);
+export const ModalEbook = ({ files, lang, modalOpen, setModalOpen, admin }: { files: EbookFile; lang: langCode; modalOpen: boolean; setModalOpen: SetterOrUpdater<boolean>; admin: boolean }) => {
+  const [section, setSection] = useState<number>(0);
+  const [voucher, setVoucher] = useState<string>("正在生產中⋯⋯");
+  const [clipboard, setClipboard] = useState<boolean>(false);
   if (files)
     return (
       <Transition show={modalOpen} as={Fragment}>
-        <Dialog onClose={() => { setModalOpen(false); setSection(0) }} as="div" className="fixed z-30 inset-0 overflow-y-auto" >
+        <Dialog onClose={() => { setModalOpen(false); setSection(0); setVoucher("正在生產中⋯⋯") }} as="div" className="fixed z-30 inset-0 overflow-y-auto" >
 
           {/* BackBlur */}
           <Transition.Child as={Fragment}
@@ -36,14 +40,15 @@ export const ModalEbook = ({ files, lang, modalOpen, setModalOpen }: { files: Eb
           >
             <div className="fixed inset-0 flex items-center justify-center">
               <div className="flex flex-col px-8 py-6 bg-background/95 rounded-lg items-center justify-center">
-                <Dialog.Title>
+                <Dialog.Title className="text-main select-none">
                   {section == 0 && _t(lang).ebook.selectPlatform}
                   {section != 0 && _t(lang).ebook.selectCompressed}
                 </Dialog.Title>
                 <Dialog.Panel className="mt-2 [&>div]:space-y-2">
-                  {section == 0 && <div>
+                  {section == 0 && <div className="flex flex-col items-center">
                     <div onClick={(e) => { setSection(2) }}><Sections file={{ ...files["epub-compressed"], link: "#" }} type="EPUB" alt={_t(lang).ebook.platformApple} lang={lang} /></div>
                     <div onClick={(e) => { setSection(1) }}><Sections file={{ ...files["pdf-compressed"], link: "#" }} type="PDF" alt={_t(lang).ebook.platformOther} lang={lang} /></div>
+                    {admin && <div onClick={async (e) => { setSection(3); setVoucher(await createEbookVoucher(files.bookId)); }}><p className="text-xs text-main/80 font-medium hover:scale-105 cursor-pointer">Admin指令 -{">"} 產生序號</p></div>}
                   </div>}
                   {section == 1 && <div>
                     <Sections file={files.pdf} type="PDF" alt={_t(lang).ebook.pdf} lang={lang} />
@@ -53,12 +58,23 @@ export const ModalEbook = ({ files, lang, modalOpen, setModalOpen }: { files: Eb
                     <Sections file={files.epub} type="EPUB" alt={_t(lang).ebook.epub} lang={lang} />
                     <Sections file={files["epub-compressed"]} type="EPUB" alt={_t(lang).ebook.epubCompressed} lang={lang} />
                   </div>}
+                  {section == 3 && <div className="flex flex-col items-center">
+                    <div className="flex flex-row space-x-2 items-center">
+                      <span className="text-lg font-bold text-main">{voucher}</span>
+                      <div className="relative text-main group cursor-pointer w-5 h-5" onClick={() => { navigator.clipboard.writeText(voucher); setClipboard(true); setTimeout(() => setClipboard(false), 1500) }}>
+                        <RiClipboardFill className={`${!clipboard ? "visible" : "hidden"} absolute opacity-0 group-hover:opacity-100 w-5 h-5 transition-all duration-300`} />
+                        <RiClipboardLine className={`${!clipboard ? "visible" : "hidden"} absolute opacity-100 group-hover:opacity-0 w-5 h-5 transition-all duration-300`} />
+                        <RiCheckDoubleFill className={`${!clipboard ? "invisible" : "visible"} absolute w-5 h-5 animate-mailFly`} />
+                      </div>
+                    </div>
+                    <span onClick={async (e) => { setVoucher("正在生產中⋯⋯"); setVoucher(await createEbookVoucher(files.bookId)); }} className="text-xs text-main/80 font-medium cursor-pointer select-none">再度生產</span>
+                  </div>}
                 </Dialog.Panel>
               </div>
             </div>
           </Transition.Child>
-        </Dialog>
-      </Transition>
+        </Dialog >
+      </Transition >
     )
   else return (<></>)
 }
@@ -83,3 +99,18 @@ const ButtonLink = ({ file, type, lang }: { file: EbookFileInfo; type: "EPUB" | 
     </div>
   </Link>
 )
+
+const createEbookVoucher = async (bookId: string) => {
+  const voucher = makeid(12);
+  await updateDoc(doc(db, "books", bookId), { voucher: arrayUnion(voucher) })
+  return voucher;
+}
+
+const makeid = (length: number) => {
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
+}

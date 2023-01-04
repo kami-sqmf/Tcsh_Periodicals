@@ -96,7 +96,10 @@ interface EBooks {
     title: string;
     published: boolean;
     timestamp: EpochTimeStamp;
-    files: EbookFile;
+    locked: boolean;
+    owner: string[];
+    price: number;
+    files?: EbookFile;
 };
 /** Col: Ebooks' Doc files */
 type EbookFile = {
@@ -104,6 +107,7 @@ type EbookFile = {
     "pdf-compressed": EbookFileInfo;
     "epub": EbookFileInfo;
     "epub-compressed": EbookFileInfo;
+    "bookId": string;
 };
 type EbookFileInfo = {
     link: string;

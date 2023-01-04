@@ -98,14 +98,42 @@ const config = {
         pdf: "PDF",
         pdfCompressed: "PDF - Compressed",
         platformApple: "Apple evices",
-        platformOther: "Other Platforms"
+        platformOther: "Other Platforms",
+        unpublishedCover: "Unreleased",
+        downloadFree: "Free Download",
+        downloadNow: "Download Now",
+        buy: "Purchase",
+        purchase: {
+            chooseMethod: "Payment type",
+            voucher: {
+                title: "Redeem Voucher",
+                use: "Redeem Voucher",
+                input: "Enter Voucher",
+            },
+            message: {
+                notExist: "Error！ This book doesn't exist.",
+                unmatched: "THe voucher code is wrong.",
+                success: "Purchase Completed！Thank you for choosing Periodicals TCSH！"
+            }
+        }
+    },
+    login: {
+        requiredLogin: "You must login first!",
+        googleAccountTCSH: "Login with TCSH Gooogle Account",
+        otherAccountEDU: "or other EDU Account",
+    },
+    form: {
+        back: "Back",
+        send: "Submit",
+        cancel: "Cancel",
     },
     add: "add",
     edit: "edit",
     imageAlt: "The image cannot be loaded.",
     followInsta: "Instagram",
     contactUs: "Contact us",
-    loading: "I'm getting this very hard!"
+    loading: "I'm getting this very hard!",
+    processing: "Processing"
 }
 
 export default config;

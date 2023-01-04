@@ -199,8 +199,8 @@ export function Modal({ setOperate, lang }: { setOperate: SetterOrUpdater<boolea
                                         ModalContent(selected, key)
                                     ))}
                                     <div className='flex flex-col-reverse md:flex-row w-full justify-around'>
-                                        <button className='px-3 py-2 bg-red-600 text-xs text-background2 rounded-lg md:rounded mt-2 md:mt-0' onClick={() => setModalOpen(false)}>取消</button>
-                                        <button disabled={modalConfirm} className='px-3 py-2 bg-green-600 text-xs text-background2 rounded-lg md:rounded mt-2 md:mt-0 disabled:bg-green-600/70' onClick={(e) => clickListener(e)}>送出</button>
+                                        <button className='px-3 py-2 bg-red-600 text-xs text-background2 rounded-lg md:rounded mt-2 md:mt-0' onClick={() => setModalOpen(false)}>{_t(lang).form.cancel}</button>
+                                        <button disabled={modalConfirm} className='px-3 py-2 bg-green-600 text-xs text-background2 rounded-lg md:rounded mt-2 md:mt-0 disabled:bg-green-600/70' onClick={(e) => clickListener(e)}>{_t(lang).form.send}</button>
                                     </div>
                                 </div>
                             </div>
