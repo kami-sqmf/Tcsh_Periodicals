@@ -113,3 +113,15 @@ type EbookFileInfo = {
     link: string;
     size: number;
 };
+
+interface TempUser {
+    "name": string,
+    "bio": null,
+    "isSchool": boolean,
+    "customTitle": null,
+    "class": null,
+    "avatar": string,
+    "email": string,
+    "username": string,
+    "insta": null
+}

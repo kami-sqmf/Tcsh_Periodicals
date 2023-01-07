@@ -15,6 +15,10 @@ const config = {
             title: "eBook",
             description: "We know you're excited for the Ebook, just click me!",
         },
+        editor: {
+            title: "Editor",
+            description: "Come! We're welcome you to write down something for us and for you!"
+        },
         posts: {
             title: "More Articles",
         },
