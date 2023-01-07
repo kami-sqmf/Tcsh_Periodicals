@@ -15,6 +15,10 @@ const config = {
             title: "電子書",
             description: '你是不是想要來 GET 你的電子書了？ 趕快點進來吧！',
         },
+        editor: {
+            title: "編輯器",
+            description: "來～都來！歡迎各位趕快來投稿！"
+        },
         posts: {
             title: "更多文章",
         },

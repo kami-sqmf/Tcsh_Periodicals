@@ -41,7 +41,7 @@ export function Modal({ setOperate, lang }: { setOperate: SetterOrUpdater<boolea
                     document.getElementById(`${sec}Err`)!.innerText = ""
                     setModalConfirm(false)
                 } else {
-                    document.getElementById(`${sec}Err`)!.innerText = "自我介紹太多字了！！ （最高 18 字元）"
+                    document.getElementById(`${sec}Err`)!.innerText = "自我介紹標題太多字了！！ （最高 18 字元）"
                     setModalConfirm(true)
                 }
                 break;
