@@ -127,6 +127,7 @@ const config = {
         otherAccountEDU: "或是其他 Google 帳號",
     },
     accounts: {
+        logout: "登出",
         edit: {
             name_zh_up5: "用戶名稱（含中文）不能超過5個字",
             name_up30: "用戶名稱大於30個字",

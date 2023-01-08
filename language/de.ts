@@ -127,6 +127,7 @@ const config = {
         otherAccountEDU: "oder anderes Google-Knoto",
     },
     accounts: {
+        logout: "Abmelden",
         edit: {
             name_zh_up5: "Username mit Chinesisch darf nur weniger als 5 Wörter sein",
             name_up30: "Der Userrname besteht aus mehr als 30 Wörtern",

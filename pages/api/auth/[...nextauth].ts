@@ -16,14 +16,12 @@ export const authOptions: NextAuthOptions = {
 
     pages: {
         signIn: '/accounts/signin',
-        signOut: '/accounts/signout'
     },
 
     callbacks: {
         async signIn({ account, profile }) {
             if (!account || !profile) return "/?error=2";
             if (account.provider != "google" || account.type != "oauth") return "/?error=3";
-            console.log(account, profile)
             if (!profile.email) return "/?error=4";
             const res = await getAccount(profile.email);
             if (res) return true;

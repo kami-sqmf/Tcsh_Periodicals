@@ -29,12 +29,12 @@ const config = {
             title: "Youtube Channel"
         },
         accounts: {
-            title: "Accounts",
-            description: "Centre of Tzuchi Senior Periodicals Accounts",
+            title: "Account",
+            description: "Centre of Tzuchi Senior Periodicals Account",
             child: {
                 signIn: {
                     title: "Signin",
-                    description: "Signin to your Tzuchi Senior Periodicals Accounts",
+                    description: "Signin to your Tzuchi Senior Periodicals Account",
                 },
             }
         },
@@ -127,6 +127,7 @@ const config = {
         otherAccountEDU: "or other Google Account",
     },
     accounts: {
+        logout: "Sign out",
         edit: {
             name_zh_up5: "Username with Chinese can only be less than 5 words",
             name_up30: "Username is more than 30 words",
