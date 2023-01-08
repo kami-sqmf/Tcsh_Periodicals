@@ -45,7 +45,7 @@ const Ebook = ({ data, books, lang, providers, userAgent }: InferGetStaticPropsT
           <Language lang={lang} />
         </div>
       </PageWrapper>
-      {session.status === "unauthenticated" && <LoginModal lang={lang} modalOpen={modalLogin} setModalOpen={setModalLogin} providers={providers} userAgent={userAgent} callback="/ebbok" />}
+      {session.status === "unauthenticated" && <LoginModal lang={lang} modalOpen={modalLogin} setModalOpen={setModalLogin} providers={providers} userAgent={userAgent} callback="/ebook" />}
       {session.status === "authenticated" && <PurchaseModal lang={lang} modalOpen={modalPurchase} setModalOpen={setModalPurchase} bookId={book?.bookId} userId={session.data.firestore.data.uid} />}
       {session.status === "authenticated" && <Modal files={book!} lang={lang} modalOpen={modal} setModalOpen={setModal} admin={isAdmin(session.data?.firestore!)} />}
     </div>

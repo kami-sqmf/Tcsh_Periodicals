@@ -17,60 +17,78 @@ export function Modal({ setOperate, lang }: { setOperate: SetterOrUpdater<boolea
     const filePickerRef = useRef<HTMLInputElement | null>(null);
     const [profileAvatar, setProfileAvatar] = useState(profile.data.avatar);
     const changeListener = (sec: keyof Account) => {
+        const value = (document.getElementsByName(sec)[0] as HTMLInputElement).value;
         switch (sec) {
             case "bio":
-                if ((document.getElementsByName(sec)[0] as HTMLInputElement).value.length <= 64) {
-                    document.getElementById(`${sec}Err`)!.innerText = ""
-                    setModalConfirm(false)
+                if (value.length <= 64) {
+                    document.getElementById(`${sec}Err`)!.innerText = "";
+                    setModalConfirm(false);
                 } else {
-                    document.getElementById(`${sec}Err`)!.innerText = "自我介紹太多字了！！ （最高 64 字元）"
-                    setModalConfirm(true)
+                    document.getElementById(`${sec}Err`)!.innerText = _t(lang).accounts.edit.bio_up64;
+                    setModalConfirm(true);
                 }
                 break;
             case "class":
-                if ((document.getElementsByName(sec)[0] as HTMLInputElement).value.match(/^[J][1 | 2 | 3][1 | 2 | 3 | 4 | 5 | 6 | 7]$/) || (document.getElementsByName(sec)[0] as HTMLInputElement).value.match(/^[S][1 | 2 | 3][1 | 2 | 3 | 4 | 5 ]$/) || (document.getElementsByName(sec)[0] as HTMLInputElement).value == "Teacher") {
-                    document.getElementById(`${sec}Err`)!.innerText = ""
-                    setModalConfirm(false)
+                if (value.match(/^[J][1 | 2 | 3][1 | 2 | 3 | 4 | 5 | 6 | 7]$/) || value.match(/^[S][1 | 2 | 3][1 | 2 | 3 | 4 | 5 ]$/) || value == "Teacher") {
+                    document.getElementById(`${sec}Err`)!.innerText = "";
+                    setModalConfirm(false);
                 } else {
-                    document.getElementById(`${sec}Err`)!.innerText = "班級格式錯誤"
-                    setModalConfirm(true)
+                    document.getElementById(`${sec}Err`)!.innerText = _t(lang).accounts.edit.class_format_error;
+                    setModalConfirm(true);
                 }
                 break;
             case "customTitle":
-                if ((document.getElementsByName(sec)[0] as HTMLInputElement).value.length <= 18) {
-                    document.getElementById(`${sec}Err`)!.innerText = ""
-                    setModalConfirm(false)
+                if (value.length <= 18) {
+                    document.getElementById(`${sec}Err`)!.innerText = "";
+                    setModalConfirm(false);
                 } else {
-                    document.getElementById(`${sec}Err`)!.innerText = "自我介紹標題太多字了！！ （最高 18 字元）"
-                    setModalConfirm(true)
+                    document.getElementById(`${sec}Err`)!.innerText = _t(lang).accounts.edit.customTitle_up18;
+                    setModalConfirm(true);
                 }
                 break;
             case "insta":
-                if ((document.getElementsByName(sec)[0] as HTMLInputElement).value.match(/^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/)) {
-                    console.log((document.getElementsByName(sec)[0] as HTMLInputElement).value.match(/^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/))
-                    document.getElementById(`${sec}Err`)!.innerText = ""
-                    setModalConfirm(false)
+                if (value.match(/^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/)) {
+                    document.getElementById(`${sec}Err`)!.innerText = "";
+                    setModalConfirm(false);
                 } else {
-                    document.getElementById(`${sec}Err`)!.innerText = "請輸入 Instagram 帳號"
-                    setModalConfirm(true)
+                    document.getElementById(`${sec}Err`)!.innerText = _t(lang).accounts.edit.insta_format_error;
+                    setModalConfirm(true);
                 }
                 break;
             case "name":
-                if ((document.getElementsByName(sec)[0] as HTMLInputElement).value.length <= 5) {
-                    document.getElementById(`${sec}Err`)!.innerText = ""
-                    setModalConfirm(false)
-                } else {
-                    document.getElementById(`${sec}Err`)!.innerText = "姓名最多只能有 5 個字"
-                    setModalConfirm(true)
+                if (value.match(/[\u3400-\u9FBF]/) && value.length > 5) {
+                    document.getElementById(`${sec}Err`)!.innerText = _t(lang).accounts.edit.name_zh_up5;
+                    setModalConfirm(true);
+                }
+                else if (value.length > 30) {
+                    document.getElementById(`${sec}Err`)!.innerText = _t(lang).accounts.edit.name_up30;
+                    setModalConfirm(true);
+                }
+                else if (value.length === 0) {
+                    document.getElementById(`${sec}Err`)!.innerText = _t(lang).accounts.edit.name_empty;
+                    setModalConfirm(true);
+                }
+                else {
+                    document.getElementById(`${sec}Err`)!.innerText = "";
+                    setModalConfirm(false);
                 }
                 break;
             case "username":
-                if ((document.getElementsByName(sec)[0] as HTMLInputElement).value.length <= 10) {
-                    document.getElementById(`${sec}Err`)!.innerText = ""
-                    setModalConfirm(false)
-                } else {
-                    document.getElementById(`${sec}Err`)!.innerText = "姓名最多只能有 10 個字"
-                    setModalConfirm(true)
+                if (value.match(/[\u3400-\u9FBF]/) && value.length > 5) {
+                    document.getElementById(`${sec}Err`)!.innerText = _t(lang).accounts.edit.name_zh_up5;
+                    setModalConfirm(true);
+                }
+                else if (value.length > 30) {
+                    document.getElementById(`${sec}Err`)!.innerText = _t(lang).accounts.edit.name_up30;
+                    setModalConfirm(true);
+                }
+                else if (value.length === 0) {
+                    document.getElementById(`${sec}Err`)!.innerText = _t(lang).accounts.edit.name_empty;
+                    setModalConfirm(true);
+                }
+                else {
+                    document.getElementById(`${sec}Err`)!.innerText = "";
+                    setModalConfirm(false);
                 }
                 break;
         }

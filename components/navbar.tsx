@@ -1,13 +1,15 @@
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { NextRouter, useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useScroll } from "../utils/use-scroll";
-import { langCode } from "../language/lang";
+import { _t, langCode } from "../language/lang";
 import { isAdmin } from "../utils/get-firestore";
 import Link from "next/link";
-import { RiCloseFill, RiMenu4Line, RiUser3Fill, RiUser3Line } from "react-icons/ri";
+import { RiCloseFill, RiLogoutBoxRFill, RiLogoutBoxRLine, RiMenu4Line, RiUser3Fill, RiUser3Line } from "react-icons/ri";
 import Image from "next/image";
 import { Global } from "../types/global";
+import { Menu, Transition } from "@headlessui/react";
+import { Account, Member } from "../types/firestore";
 
 const floatNav = 38;
 
@@ -43,18 +45,13 @@ export const Navbar = () => {
                     </Link>
                 </div>
                 {session.status == "authenticated" ?
-                    <Link href={Global.webMap.accounts.href} className="relative text-main cursor-pointer group h-7 w-7 md:w-10 md:h-10">
-                        <Image placeholder='blur' blurDataURL="./defaultProfile.png" src={session.data!.user!.image!} fill={true} className="rounded-full overflow-hidden object-cover" alt="大頭貼" />
-                        <div className="absolute w-max px-2 py-1 text-xs z-40 bg-background2 rounded-md hidden opacity-0 group-hover:block group-hover:opacity-90 transition-opacity -translate-x-[10%] -bottom-7">
-                            <span>{session.data!.user!.name!}</span>
-                        </div>
-                    </Link>
+                    <NavbarAccountMenu user={session.data.firestore.data} size={{less: 7, md: 10}} lang={lang} />
                     :
                     <Link href={Global.webMap.accounts.child.signIn.href} className="relative text-main cursor-pointer group">
                         <RiUser3Line className="inline-flex group-only-of-type: group-hover:hidden h-7 w-7 md:h-9 md:w-9" />
                         <RiUser3Fill className="hidden group-hover:inline-flex h-7 w-7 md:h-9 md:w-9" />
                         <div className="absolute w-max px-2 py-1 text-xs bg-background2 rounded-md hidden opacity-0 group-hover:block group-hover:opacity-90 transition-opacity -translate-x-[20%] mt-1">
-                            <span>按此登入</span>
+                            <span>{_t(lang).webMap.accounts.child.signIn.title}</span>
                         </div>
                     </Link>
                 }
@@ -74,6 +71,49 @@ export const Navbar = () => {
                 })}
             </div>
         </div>
+    )
+}
+
+export const NavbarAccountMenu = ({ user, lang, size }: { user: Account | Member; lang: langCode; size: {less: number; md:number} }) => {
+    return (
+        <Menu as="div" className="relative z-50">
+            <Menu.Button className={`relative text-main cursor-pointer group h-${size.less} w-${size.less} md:w-${size.md} md:h-${size.md}`}>
+                <Image placeholder='blur' blurDataURL="./defaultProfile.png" src={user.avatar} fill={true} className="rounded-full overflow-hidden object-cover bg-background2" alt="大頭貼" />
+                <div className="absolute w-max px-2 py-1 text-xs z-40 bg-background2 rounded-md hidden opacity-0 group-hover:block group-hover:opacity-90 transition-opacity -translate-x-[10%] -bottom-7">
+                    <span>{user.name}</span>
+                </div>
+            </Menu.Button>
+            <Transition
+                as={Fragment}
+                enter="transition ease-out duration-100"
+                enterFrom="transform opacity-0 scale-95"
+                enterTo="transform opacity-100 scale-100"
+                leave="transition ease-in duration-75"
+                leaveFrom="transform opacity-100 scale-100"
+                leaveTo="transform opacity-0 scale-95"
+            >
+                <Menu.Items className="absolute right-0 mt-3 w-max max-w-48 text-main divide-y divide-gray-300 rounded-md bg-background2 shadow-lg ring-1 ring-main2 ring-opacity-5 focus:outline-none">
+                    <div className="pl-4 pr-8 py-1">
+                        <Menu.Item as={Link} href={Global.webMap.accounts.href} className="flex flex-row items-center space-x-2 cursor-pointer group hover:text-main2">
+                            <div className="relative h-5 w-5">
+                                <RiUser3Line className="absolute opacity-100 group-hover:opacity-0 h-5 w-5 transition-all duration-500" />
+                                <RiUser3Fill className="absolute opacity-0 group-hover:opacity-100 h-5 w-5 transition-all duration-500" />
+                            </div>
+                            <span className="transition-all duration-500">{_t(lang).webMap.accounts.title}</span>
+                        </Menu.Item>
+                    </div>
+                    <div className="pl-4 pr-8 py-1">
+                        <Menu.Item as="div" className="flex flex-row items-center space-x-2 cursor-pointer group hover:text-main2" onClick={() => signOut()}>
+                            <div className="relative h-5 w-5">
+                                <RiLogoutBoxRLine className="absolute opacity-100 group-hover:opacity-0 h-5 w-5 transition-all duration-500" />
+                                <RiLogoutBoxRFill className="absolute opacity-0 group-hover:opacity-100 h-5 w-5 transition-all duration-500" />
+                            </div>
+                            <span className="transition-all duration-500">{_t(lang).accounts.logout}</span>
+                        </Menu.Item>
+                    </div>
+                </Menu.Items>
+            </Transition>
+        </Menu >
     )
 }
 

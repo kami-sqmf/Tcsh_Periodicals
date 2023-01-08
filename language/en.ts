@@ -25,16 +25,16 @@ const config = {
         postIt: {
             title: "Post Now",
         },
-         youtube: {
+        youtube: {
             title: "Youtube Channel"
         },
         accounts: {
-            title: "Accounts",
-            description: "Centre of Tzuchi Senior Periodicals Accounts",
+            title: "Account",
+            description: "Centre of Tzuchi Senior Periodicals Account",
             child: {
                 signIn: {
                     title: "Signin",
-                    description: "Signin to your Tzuchi Senior Periodicals Accounts",
+                    description: "Signin to your Tzuchi Senior Periodicals Account",
                 },
             }
         },
@@ -124,7 +124,30 @@ const config = {
     login: {
         requiredLogin: "You must login first!",
         googleAccountTCSH: "Login with TCSH Gooogle Account",
-        otherAccountEDU: "or other EDU Account",
+        otherAccountEDU: "or other Google Account",
+    },
+    accounts: {
+        logout: "Sign out",
+        edit: {
+            name_zh_up5: "Username with Chinese can only be less than 5 words",
+            name_up30: "Username is more than 30 words",
+            name_empty: "Please enter your username",
+            class_format_error: "Class format error",
+            customTitle_up18: "Custom title can only be less than 18 words",
+            bio_up64: "Bio can only be less than 64 words",
+            insta_format_error: "Instagram Account format error"
+        },
+        label: {
+            customTitle_mit_eg: "Bio Title (Default: 自我介紹)",
+            bio_content: "Bio Content"
+        },
+        policy_service_upload: "People who use our service may have uploaded your contact information to TCSH_Periodicals. ",
+        policy_details: "Learn More",
+        policy_signup_agree: "By signing up, you agree to our ",
+        policy_policy: "Terms",
+        policy_and: " and ",
+        policy_privacy: "Privacy Policy",
+        policy_cookie: "Cookies Policy"
     },
     form: {
         back: "Back",
@@ -137,7 +160,7 @@ const config = {
     followInsta: "Instagram",
     contactUs: "Contact us",
     loading: "I'm getting this very hard!",
-    processing: "Processing"
+    processing: "Processing",
 }
 
 export default config;

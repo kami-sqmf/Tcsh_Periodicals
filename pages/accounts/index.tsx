@@ -24,7 +24,6 @@ const Accounts = ({ data, lang }: InferGetStaticPropsType<typeof getPropsGlobalD
                     <div className='inline-grid mt-2 md:mt-0 md:ml-2 border-2 border-main justify-center overflow-hidden'>
                         {session.status == "authenticated" && <Profile profile={session.data.firestore} lang={lang} owned={true} rounded={false} />}
                         {session.status != "authenticated" && <span className="text-xl text-gray-700 min-h-[532px] text-center py-56 animate-mailFly">{_t(lang).loading}</span>}
-                        {session.status == "authenticated" && <button className="bg-pink-200/60 py-1 w-full text-center" onClick={() => signOut({ callbackUrl: "/"})}>登出</button>}
                     </div>
                 </div>
             </PageWrapper>

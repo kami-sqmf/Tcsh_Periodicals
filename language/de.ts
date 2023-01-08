@@ -124,7 +124,30 @@ const config = {
     login: {
         requiredLogin: "Sie müssen sich zuerst einloggen!",
         googleAccountTCSH: "Anmeldung min TCSH-Gooogle-Konto",
-        otherAccountEDU: "oder anderes EDU-Knoto",
+        otherAccountEDU: "oder anderes Google-Knoto",
+    },
+    accounts: {
+        logout: "Abmelden",
+        edit: {
+            name_zh_up5: "Username mit Chinesisch darf nur weniger als 5 Wörter sein",
+            name_up30: "Der Userrname besteht aus mehr als 30 Wörtern",
+            name_empty: "Bitte geben Sie Ihren Username ein",
+            class_format_error: "Fehler beim Klasseformat",
+            customTitle_up18: "Nachsteckbrief dürfen nur weniger als 18 Wörter sein",
+            bio_up64: "Steckbrief dürfen nur weniger als 64 Wörter sein",
+            insta_format_error: "Fehler im Format des Instagram-Kontos"
+        },
+        label: {
+            customTitle_mit_eg: "Nachsteckbrief（Verzug：自我介紹）",
+            bio_content: "Steckbrief"
+        },
+        policy_service_upload: "Personen, die unseren Service nutzen, haben möglicherweise deine Kontaktinformationen auf TCSH_Periodicals hochgeladen. ",
+        policy_details: "Mehr dazu",
+        policy_signup_agree: "Indem du dich registrierst, stimmst du unseren ",
+        policy_policy: "Nutzungsbedingungen",
+        policy_and: " und ",
+        policy_privacy: "Datenschutzrichtlinie",
+        policy_cookie: "Cookie-Richtlinie"
     },
     form: {
         back: "Zurück",
