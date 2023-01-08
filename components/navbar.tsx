@@ -2,7 +2,7 @@ import { useSession } from "next-auth/react";
 import { NextRouter, useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useScroll } from "../utils/use-scroll";
-import { langCode } from "../language/lang";
+import { _t, langCode } from "../language/lang";
 import { isAdmin } from "../utils/get-firestore";
 import Link from "next/link";
 import { RiCloseFill, RiMenu4Line, RiUser3Fill, RiUser3Line } from "react-icons/ri";
@@ -54,7 +54,7 @@ export const Navbar = () => {
                         <RiUser3Line className="inline-flex group-only-of-type: group-hover:hidden h-7 w-7 md:h-9 md:w-9" />
                         <RiUser3Fill className="hidden group-hover:inline-flex h-7 w-7 md:h-9 md:w-9" />
                         <div className="absolute w-max px-2 py-1 text-xs bg-background2 rounded-md hidden opacity-0 group-hover:block group-hover:opacity-90 transition-opacity -translate-x-[20%] mt-1">
-                            <span>按此登入</span>
+                            <span>{_t(lang).webMap.accounts.child.signIn.title}</span>
                         </div>
                     </Link>
                 }

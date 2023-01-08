@@ -124,7 +124,29 @@ const config = {
     login: {
         requiredLogin: "您必須先登入！",
         googleAccountTCSH: "使用 慈中 Gooogle 帳號登入",
-        otherAccountEDU: "或是其他教育帳號",
+        otherAccountEDU: "或是其他 Google 帳號",
+    },
+    accounts: {
+        edit: {
+            name_zh_up5: "用戶名稱（含中文）不能超過5個字",
+            name_up30: "用戶名稱大於30個字",
+            name_empty: "請輸入用戶名稱",
+            class_format_error: "班級格式錯誤",
+            customTitle_up18: "自我介紹不可超過18個字",
+            bio_up64: "自我介紹不可超過64個字",
+            insta_format_error: "Instagram 帳號格式錯誤，請再次檢查"
+        },
+        label: {
+            customTitle_mit_eg: "自我介紹標題 （預設：「自我介紹」）",
+            bio_content: "自我介紹內容"
+        },
+        policy_service_upload: "使用我們服務的用戶可能上傳了您的聯絡資料到慈中後生。",
+        policy_details: "瞭解詳情",
+        policy_signup_agree: "註冊即表示你同意我們的 ",
+        policy_policy: "服務條款 ",
+        policy_and: "和",
+        policy_privacy: "《隱私政策》",
+        policy_cookie: "《Cookie 政策》"
     },
     form: {
         back: "返回",

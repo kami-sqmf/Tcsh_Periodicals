@@ -87,6 +87,7 @@ interface Account {
     insta: string | null;
     name: string;
     username: string;
+    isSchool: boolean;
 };
 
 /** Col: Ebooks' Doc */

@@ -38,7 +38,11 @@
 > ⚠️ 注意：好像沒有什麼好注意的？
 > 💻 <- 代表曾發布到[正式伺服器](https://periodicals.kami.tw/)，其餘僅發佈在[測試伺服器](https://periodicalsalpha.kami.tw/)。
 
-#### Stable Alpha 1.2.4
+#### Stable Alpha 1.2.5
+- 新增註冊頁面語言支援
+- 新增修改內面中錯誤的語言支持
+
+#### Stable Alpha 1.2.4 💻
 - 新增註冊頁面
 
 #### Stable 1.2.3 💻
