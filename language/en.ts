@@ -154,6 +154,9 @@ const config = {
         send: "Submit",
         cancel: "Cancel",
     },
+    editor: {
+        newEditorLoading: "Initializing Editor..."
+    },
     add: "add",
     edit: "edit",
     imageAlt: "The image cannot be loaded.",

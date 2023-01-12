@@ -38,7 +38,11 @@
 > ⚠️ 注意：好像沒有什麼好注意的？
 > 💻 <- 代表曾發布到[正式伺服器](https://periodicals.kami.tw/)，其餘僅發佈在[測試伺服器](https://periodicalsalpha.kami.tw/)。
 
-#### Stable Alpha 1.2.6
+#### Stable Alpha 1.3.0
+- 新增測試版功能編輯器！
+- 新增測試版我的投稿！
+
+#### Stable Alpha 1.2.6 💻
 - 新增導覽行帳戶選單 （帳戶、登出）
 - 移除在帳戶頁面中的登出
 - 移除 next-auth 中的自定義登出頁面 （影響網址登出 /api/auth/signout）

@@ -50,6 +50,17 @@ export const Global = {
                 iconHover: RiChatForwardFill,
             },
         },
+        editor: {
+            href: "/editor",
+            title: (lang: langCode) => _t(lang).webMap.editor.title,
+            description: (lang: langCode) => _t(lang).webMap.editor.description,
+            nav: {
+                show: false,
+                admin: false,
+                icon: RiBookLine,
+                iconHover: RiBookFill,
+            }
+        },
         ebook: {
             href: "/ebook",
             title: (lang: langCode) => _t(lang).webMap.ebook.title,
@@ -107,6 +118,11 @@ export const Global = {
                     title: (lang: langCode) => _t(lang).webMap.accounts.child.signIn.title,
                     description: (lang: langCode) => _t(lang).webMap.accounts.child.signIn.description,
                 },
+                posts: {
+                    href: "/accounts/posts",
+                    title: (lang: langCode) => "我的投稿",
+                    description: (lang: langCode) => _t(lang).webMap.accounts.child.signIn.description,
+                }
             }
         },
         admin: {

@@ -1,10 +1,10 @@
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { GetServerSidePropsContext, GetStaticPropsContext } from "next";
+import { getProviders, getSession } from "next-auth/react";
 import { ValueOf } from "next/dist/shared/lib/constants";
 import { langCode } from "../language/lang";
-import { AccountsUni, DB, GlobalDB, Member } from "../types/firestore";
+import { AccountsUni, DB, GlobalDB, Member, PostDocument } from "../types/firestore";
 import { db } from "./firebase";
-import { getProviders } from "next-auth/react";
 
 export async function getPropsGlobalDB(ctx: GetStaticPropsContext) {
     const lang = await ctx.locale
@@ -26,6 +26,55 @@ export async function getProps_Global_Members_DB(ctx: GetStaticPropsContext) {
             lang: lang ? lang as langCode : "zh"
         },
         revalidate: 900,
+    }
+}
+
+export async function getProps_Session(ctx: GetServerSidePropsContext) {
+    const lang = await ctx.locale;
+    const session = await getSession(ctx.res);
+    if (!session) {
+        return {
+            redirect: {
+                destination: '/',
+                permanent: false,
+            },
+        }
+    }
+    return {
+        props: {
+            session,
+            lang: lang ? lang as langCode : "zh",
+        },
+    }
+}
+
+
+export async function getProps_Session_OwnPost(ctx: GetServerSidePropsContext) {
+    const now = new Date();
+    const lang = await ctx.locale;
+    const session = await getSession(ctx.res);
+    if (!session) {
+        return {
+            redirect: {
+                destination: '/',
+                permanent: false,
+            },
+        }
+    }
+    const docs = await getDocs(query(collection(db, "posts"), where("owner", "==", session.firestore.data.uid)));
+    const mappedDocs = docs.docs.map(doc => {
+        return JSON.stringify({
+            id: doc.id,
+            data: doc.data() as PostDocument
+        })
+    })
+    return {
+        props: {
+            session,
+            requestTime: Math.floor(now.getTime() / 1000),
+            lang: lang ? lang as langCode : "zh",
+            ownPost: mappedDocs
+        },
     }
 }
 
