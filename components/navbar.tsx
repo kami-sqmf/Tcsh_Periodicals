@@ -5,7 +5,7 @@ import { useScroll } from "../utils/use-scroll";
 import { _t, langCode } from "../language/lang";
 import { isAdmin } from "../utils/get-firestore";
 import Link from "next/link";
-import { RiCloseFill, RiLogoutBoxRFill, RiLogoutBoxRLine, RiMenu4Line, RiUser3Fill, RiUser3Line } from "react-icons/ri";
+import { RiBookletFill, RiBookletLine, RiCloseFill, RiLogoutBoxRFill, RiLogoutBoxRLine, RiMenu4Line, RiUser3Fill, RiUser3Line } from "react-icons/ri";
 import Image from "next/image";
 import { Global } from "../types/global";
 import { Menu, Transition } from "@headlessui/react";
@@ -93,7 +93,23 @@ export const NavbarAccountMenu = ({ user, lang, size }: { user: Account | Member
                 leaveTo="transform opacity-0 scale-95"
             >
                 <Menu.Items className="absolute right-0 mt-3 w-max max-w-48 text-main divide-y divide-gray-300 rounded-md bg-background2 shadow-lg ring-1 ring-main2 ring-opacity-5 focus:outline-none">
-                    <div className="pl-4 pr-8 py-1">
+                    <div className="pl-4 pr-8 py-1 space-y-2">
+                        <Menu.Item as={Link} href={`/${lang}/editor/new`} className="flex flex-row items-center space-x-2 cursor-pointer group hover:text-main2">
+                            <div className="relative h-5 w-5">
+                                <Global.webMap.postIt.nav.icon className="absolute opacity-100 group-hover:opacity-0 h-5 w-5 transition-all duration-500" />
+                                <Global.webMap.postIt.nav.iconHover className="absolute opacity-0 group-hover:opacity-100 h-5 w-5 transition-all duration-500" />
+                            </div>
+                            <span className="transition-all duration-500">{Global.webMap.postIt.title(lang)} (正在籌劃)</span>
+                        </Menu.Item>
+                        <Menu.Item as={Link} href={Global.webMap.accounts.child.posts.href} className="flex flex-row items-center space-x-2 cursor-pointer group hover:text-main2">
+                            <div className="relative h-5 w-5">
+                                <RiBookletLine className="absolute opacity-100 group-hover:opacity-0 h-5 w-5 transition-all duration-500" />
+                                <RiBookletFill className="absolute opacity-0 group-hover:opacity-100 h-5 w-5 transition-all duration-500" />
+                            </div>
+                            <span className="transition-all duration-500">{Global.webMap.accounts.child.posts.title(lang)} (正在籌劃)</span>
+                        </Menu.Item>
+                    </div>
+                    <div className="pl-4 pr-8 py-1 space-y-2">
                         <Menu.Item as={Link} href={Global.webMap.accounts.href} className="flex flex-row items-center space-x-2 cursor-pointer group hover:text-main2">
                             <div className="relative h-5 w-5">
                                 <RiUser3Line className="absolute opacity-100 group-hover:opacity-0 h-5 w-5 transition-all duration-500" />
@@ -102,7 +118,7 @@ export const NavbarAccountMenu = ({ user, lang, size }: { user: Account | Member
                             <span className="transition-all duration-500">{_t(lang).webMap.accounts.title}</span>
                         </Menu.Item>
                     </div>
-                    <div className="pl-4 pr-8 py-1">
+                    <div className="pl-4 pr-8 py-1 space-y-2">
                         <Menu.Item as="div" className="flex flex-row items-center space-x-2 cursor-pointer group hover:text-main2" onClick={() => signOut()}>
                             <div className="relative h-5 w-5">
                                 <RiLogoutBoxRLine className="absolute opacity-100 group-hover:opacity-0 h-5 w-5 transition-all duration-500" />

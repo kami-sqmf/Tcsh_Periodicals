@@ -1,7 +1,7 @@
 import { IconType } from "react-icons";
-import { RiAccountBoxFill, RiAccountBoxLine, RiAdminFill, RiAdminLine, RiBookFill, RiBookLine, RiChatForwardFill, RiChatForwardLine, RiEditFill, RiEditLine, RiGroup2Fill, RiGroup2Line, RiHome2Fill, RiHome2Line, RiInstagramFill, RiInstagramLine, RiNotification2Line, RiSlideshowFill, RiSlideshowLine, RiUserSettingsFill, RiUserSettingsLine, RiWindow2Fill, RiWindow2Line, RiYoutubeFill, RiYoutubeLine } from "react-icons/ri";
-import { langCode, _t } from "../language/lang";
-import logo from "../public/logo.jpg"
+import { RiAccountBoxFill, RiAccountBoxLine, RiAdminFill, RiAdminLine, RiBookFill, RiBookLine, RiChatForwardFill, RiChatForwardLine, RiEditFill, RiEditLine, RiFilePaper2Fill, RiFilePaper2Line, RiGroup2Fill, RiGroup2Line, RiHome2Fill, RiHome2Line, RiInstagramFill, RiInstagramLine, RiNotification2Line, RiProfileFill, RiProfileLine, RiSlideshowFill, RiSlideshowLine, RiUserSettingsFill, RiUserSettingsLine, RiWindow2Fill, RiWindow2Line, RiYoutubeFill, RiYoutubeLine } from "react-icons/ri";
+import { _t, langCode } from "../language/lang";
+import logo from "../public/logo.jpg";
 
 export const Global = {
     domain: "kami.tw",
@@ -49,6 +49,17 @@ export const Global = {
                 icon: RiChatForwardLine,
                 iconHover: RiChatForwardFill,
             },
+        },
+        editor: {
+            href: "/editor",
+            title: (lang: langCode) => _t(lang).webMap.editor.title,
+            description: (lang: langCode) => _t(lang).webMap.editor.description,
+            nav: {
+                show: false,
+                admin: false,
+                icon: RiBookLine,
+                iconHover: RiBookFill,
+            }
         },
         ebook: {
             href: "/ebook",
@@ -107,6 +118,11 @@ export const Global = {
                     title: (lang: langCode) => _t(lang).webMap.accounts.child.signIn.title,
                     description: (lang: langCode) => _t(lang).webMap.accounts.child.signIn.description,
                 },
+                posts: {
+                    href: "/accounts/posts",
+                    title: (lang: langCode) => "我的投稿",
+                    description: (lang: langCode) => _t(lang).webMap.accounts.child.signIn.description,
+                }
             }
         },
         admin: {
@@ -163,6 +179,41 @@ export const Global = {
                         iconHover: RiNotification2Line
                     },
                 },
+            }
+        },
+        policy: {
+            href: "/policy",
+            title: (lang: langCode) => _t(lang).policy.policy,
+            description: (lang: langCode) => _t(lang).policy.policy,
+            nav: {
+                show: false,
+                admin: false,
+                icon: RiAdminLine,
+                iconHover: RiAdminFill,
+            },
+            child: {
+                privacy: {
+                    href: "/policy/privacy",
+                    title: (lang: langCode) => _t(lang).policy.privacy,
+                    nav: {
+                        show: false,
+                        admin: false,
+                        icon: RiProfileLine,
+                        iconHover: RiProfileFill
+                    },
+                    description: (lang: langCode) => _t(lang).policy.privacy,
+                },
+                cookie: {
+                    href: "/policy/cookie",
+                    title: (lang: langCode) => _t(lang).policy.cookie,
+                    nav: {
+                        show: false,
+                        admin: false,
+                        icon: RiFilePaper2Line,
+                        iconHover: RiFilePaper2Fill
+                    },
+                    description: (lang: langCode) => _t(lang).policy.cookie,
+                }
             }
         }
     },

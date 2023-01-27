@@ -105,11 +105,11 @@ export const Chat = ({ className, about }: { className: string, about: About }) 
   )
 }
 
-const timestampBefrore = (oldTimestamp: EpochTimeStamp) => {
+export const timestampBefrore = (oldTimestamp: EpochTimeStamp) => {
   const nowTimestamp = new Date().getTime();
   const diff = Math.floor((nowTimestamp - oldTimestamp) / 1000);
-  if (diff < 60) return `${diff} 秒前`
-  else if (diff < 3600) return `${Math.floor(diff / 60)} 分前`
+  if (diff < 60) return `${diff} 秒鐘前`
+  else if (diff < 3600) return `${Math.floor(diff / 60)} 分鐘前`
   else if (diff < 86400) return `${Math.floor(diff / 3600)} 小時前`
   else return `${Math.floor(diff / 86400)} 天前`
 }

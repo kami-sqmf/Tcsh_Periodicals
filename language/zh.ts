@@ -154,6 +154,14 @@ const config = {
         send: "送出",
         cancel: "取消",
     },
+    editor: {
+        newEditorLoading: "正在建立新的編輯器⋯⋯"
+    },
+    policy: {
+        policy: "服務條款",
+        privacy: "隱私條款",
+        cookie: "Cookie 政策"
+    },
     add: "新增",
     edit: "編輯",
     imageAlt: "照片目前無法載入！",

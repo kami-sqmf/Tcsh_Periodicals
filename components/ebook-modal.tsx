@@ -106,7 +106,7 @@ const createEbookVoucher = async (bookId: string) => {
   return voucher;
 }
 
-const makeid = (length: number) => {
+export const makeid = (length: number) => {
   let result = '';
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   for (var i = 0; i < length; i++) {

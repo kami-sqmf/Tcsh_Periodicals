@@ -1,6 +1,6 @@
-import { initializeApp, getApps, getApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore"
-import { getStorage } from "firebase/storage"
+import { getApp, getApps, initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -9,10 +9,11 @@ const firebaseConfig = {
   storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STROAGE_BUCKET,
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  databaseURL: process.env.NEXT_PUBLIC_FIREBASE_REALTIME_DATABASE,
 };
 
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const db = getFirestore();
-const storage = getStorage(getApp())
+const storage = getStorage(getApp());
 
-export { app, db, storage }
+export { app, db, storage };

@@ -1,4 +1,6 @@
+import { OutputData } from "@editorjs/editorjs";
 import { MemberRoleKey } from "./role";
+import { FieldValue } from "firebase/firestore";
 
 /** Collections */
 interface DB {
@@ -125,4 +127,19 @@ interface TempUser {
     "email": string,
     "username": string,
     "insta": null
+}
+
+interface PostsCollection {
+    [x: string]: PostDocument;
+}
+
+interface PostDocument {
+    type?: number;
+    title: string;
+    thumbnail?: string;
+    tag: string[];
+    data: OutputData;
+    owner: string;
+    createdTimestamp: FieldValue;
+    lastEditTimestamp: FieldValue;
 }
