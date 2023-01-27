@@ -38,6 +38,10 @@
 > ⚠️ 注意：好像沒有什麼好注意的？
 > 💻 <- 代表曾發布到[正式伺服器](https://periodicals.kami.tw/)，其餘僅發佈在[測試伺服器](https://periodicalsalpha.kami.tw/)。
 
+#### Stable Alpha 1.3.1 💻
+- 新增網站地圖 （Sitemap.xml）
+- 針對 Google Search bot 進行更改
+
 #### Stable Alpha 1.3.0
 - 新增測試版功能編輯器！
 - 新增測試版我的投稿！

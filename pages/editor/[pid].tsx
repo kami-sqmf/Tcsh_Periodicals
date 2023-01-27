@@ -1,5 +1,6 @@
 import { OutputData } from '@editorjs/editorjs';
 import { Menu, Transition } from '@headlessui/react';
+import { doc, onSnapshot, serverTimestamp } from 'firebase/firestore';
 import type { GetServerSideProps, InferGetStaticPropsType } from 'next';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
@@ -12,11 +13,10 @@ import { _t, langCode } from '../../language/lang';
 import LogoSVG from '../../public/logo-nav.svg';
 import { Account, Member, PostDocument } from '../../types/firestore';
 import { Global } from '../../types/global';
+import { uploadToCloud } from '../../utils/editor';
+import { db } from '../../utils/firebase';
 import { getProps_Session } from '../../utils/get-firestore';
 import { useScroll } from '../../utils/use-scroll';
-import { doc, onSnapshot, serverTimestamp, setDoc } from 'firebase/firestore';
-import { db } from '../../utils/firebase';
-import { uploadToCloud } from '../../utils/editor';
 
 const floatNav = 34;
 const EditorBlock = dynamic(() => import("../../components/editor"), {
@@ -79,7 +79,7 @@ const Editor = ({ session, lang }: InferGetStaticPropsType<typeof getProps_Sessi
         }
         setIsReady(true);
       }
-      else{
+      else {
         console.log(doc.data())
       }
     });

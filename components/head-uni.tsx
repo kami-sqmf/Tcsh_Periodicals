@@ -2,14 +2,14 @@ import Head from 'next/head';
 import { langCode } from '../language/lang';
 import { Global } from '../types/global';
 
-const url = `https://${Global.subdomian ? Global.subdomian + "." : ""}${Global.domain}/`
+const url = `https://${Global.subdomian ? Global.subdomian + "." : ""}${Global.domain}`
 
 function HeadUni({
   title, description, pages, lang
 }: { title: string, description: string; pages: string, lang: langCode }) {
   const data = {
     description: description,
-    url: `${url}/${pages}`,
+    url: `${url}/${lang}${pages}`,
     title: `${title} • ${lang == "zh" ? "慈中後生-文學季刊" : "Tzuchi Senior Periodicals"}`,
   };
   return (
@@ -31,6 +31,11 @@ function HeadUni({
       <meta name="twitter:image" content={`${url}/logo.jpg`} />
 
       <link rel="icon" type="image/x-icon" href="/favicon.ico"></link>
+      <link rel="alternate" href={`${url}/zh${pages}`} hrefLang="x-default" />
+      <link rel="alternate" href={`${url}/zh${pages}`} hrefLang="zh-Hant" />
+      <link rel="alternate" href={`${url}/en${pages}`} hrefLang="en" />
+      <link rel="alternate" href={`${url}/de${pages}`} hrefLang="de" />
+      <link rel="canonical" href={data.url}></link>
     </Head>
   );
 }

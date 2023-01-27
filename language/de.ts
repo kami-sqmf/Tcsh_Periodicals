@@ -157,6 +157,11 @@ const config = {
     editor: {
         newEditorLoading: "Editor initialisieren..."
     },
+    policy: {
+        policy: "Nutzungsbedingungen",
+        privacy: "Datenschutzrichtlinie",
+        cookie: "Cookie-Richtlinie"
+    },
     add: "ergänzen",
     edit: "bearbeiten",
     imageAlt: "Die Bilder kann nicht geladen werden.",

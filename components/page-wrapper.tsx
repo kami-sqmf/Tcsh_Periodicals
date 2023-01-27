@@ -7,7 +7,7 @@ import Notification from "./notification";
 
 export const PageWrapper = ({ page, withNavbar = true, operating = false, children, lang = "zh", className, Noti }: React.PropsWithChildren<{ page: webInfo, withNavbar: boolean, operating: boolean, lang: langCode, className?: string, Noti?: Notifications }>) => (
     <div className='min-h-screen bg-background/90 py-4'>
-        <HeadUni title={page.title ? page.title(lang) : "北極星"} description={page.description ? page.description(lang) : "慈中後生歡迎您！"} lang={lang} pages='' />
+        <HeadUni title={page.title ? page.title(lang) : "北極星"} description={page.description ? page.description(lang) : "慈中後生歡迎您！"} lang={lang} pages={page.href} />
         <div className={'max-w-xs md:max-w-2xl lg:max-w-4xl xl:max-w-6xl mx-auto ' + className}>
             {withNavbar ? <Navbar /> : <></>}
             {Noti && <Notification className="mt-2" data={Noti} />}
