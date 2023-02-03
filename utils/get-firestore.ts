@@ -1,4 +1,4 @@
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, query, where } from "firebase/firestore";
 import { GetServerSidePropsContext, GetStaticPropsContext } from "next";
 import { getProviders, getSession } from "next-auth/react";
 import { ValueOf } from "next/dist/shared/lib/constants";
@@ -62,10 +62,11 @@ export async function getProps_Session_OwnPost(ctx: GetServerSidePropsContext) {
         }
     }
     const docs = await getDocs(query(collection(db, "posts"), where("owner", "==", session.firestore.data.uid)));
-    const mappedDocs = docs.docs.map(doc => {
+    const mappedDocs = docs.docs.flatMap(docu => {
+        if (!(docu.data() as PostDocument).data.blocks && !(docu.data() as PostDocument).title) { deleteDoc(doc(db, "posts", docu.id)); return ([]) }
         return JSON.stringify({
-            id: doc.id,
-            data: doc.data() as PostDocument
+            id: docu.id,
+            data: docu.data() as PostDocument
         })
     })
     return {

@@ -5,7 +5,7 @@ import type { GetServerSideProps, InferGetStaticPropsType } from 'next';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { Fragment, KeyboardEvent, useEffect, useState } from 'react';
+import { Dispatch, Fragment, KeyboardEvent, MutableRefObject, SetStateAction, useEffect, useRef, useState } from 'react';
 import { RiMoreFill, RiMoreLine } from 'react-icons/ri';
 import HeadUni from '../../components/head-uni';
 import { NavbarAccountMenu } from '../../components/navbar';
@@ -22,6 +22,10 @@ const floatNav = 34;
 const EditorBlock = dynamic(() => import("../../components/editor"), {
   ssr: false,
 });
+const ModalEditorPublish = dynamic(() => import('../../components/editor-publish-modal').then((res) => res.ModalEditorPublish), {
+  ssr: false,
+})
+
 
 const Editor = ({ session, lang }: InferGetStaticPropsType<typeof getProps_Session>) => {
   // Router Scroll and Query
@@ -29,9 +33,11 @@ const Editor = ({ session, lang }: InferGetStaticPropsType<typeof getProps_Sessi
   const { scrollY } = useScroll();
   const postId = router.query.pid as string;
   // UseState Hook
+  const title = useRef<HTMLInputElement>();
   const [data, setData] = useState<OutputData>();
   const [isReady, setIsReady] = useState<boolean>(false);
   const [serverPostData, setServerPostData] = useState<PostDocument>();
+  const [modalPublished, setModalPublished] = useState<boolean>(false);
   const [status, setStatus] = useState(`已儲存在 - ${session.firestore.data.name} (本地)`);
   let queueToCloud: any;
   // Function Stuff
@@ -95,19 +101,22 @@ const Editor = ({ session, lang }: InferGetStaticPropsType<typeof getProps_Sessi
   };
   return (
     <div className='min-h-screen bg-background' onKeyDown={keyboardListener}>
-      <HeadUni title={Global.webMap.editor.title(lang)} description={Global.webMap.editor.description(lang)} lang={lang} pages='/editor' />
-      <Navbar user={session.firestore.data} lang={lang} className={`${scrollY > floatNav || !isReady ? "fixed top-0 bg-background2/90" : "bg-background2/10"} z-30`} status={status} />
-      {isReady && <div className={'max-w-xs md:max-w-3xl lg:max-w-4xl mx-auto'}>
-        <EditorBlock data={data} onChange={onDataChange} editorId={`editor-${session.firestore.data.uid}-${postId}`} serverData={serverPostData!} />
-      </div>}
-      {!isReady && <div className='flex flex-row justify-center items-center h-screen'>
-        <span className='text-4xl text-main font-medium animate-pulse'>{_t(lang).editor.newEditorLoading}</span>
-      </div>}
+      <div>
+        <HeadUni title={Global.webMap.editor.title(lang)} description={Global.webMap.editor.description(lang)} lang={lang} pages='/editor' />
+        <Navbar user={session.firestore.data} lang={lang} className={`${scrollY > floatNav || !isReady ? "fixed top-0 bg-background2/90" : "bg-background2/10"} z-30`} status={status} setModalPublished={setModalPublished} />
+        {isReady && <div className={'max-w-xs md:max-w-3xl lg:max-w-4xl mx-auto'}>
+          <EditorBlock data={data} onChange={onDataChange} editorId={`editor-${session.firestore.data.uid}-${postId}`} serverData={serverPostData!} titleRef={title as MutableRefObject<HTMLInputElement>} />
+        </div>}
+        {!isReady && <div className='flex flex-row justify-center items-center h-screen'>
+          <span className='text-4xl text-main font-medium animate-pulse'>{_t(lang).editor.newEditorLoading}</span>
+        </div>}
+      </div>
+      <ModalEditorPublish lang={lang} modalOpen={modalPublished} setModalOpen={setModalPublished} data={data!} user={session.firestore} titleRef={title as MutableRefObject<HTMLInputElement>} />
     </div>
   )
 }
 
-const Navbar = ({ className, user, lang, status }: { className: string; user: Account | Member; lang: langCode; status: string }) => {
+const Navbar = ({ className, user, lang, status, setModalPublished }: { className: string; user: Account | Member; lang: langCode; status: string; setModalPublished: Dispatch<SetStateAction<boolean>> }) => {
   return (
     <div className={`${className} flex items-center h-16 w-full transition-all duration-300`}>
       <div className='flex flex-row justify-between items-center w-[20rem] md:w-[42rem] lg:w-[56rem] xl:w-[72rem] mx-auto'>
@@ -116,7 +125,7 @@ const Navbar = ({ className, user, lang, status }: { className: string; user: Ac
           <span className='font-medium text-xs text-main/80 mt-2'>{status}</span>
         </div>
         <div className='right flex flex-row items-center'>
-          <button className="flex flex-row justify-center items-center px-3 py-1 rounded-lg bg-green-700 hover:bg-green-800 transition-all duration-300">
+          <button onClick={() => setModalPublished(true)} className="flex flex-row justify-center items-center px-3 py-1 rounded-lg bg-green-700 hover:bg-green-800 transition-all duration-300">
             <p className="text text-background2 my-auto">發佈</p>
           </button>
           <NavbarMoreMenu lang={lang} />

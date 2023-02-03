@@ -1,17 +1,27 @@
+'use client'
+
+import { OutputData } from "@editorjs/editorjs"
 import { Dialog, Transition } from "@headlessui/react"
-import { Fragment, useState } from "react"
-import { RiCheckDoubleFill, RiClipboardFill, RiClipboardLine } from "react-icons/ri"
+import { ChangeEvent, Fragment, MutableRefObject, useEffect, useRef, useState } from "react"
 import { SetterOrUpdater } from "recoil"
-import { _t, langCode } from "../language/lang"
+import { langCode } from "../language/lang"
+import { AccountsUni } from "../types/firestore"
 
-export const ModalEditorPublish = ({ lang, modalOpen, setModalOpen }: { lang: langCode; modalOpen: boolean; setModalOpen: SetterOrUpdater<boolean>; }) => {
-  const [section, setSection] = useState<number>(0);
-  const [voucher, setVoucher] = useState<string>("正在生產中⋯⋯");
-  const [clipboard, setClipboard] = useState<boolean>(false);
-
+export const ModalEditorPublish = ({ lang, modalOpen, setModalOpen, data, user, titleRef }: { lang: langCode; modalOpen: boolean; setModalOpen: SetterOrUpdater<boolean>; data: OutputData; user: AccountsUni; titleRef: MutableRefObject<HTMLInputElement> }) => {
+  const hiddenTextarea = useRef<any>(null);
+  const [rowTextarea, setTextarea] = useState<number>(1);
+  const handleTextArea = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    hiddenTextarea.current.value = e.target.value;
+    setTextarea(hiddenTextarea.current.scrollHeight / 24);
+  }
+  useEffect(() => {
+    hiddenTextarea.current.value = data?.blocks[0]?.data?.text.slice(0, 140);
+    setTextarea(hiddenTextarea.current.scrollHeight / 24);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hiddenTextarea]);
   return (
     <Transition show={modalOpen} as={Fragment}>
-      <Dialog onClose={() => { setModalOpen(false); setSection(0); setVoucher("正在生產中⋯⋯") }} as="div" className="fixed z-30 inset-0 overflow-y-auto" >
+      <Dialog onClose={() => { setModalOpen(false); }} as="div" className="fixed z-30 inset-0 overflow-y-auto" >
 
         {/* BackBlur */}
         <Transition.Child as={Fragment}
@@ -35,25 +45,24 @@ export const ModalEditorPublish = ({ lang, modalOpen, setModalOpen }: { lang: la
         >
           <div className="fixed inset-0 flex items-center justify-center">
             <div className="flex flex-col px-8 py-6 bg-background/95 rounded-lg items-center justify-center">
-              <Dialog.Title className="text-main select-none">
-                {section == 0 && _t(lang).ebook.selectPlatform}
-                {section != 0 && _t(lang).ebook.selectCompressed}
-              </Dialog.Title>
-              <Dialog.Panel className="mt-2 [&>div]:space-y-2">
-                {section == 0 && <div className="flex flex-col items-center">
-                  <div onClick={(e) => { setSection(2) }}></div>
-                  <div onClick={(e) => { setSection(1) }}></div>
-                </div>}
-                {section == 3 && <div className="flex flex-col items-center">
-                  <div className="flex flex-row space-x-2 items-center">
-                    <span className="text-lg font-bold text-main">{voucher}</span>
-                    <div className="relative text-main group cursor-pointer w-5 h-5" onClick={() => { navigator.clipboard.writeText(voucher); setClipboard(true); setTimeout(() => setClipboard(false), 1500) }}>
-                      <RiClipboardFill className={`${!clipboard ? "visible" : "hidden"} absolute opacity-0 group-hover:opacity-100 w-5 h-5 transition-all duration-300`} />
-                      <RiClipboardLine className={`${!clipboard ? "visible" : "hidden"} absolute opacity-100 group-hover:opacity-0 w-5 h-5 transition-all duration-300`} />
-                      <RiCheckDoubleFill className={`${!clipboard ? "invisible" : "visible"} absolute w-5 h-5 animate-mailFly`} />
+              <Dialog.Panel as="div" className="grid grid-cols-1 md:grid-cols-2 gap-4 text-main">
+                <div className="flex flex-col prose-h1:font-medium prose-h1:text-4xl">
+                  <div className="space-y-4">
+                    <h1>投稿成品預覽</h1>
+                    <div className="flex flex-col border-main border-b-2">
+                      <p className="text-xs text-main/80">標題</p>
+                      <input className="bg-transparent focus:outline-none text-2xl" defaultValue={titleRef.current ? titleRef.current.value : "未命名"} />
+                    </div>
+                    <div className="flex flex-col border-main border-b-2">
+                      <p className="text-xs text-main/80">預覽簡述：</p>
+                      <textarea maxLength={140} className="text-base resize-none w-60 bg-transparent focus:outline-none" rows={rowTextarea} defaultValue={data?.blocks[0]?.data?.text.slice(0, 140)} placeholder="請輸入簡述" onChange={handleTextArea}/>
+                      <textarea maxLength={140} className="text-base resize-none w-60 invisible absolute overflow-hidden" rows={1} ref={hiddenTextarea} disabled></textarea>
                     </div>
                   </div>
-                </div>}
+                </div>
+                <div className="flex flex-col">
+                  Right
+                </div>
               </Dialog.Panel>
             </div>
           </div>

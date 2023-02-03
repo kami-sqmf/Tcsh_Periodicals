@@ -56,9 +56,10 @@ const Book = ({ book, lang, setBook, setModalLogin, setModalOpen, setModalPurcha
   const callModal = async () => {
     if (!book.published) return;
     setBook(book.files);
+    const uid = session?.firestore.data.uid;
+    console.log(uid)
+    if (!uid) return setModalLogin(true);
     if (book.locked) {
-      const uid = session?.firestore.data.uid;
-      if (!uid) return setModalLogin(true);
       if (session?.firestore.type !== "Member") { if (!book.owner.includes(uid)) return setModalPurchase(true); }
     }
     setModalOpen(true);
