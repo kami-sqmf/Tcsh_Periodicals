@@ -1,6 +1,6 @@
 import { OutputData } from '@editorjs/editorjs';
 import { Menu, Transition } from '@headlessui/react';
-import { doc, onSnapshot, serverTimestamp } from 'firebase/firestore';
+import { doc, onSnapshot, serverTimestamp, setDoc } from 'firebase/firestore';
 import type { GetServerSideProps, InferGetStaticPropsType } from 'next';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
@@ -13,7 +13,6 @@ import { _t, langCode } from '../../language/lang';
 import LogoSVG from '../../public/logo-nav.svg';
 import { Account, Member, PostDocument } from '../../types/firestore';
 import { Global } from '../../types/global';
-import { uploadToCloud } from '../../utils/editor';
 import { db } from '../../utils/firebase';
 import { getProps_Session } from '../../utils/get-firestore';
 import { useScroll } from '../../utils/use-scroll';
@@ -84,6 +83,18 @@ const Editor = ({ session, lang }: InferGetStaticPropsType<typeof getProps_Sessi
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const uploadToCloud = async (postId: string, username?: string, setStatus?: Dispatch<SetStateAction<string>>) => {
+    try {
+      console.log(`正在上傳中：公開狀態 ${queueData?.isPublic}`);
+      if (username && setStatus) setStatus(`正在上傳 - ${username} （雲端）`);
+      const res = await setDoc(doc(db, "posts", postId), queueData);
+      if (username && setStatus) setStatus(`已儲存在 - ${username} （雲端）`)
+      return true
+    } catch (error) {
+      console.log(error)
+      return false
+    }
+  }
   const editorListener = async (data: OutputData) => {
     clearTimeout(queueToCloud);
     if (!queueData) return;
@@ -95,7 +106,7 @@ const Editor = ({ session, lang }: InferGetStaticPropsType<typeof getProps_Sessi
     localStorage.setItem(postId, JSON.stringify(queueData));
     setStatus(`已排定在 - ${session.firestore.data.name} (雲端)`)
     queueToCloud = setTimeout(() => {
-      uploadToCloud(postId, queueData, session.firestore.data.name, setStatus);
+      uploadToCloud(postId, session.firestore.data.name, setStatus);
       localStorage.setItem(postId, JSON.stringify(queueData));
     }, 60000);
   }
@@ -109,7 +120,7 @@ const Editor = ({ session, lang }: InferGetStaticPropsType<typeof getProps_Sessi
       setQueueData({
         data: editorOutput,
         type: queueData.type ? queueData.type : 0,
-        title: title.current ? title.current.value : queueData.title,
+        title: title.current?.value ? title.current.value : queueData.title,
         description: queueData.description ? queueData.description : editorOutput?.blocks[0]?.data?.text.slice(0, 140),
         thumbnail: queueData.thumbnail ? queueData.thumbnail : "",
         tag: queueData.tag ? queueData.tag : [],
@@ -119,14 +130,15 @@ const Editor = ({ session, lang }: InferGetStaticPropsType<typeof getProps_Sessi
         lastEditTimestamp: serverTimestamp()
       })
       localStorage.setItem(postId, JSON.stringify(queueData));
-      uploadToCloud(postId, queueData!, session.firestore.data.name, setStatus);
+      uploadToCloud(postId, session.firestore.data.name, setStatus);
     }
   };
-  const onPublishedClicked = async () => {
+  const onPublishedClicked = () => {
+    setStatus(`正在發布至 - ${session.firestore.data.name} (雲端)`);
     setQueueData({
       data: queueData!.data,
       type: queueData!.type ? queueData!.type : 0,
-      title: queueData!.title,
+      title: title.current?.value ? title.current.value : queueData!.title,
       description: queueData!.description ? queueData!.description : editorOutput?.blocks[0]?.data?.text.slice(0, 140),
       thumbnail: queueData!.thumbnail ? queueData!.thumbnail : "",
       tag: queueData!.tag ? queueData!.tag : [],
@@ -134,8 +146,10 @@ const Editor = ({ session, lang }: InferGetStaticPropsType<typeof getProps_Sessi
       isPublic: true,
       createdTimestamp: serverShapshot!.createdTimestamp as any,
       lastEditTimestamp: serverTimestamp()
-    })
-    uploadToCloud(postId, queueData!, session.firestore.data.name, setStatus);
+    });
+    uploadToCloud(postId, session.firestore.data.name, setStatus);
+    setModalPublished(false);
+    return setStatus(`已發布至 - ${session.firestore.data.name} (雲端)`);
   }
   return (
     <div className='min-h-screen bg-background' onKeyDown={keyboardListener}>
@@ -164,7 +178,7 @@ const Navbar = ({ className, user, lang, status, setModalPublished, isReady }: {
         </div>
         <div className='right flex flex-row items-center'>
           <button onClick={() => setModalPublished(true && isReady)} className="flex flex-row justify-center items-center px-3 py-1 rounded-lg bg-green-700 hover:bg-green-800 transition-all duration-300">
-            <p className="text text-background2 my-auto">發佈</p>
+            <p className="text text-background2 my-auto">發布</p>
           </button>
           <NavbarMoreMenu lang={lang} />
           <NavbarAccountMenu size={{ less: 8, md: 9 }} lang={lang} user={user} />

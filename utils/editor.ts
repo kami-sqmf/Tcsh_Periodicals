@@ -24,15 +24,3 @@ export const newPostEditorLink = async (userId: string) => {
   const postId = await newPost(userId);
   return `${Global.webMap.editor.href}/${postId}`;
 }
-
-export const uploadToCloud = async (postId: string, data: PostDocument, username?: string, setStatus?: Dispatch<SetStateAction<string>>) => {
-  try {
-    if (username && setStatus) setStatus(`正在上傳 - ${username} （雲端）`);
-    const res = await setDoc(doc(db, "posts", postId), data);
-    if (username && setStatus) setStatus(`已儲存在 - ${username} （雲端）`)
-    return true
-  } catch (error) {
-    console.log(error)
-    return false
-  }
-}

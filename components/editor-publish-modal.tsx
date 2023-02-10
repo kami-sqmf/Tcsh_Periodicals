@@ -12,7 +12,7 @@ import { FieldValue, addDoc, collection, getDocs, serverTimestamp, setDoc } from
 import { db } from "../utils/firebase"
 import { timestampBefrore } from "./chat"
 
-export const ModalEditorPublish = ({ lang, modalOpen, setModalOpen, data, setData, user, titleRef, onPublishedClick }: { lang: langCode; modalOpen: boolean; setModalOpen: SetterOrUpdater<boolean>; data: PostDocument; setData: SetterOrUpdater<PostDocument | undefined>; user: AccountsUni; titleRef: MutableRefObject<HTMLInputElement>; onPublishedClick: () => Promise<void> }) => {
+export const ModalEditorPublish = ({ lang, modalOpen, setModalOpen, data, setData, user, titleRef, onPublishedClick }: { lang: langCode; modalOpen: boolean; setModalOpen: SetterOrUpdater<boolean>; data: PostDocument; setData: SetterOrUpdater<PostDocument | undefined>; user: AccountsUni; titleRef: MutableRefObject<HTMLInputElement>; onPublishedClick: () => void }) => {
   const [rowTextarea, setTextarea] = useState<number>(1);
   const [currentPostType, setCurrentPostType] = useState(data.type || 0);
   const [addingTag, setAddingTag] = useState(false);
@@ -44,9 +44,6 @@ export const ModalEditorPublish = ({ lang, modalOpen, setModalOpen, data, setDat
       return { type: 1, ...tag.data() as any };
     }));
     return setAddingTag(!addingTag);
-  }
-  const onPublishedClicked = async () => {
-
   }
   useEffect(() => {
     setData(data => {
@@ -134,7 +131,7 @@ export const ModalEditorPublish = ({ lang, modalOpen, setModalOpen, data, setDat
                   </div>
                   <div className='flex flex-col-reverse md:flex-row w-full justify-around'>
                     <button className='px-3 py-2 bg-red-600 text-xs text-background2 rounded-lg md:rounded mt-2 md:mt-0' onClick={() => setModalOpen(false)}>關閉</button>
-                    <button className='px-3 py-2 bg-green-600 text-xs text-background2 rounded-lg md:rounded mt-2 md:mt-0 disabled:bg-green-600/70' onClick={onPublishedClicked}>發佈</button>
+                    <button className='px-3 py-2 bg-green-600 text-xs text-background2 rounded-lg md:rounded mt-2 md:mt-0 disabled:bg-green-600/70' onClick={onPublishedClick}>發布</button>
                   </div>
                 </div>
               </Dialog.Panel>
