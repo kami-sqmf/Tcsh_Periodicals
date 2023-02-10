@@ -2,15 +2,20 @@ import { addDoc, collection, doc, serverTimestamp, setDoc } from "firebase/fires
 import { PostDocument } from "../types/firestore";
 import { Global } from "../types/global";
 import { db } from "./firebase";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, use } from "react";
 
 export const newPost = async (userId: string) => {
   const post = await addDoc(collection(db, "posts"), {
-    title: "",
-    tag: [],
     data: {},
+    type: 0,
+    title: "",
+    description: "",
+    thumbnail: "",
+    tag: [""],
     owner: userId,
+    isPublic: false,
     createdTimestamp: serverTimestamp(),
+    lastEditTimestamp: serverTimestamp()
   });
   return post.id;
 }
@@ -20,7 +25,7 @@ export const newPostEditorLink = async (userId: string) => {
   return `${Global.webMap.editor.href}/${postId}`;
 }
 
-export const uploadToCloud = async (postId: string, data: PostDocument, username?: string, setStatus?: Dispatch<SetStateAction<string>> ) => {
+export const uploadToCloud = async (postId: string, data: PostDocument, username?: string, setStatus?: Dispatch<SetStateAction<string>>) => {
   try {
     if (username && setStatus) setStatus(`正在上傳 - ${username} （雲端）`);
     const res = await setDoc(doc(db, "posts", postId), data);

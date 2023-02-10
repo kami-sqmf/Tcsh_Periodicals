@@ -29,27 +29,18 @@ const ModalEditorPublish = dynamic(() => import('../../components/editor-publish
 
 const Editor = ({ session, lang }: InferGetStaticPropsType<typeof getProps_Session>) => {
   // Router Scroll and Query
+  let queueToCloud: any;
   const router = useRouter();
   const { scrollY } = useScroll();
   const postId = router.query.pid as string;
   // UseState Hook
   const title = useRef<HTMLInputElement>();
-  const [data, setData] = useState<OutputData>();
   const [isReady, setIsReady] = useState<boolean>(false);
-  const [serverPostData, setServerPostData] = useState<PostDocument>();
+  const [queueData, setQueueData] = useState<PostDocument>();
+  const [editorOutput, setEditorOutput] = useState<OutputData>();
+  const [serverShapshot, setServerSnapshot] = useState<PostDocument>();
   const [modalPublished, setModalPublished] = useState<boolean>(false);
   const [status, setStatus] = useState(`已儲存在 - ${session.firestore.data.name} (本地)`);
-  let queueToCloud: any;
-  // Function Stuff
-  const onDataChange = async (data: OutputData) => {
-    clearTimeout(queueToCloud);
-    setData(data);
-    localStorage.setItem(postId, JSON.stringify({ title: (document.querySelector("#title") as any).value, data: data, owner: serverPostData!.owner, tag: serverPostData!.tag, lastEditTimestamp: serverTimestamp() }));
-    setStatus(`已儲存在 - ${session.firestore.data.name} (本地)`)
-    queueToCloud = setTimeout(() => {
-      uploadToCloud(postId, { title: (document.querySelector("#title") as any).value, data: data, owner: serverPostData!.owner, tag: serverPostData!.tag, createdTimestamp: serverPostData!.createdTimestamp, lastEditTimestamp: serverTimestamp() }, session.firestore.data.name, setStatus);
-    }, 60000);
-  }
   // Confirm when leaving
   useEffect(() => {
     function listener(e: BeforeUnloadEvent) {
@@ -66,57 +57,104 @@ const Editor = ({ session, lang }: InferGetStaticPropsType<typeof getProps_Sessi
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  // Firestore Snapshot initalize
   useEffect(() => {
     const storedLocally = localStorage.getItem(postId);
     return onSnapshot(doc(db, "posts", postId), async (doc) => {
       if (!doc.exists()) return router.push(`/${lang}`);
       if (doc.data().owner !== session.firestore.data.uid) return router.push(`/${lang}`);
       if (!isReady) {
-        setServerPostData(doc.data() as PostDocument);
+        setServerSnapshot(doc.data() as PostDocument);
         if (storedLocally) {
           const stored = JSON.parse(storedLocally).data as PostDocument;
           if (stored !== doc.data()) {
             if (stored.lastEditTimestamp > doc.data().lastEditTimestamp) {
-              setData(stored.data);
+              setEditorOutput(stored.data);
             } else {
-              setData(doc.data().data);
+              setEditorOutput(doc.data().data);
             }
           }
         }
         setIsReady(true);
       }
       else {
-        console.log(doc.data())
+        console.log(doc.data());
       }
+      return setQueueData(doc.data() as PostDocument);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const editorListener = async (data: OutputData) => {
+    clearTimeout(queueToCloud);
+    if (!queueData) return;
+    setEditorOutput(data);
+    setQueueData((dataInQueue) => {
+      if (dataInQueue) { dataInQueue.data = data; }
+      return dataInQueue;
+    });
+    localStorage.setItem(postId, JSON.stringify(queueData));
+    setStatus(`已排定在 - ${session.firestore.data.name} (雲端)`)
+    queueToCloud = setTimeout(() => {
+      uploadToCloud(postId, queueData, session.firestore.data.name, setStatus);
+      localStorage.setItem(postId, JSON.stringify(queueData));
+    }, 60000);
+  }
   const keyboardListener = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 's' && e.metaKey === true) {
-      if (!data || !serverPostData) return;
+      if (!editorOutput || !serverShapshot) return;
+      if (!queueData) return;
+      clearTimeout(queueToCloud);
       e.preventDefault();
       setStatus(`已儲存在 - ${session.firestore.data.name} (本地)`)
-      uploadToCloud(postId, { title: (document.querySelector("#title") as any).value, data: data, owner: serverPostData.owner, tag: serverPostData.tag, createdTimestamp: serverPostData.createdTimestamp, lastEditTimestamp: serverTimestamp() }, session.firestore.data.name, setStatus);
+      setQueueData({
+        data: editorOutput,
+        type: queueData.type ? queueData.type : 0,
+        title: title.current ? title.current.value : queueData.title,
+        description: queueData.description ? queueData.description : editorOutput?.blocks[0]?.data?.text.slice(0, 140),
+        thumbnail: queueData.thumbnail ? queueData.thumbnail : "",
+        tag: queueData.tag ? queueData.tag : [""],
+        owner: serverShapshot.owner,
+        isPublic: false,
+        createdTimestamp: serverShapshot.createdTimestamp as any,
+        lastEditTimestamp: serverTimestamp()
+      })
+      localStorage.setItem(postId, JSON.stringify(queueData));
+      uploadToCloud(postId, queueData!, session.firestore.data.name, setStatus);
     }
   };
+  const onPublishedClicked = async () => {
+    setQueueData({
+      data: queueData!.data,
+      type: queueData!.type ? queueData!.type : 0,
+      title: queueData!.title,
+      description: queueData!.description ? queueData!.description : editorOutput?.blocks[0]?.data?.text.slice(0, 140),
+      thumbnail: queueData!.thumbnail ? queueData!.thumbnail : "",
+      tag: queueData!.tag ? queueData!.tag : [""],
+      owner: serverShapshot!.owner,
+      isPublic: true,
+      createdTimestamp: serverShapshot!.createdTimestamp as any,
+      lastEditTimestamp: serverTimestamp()
+    })
+    uploadToCloud(postId, queueData!, session.firestore.data.name, setStatus);
+  }
   return (
     <div className='min-h-screen bg-background' onKeyDown={keyboardListener}>
       <div>
         <HeadUni title={Global.webMap.editor.title(lang)} description={Global.webMap.editor.description(lang)} lang={lang} pages='/editor' />
-        <Navbar user={session.firestore.data} lang={lang} className={`${scrollY > floatNav || !isReady ? "fixed top-0 bg-background2/90" : "bg-background2/10"} z-30`} status={status} setModalPublished={setModalPublished} />
+        <Navbar user={session.firestore.data} lang={lang} className={`${scrollY > floatNav || !isReady ? "fixed top-0 bg-background2/90" : "bg-background2/10"} z-30`} status={status} setModalPublished={setModalPublished} isReady={isReady} />
         {isReady && <div className={'max-w-xs md:max-w-3xl lg:max-w-4xl mx-auto'}>
-          <EditorBlock data={data} onChange={onDataChange} editorId={`editor-${session.firestore.data.uid}-${postId}`} serverData={serverPostData!} titleRef={title as MutableRefObject<HTMLInputElement>} />
+          <EditorBlock data={editorOutput} onChange={editorListener} editorId={`editor-${session.firestore.data.uid}-${postId}`} serverData={serverShapshot!} titleRef={title as MutableRefObject<HTMLInputElement>} />
         </div>}
         {!isReady && <div className='flex flex-row justify-center items-center h-screen'>
           <span className='text-4xl text-main font-medium animate-pulse'>{_t(lang).editor.newEditorLoading}</span>
         </div>}
       </div>
-      <ModalEditorPublish lang={lang} modalOpen={modalPublished} setModalOpen={setModalPublished} data={data!} user={session.firestore} titleRef={title as MutableRefObject<HTMLInputElement>} />
+      {isReady && <ModalEditorPublish lang={lang} modalOpen={modalPublished} setModalOpen={setModalPublished} data={queueData!} setData={setQueueData} user={session.firestore} titleRef={title as MutableRefObject<HTMLInputElement>} onPublishedClick={onPublishedClicked} />}
     </div>
   )
 }
 
-const Navbar = ({ className, user, lang, status, setModalPublished }: { className: string; user: Account | Member; lang: langCode; status: string; setModalPublished: Dispatch<SetStateAction<boolean>> }) => {
+const Navbar = ({ className, user, lang, status, setModalPublished, isReady }: { className: string; user: Account | Member; lang: langCode; status: string; setModalPublished: Dispatch<SetStateAction<boolean>>; isReady: boolean }) => {
   return (
     <div className={`${className} flex items-center h-16 w-full transition-all duration-300`}>
       <div className='flex flex-row justify-between items-center w-[20rem] md:w-[42rem] lg:w-[56rem] xl:w-[72rem] mx-auto'>
@@ -125,7 +163,7 @@ const Navbar = ({ className, user, lang, status, setModalPublished }: { classNam
           <span className='font-medium text-xs text-main/80 mt-2'>{status}</span>
         </div>
         <div className='right flex flex-row items-center'>
-          <button onClick={() => setModalPublished(true)} className="flex flex-row justify-center items-center px-3 py-1 rounded-lg bg-green-700 hover:bg-green-800 transition-all duration-300">
+          <button onClick={() => setModalPublished(true && isReady)} className="flex flex-row justify-center items-center px-3 py-1 rounded-lg bg-green-700 hover:bg-green-800 transition-all duration-300">
             <p className="text text-background2 my-auto">發佈</p>
           </button>
           <NavbarMoreMenu lang={lang} />

@@ -23,13 +23,13 @@ const Posts = ({ session, lang, ownPost, requestTime }: InferGetStaticPropsType<
                 <PostWrapper key={key} post={JSON.parse(post)} lang={lang} requestTime={requestTime} />
               )) : <div className='space-y-4 mt-4'>
                 <h3>目前還沒有得到您的大力支持，請問乾爹要跟嗎？</h3>
-                  <Link href={Global.webMap.postIt.href} className="flex flex-row items-center space-x-2 cursor-pointer group hover:text-main2 border-2 border-main hover:border-main2 w-max py-2 px-4 rounded-lg">
-                    <div className="relative h-5 w-5">
-                      <Global.webMap.postIt.nav.icon className="absolute opacity-100 group-hover:opacity-0 h-5 w-5 transition-all duration-500" />
-                      <Global.webMap.postIt.nav.iconHover className="absolute opacity-0 group-hover:opacity-100 h-5 w-5 transition-all duration-500" />
-                    </div>
-                    <span className="transition-all duration-500">{Global.webMap.postIt.title(lang)}</span>
-                  </Link>
+                <Link href={Global.webMap.postIt.href} className="flex flex-row items-center space-x-2 cursor-pointer group hover:text-main2 border-2 border-main hover:border-main2 w-max py-2 px-4 rounded-lg">
+                  <div className="relative h-5 w-5">
+                    <Global.webMap.postIt.nav.icon className="absolute opacity-100 group-hover:opacity-0 h-5 w-5 transition-all duration-500" />
+                    <Global.webMap.postIt.nav.iconHover className="absolute opacity-0 group-hover:opacity-100 h-5 w-5 transition-all duration-500" />
+                  </div>
+                  <span className="transition-all duration-500">{Global.webMap.postIt.title(lang)}</span>
+                </Link>
                 <Link href={`/${lang}/editor/new`} className="flex flex-row items-center space-x-2 cursor-pointer group hover:text-main2 border-2 border-main hover:border-main2 w-max py-2 px-4 rounded-lg">
                   <div className="relative h-5 w-5">
                     <Global.webMap.postIt.nav.icon className="absolute opacity-100 group-hover:opacity-0 h-5 w-5 transition-all duration-500" />
@@ -64,9 +64,15 @@ const PostWrapper = ({ post, lang, requestTime }: {
         </div>}
         <div className={`${post.data.thumbnail ? "md:ml-6" : ""} md:-mt-2 text-main`}>
           <h2 className="text-lg font-bold mt-1.5 line-clamp-2">{post.data.title || `未命名`}</h2>
-          {post.data.data.blocks ? post.data.data.blocks[0].data.text && <h3 className="text-base text-main line-clamp-2">{post.data.data.blocks[0].data.text}</h3> : <h3>目前還是空的呀！</h3>}
-          <div>
-            {<span className='text-sm text-main/80'>{post.data.lastEditTimestamp ? `Last edited  ${timestampBefrore((post.data.lastEditTimestamp as any).seconds * 1000)}` : `Created at ${timestampBefrore((post.data.createdTimestamp as any).seconds * 1000)}`}</span>}
+          {post.data.description ? <h3 className="text-base text-main line-clamp-2">{post.data.description}</h3> : post.data.data.blocks[0].data.text && <h3 className="text-base text-main line-clamp-2">{post.data.data.blocks[0].data.text}</h3>}
+          <div className='flex flex-row text-sm text-main/80 space-x-3'>
+            <span>{post.data.lastEditTimestamp ? `Last edited  ${timestampBefrore((post.data.lastEditTimestamp as any).seconds * 1000)}` : `Created at ${timestampBefrore((post.data.createdTimestamp as any).seconds * 1000)}`}</span>
+            <span>|</span>
+            <div className='flex flex-row'>
+              {post.data.tag.filter((item, index) => index < 3).map((category, key) => (
+                <p className="mr-2" key={key}>{post.data.tag.length > 1 ? "#" : ""}{category.replaceAll(" ", "  ")}</p>
+              ))}
+            </div>
           </div>
         </div>
       </div>
