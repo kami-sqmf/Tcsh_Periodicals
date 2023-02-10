@@ -38,6 +38,9 @@
 > ⚠️ 注意：好像沒有什麼好注意的？
 > 💻 <- 代表曾發布到[正式伺服器](https://periodicals.kami.tw/)，其餘僅發佈在[測試伺服器](https://periodicalsalpha.kami.tw/)。
 
+#### Stable Alpha 1.3.4
+- 修正 新增文章時的數值讀取錯誤
+
 #### Stable Alpha 1.3.3
 - 完善投稿功能！
 

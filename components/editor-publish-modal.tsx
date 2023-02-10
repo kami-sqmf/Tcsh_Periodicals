@@ -101,7 +101,7 @@ export const ModalEditorPublish = ({ lang, modalOpen, setModalOpen, data, setDat
                     <p className="text-xs text-main/80">文章類型：</p>
                     <DropdownPostType currentPostType={currentPostType} setCurrentPostType={setCurrentPostType} />
                   </div>
-                  {Object.values(PostType[currentPostType].requiredInformation).map((title, key) => (
+                  {currentPostType !== 0 && Object.values(PostType[currentPostType].requiredInformation).map((title, key) => (
                     <div className="flex flex-col border-main border-b-2" key={key}>
                       <p className="text-xs text-main/80">{title}</p>
                       <input className="bg-transparent focus:outline-none" onChange={e => {
@@ -121,7 +121,7 @@ export const ModalEditorPublish = ({ lang, modalOpen, setModalOpen, data, setDat
                     <p className="text-xs text-main/80">標籤：</p>
                     <div className="flex flex-row items-center text-main text-base space-x-2">
                       {data.tag.map((tag, key) => (
-                        <span key={key} onClick={e => console.log(key)}>#{tag}</span>
+                        <span key={key}>#{tag}</span>
                       ))}
                       <div className="relative inline-block h-6 w-6 text-center group">
                         <RiAddCircleLine className={`absolute w-6 h-6 ${addingTag ? "opacity-0" : "opacity-100"} group-hover:opacity-0 transition-all duration-300`} />
