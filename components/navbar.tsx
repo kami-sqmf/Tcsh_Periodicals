@@ -27,7 +27,7 @@ export const Navbar = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [session.status, admin]);
     return (
-        <div className={`${scrollY > floatNav ? "navTop" : ""} z-30`}>
+        <div className={`${scrollY > floatNav ? "navTop" : ""} z-30 select-none`}>
             <div className={`flex flex-row h-8 md:h-16 w-full relative justify-between items-center transition-all`}>
                 <div className="relative">
                     <RiMenu4Line className={`${showMenu ? "opacity-0 rotate-90" : "opacity-100"} absolute top-50 -translate-y-1/2 text-main h-7 w-7 md:h-10 md:w-10 cursor-pointer transition-all duration-300`} onClick={(e) => { setShowMenu(!showMenu) }} />
@@ -93,22 +93,22 @@ export const NavbarAccountMenu = ({ user, lang, size }: { user: Account | Member
                 leaveTo="transform opacity-0 scale-95"
             >
                 <Menu.Items className="absolute right-0 mt-3 w-max max-w-48 text-main divide-y divide-gray-300 rounded-md bg-background2 shadow-lg ring-1 ring-main2 ring-opacity-5 focus:outline-none">
-                    <div className="pl-4 pr-8 py-1 space-y-2">
+                    {(user as Member).role && <div className="pl-4 pr-8 py-1 space-y-2">
                         <Menu.Item as={Link} href={`/${lang}/editor/new`} className="flex flex-row items-center space-x-2 cursor-pointer group hover:text-main2">
                             <div className="relative h-5 w-5">
                                 <Global.webMap.postIt.nav.icon className="absolute opacity-100 group-hover:opacity-0 h-5 w-5 transition-all duration-500" />
                                 <Global.webMap.postIt.nav.iconHover className="absolute opacity-0 group-hover:opacity-100 h-5 w-5 transition-all duration-500" />
                             </div>
-                            <span className="transition-all duration-500">{Global.webMap.postIt.title(lang)} (正在籌劃)</span>
+                            <span className="transition-all duration-500">{Global.webMap.postIt.title(lang)} (測試版)</span>
                         </Menu.Item>
                         <Menu.Item as={Link} href={Global.webMap.accounts.child.posts.href} className="flex flex-row items-center space-x-2 cursor-pointer group hover:text-main2">
                             <div className="relative h-5 w-5">
                                 <RiBookletLine className="absolute opacity-100 group-hover:opacity-0 h-5 w-5 transition-all duration-500" />
                                 <RiBookletFill className="absolute opacity-0 group-hover:opacity-100 h-5 w-5 transition-all duration-500" />
                             </div>
-                            <span className="transition-all duration-500">{Global.webMap.accounts.child.posts.title(lang)} (正在籌劃)</span>
+                            <span className="transition-all duration-500">{Global.webMap.accounts.child.posts.title(lang)} (測試版)</span>
                         </Menu.Item>
-                    </div>
+                    </div>}
                     <div className="pl-4 pr-8 py-1 space-y-2">
                         <Menu.Item as={Link} href={Global.webMap.accounts.href} className="flex flex-row items-center space-x-2 cursor-pointer group hover:text-main2">
                             <div className="relative h-5 w-5">

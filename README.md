@@ -36,7 +36,24 @@
 
 ### Stable 紀錄（正式版階段）
 > ⚠️ 注意：好像沒有什麼好注意的？
-> 💻 <- 代表曾發布到[正式伺服器](https://periodicals.kami.tw/)，其餘僅發佈在[測試伺服器](https://periodicalsalpha.kami.tw/)。
+> 💻 <- 代表曾發布到[正式伺服器](https://periodicals.kami.tw/)，其餘僅發布在[測試伺服器](https://periodicalsalpha.kami.tw/)。
+
+#### Stable Alpha 1.4.1
+- 修復新增投稿不新增的錯誤
+- 嘗試修正新版投稿編輯器無法載入資訊的問題 (修正 InitalCallback)
+
+#### Stable Alpha 1.4.0
+- 新增文章瀏覽器
+- 因投稿編輯器太多問題所以重構了編輯器
+
+#### Stable Alpha 1.3.5
+- 修正儲存標題文章時標題丟失
+
+#### Stable Alpha 1.3.4
+- 修正 新增文章時的數值讀取錯誤
+
+#### Stable Alpha 1.3.3
+- 完善投稿功能！
 
 #### Stable 1.3.2 💻
 - 修改對電子書免費下載的錯誤
@@ -99,7 +116,7 @@
 ### PreAlpha 紀錄 （最早開發階段）
 
 > ⚠️ 注意：只對重大改變進行記錄
-> 💻 <- 代表曾發布到[正式伺服器](https://periodicals.kami.tw/)，其餘僅發佈在[測試伺服器](https://periodicalsalpha.kami.tw/)。
+> 💻 <- 代表曾發布到[正式伺服器](https://periodicals.kami.tw/)，其餘僅發布在[測試伺服器](https://periodicalsalpha.kami.tw/)。
 
 #### PreAlpha 2.6.0 💻
  - 新增管理員中心 - 網站設定

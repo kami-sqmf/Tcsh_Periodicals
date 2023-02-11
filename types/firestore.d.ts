@@ -136,10 +136,13 @@ interface PostsCollection {
 interface PostDocument {
     type?: number;
     title: string;
+    description: string;
     thumbnail?: string;
     tag: string[];
     data: OutputData;
     owner: string;
     createdTimestamp: FieldValue;
     lastEditTimestamp: FieldValue;
+    isPublic: boolean;
+    requiredAnswer?: { [x: sting]: string };
 }

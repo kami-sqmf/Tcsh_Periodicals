@@ -8,7 +8,7 @@ import { getProps_Session } from '../../utils/get-firestore';
 const Editor = ({ session, lang }: InferGetStaticPropsType<typeof getProps_Session>) => {
   const router = useRouter();
   const dataFetchedRef = useRef(false);
-  
+
   useEffect(() => {
     if (dataFetchedRef.current) return;
     dataFetchedRef.current = true;
@@ -16,7 +16,7 @@ const Editor = ({ session, lang }: InferGetStaticPropsType<typeof getProps_Sessi
     postId.then((link) => {
       router.push(link);
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

@@ -1,5 +1,5 @@
 import { IconType } from "react-icons";
-import { RiAccountBoxFill, RiAccountBoxLine, RiAdminFill, RiAdminLine, RiBookFill, RiBookLine, RiChatForwardFill, RiChatForwardLine, RiEditFill, RiEditLine, RiFilePaper2Fill, RiFilePaper2Line, RiGroup2Fill, RiGroup2Line, RiHome2Fill, RiHome2Line, RiInstagramFill, RiInstagramLine, RiNotification2Line, RiProfileFill, RiProfileLine, RiSlideshowFill, RiSlideshowLine, RiUserSettingsFill, RiUserSettingsLine, RiWindow2Fill, RiWindow2Line, RiYoutubeFill, RiYoutubeLine } from "react-icons/ri";
+import { RiAccountBoxFill, RiAccountBoxLine, RiAdminFill, RiAdminLine, RiBookFill, RiBookLine, RiChatForwardFill, RiChatForwardLine, RiEditFill, RiEditLine, RiFilePaper2Fill, RiFilePaper2Line, RiGroup2Fill, RiGroup2Line, RiHome2Fill, RiHome2Line, RiNewspaperFill, RiNewspaperLine, RiNotification2Line, RiProfileFill, RiProfileLine, RiSlideshowFill, RiSlideshowLine, RiUserSettingsFill, RiUserSettingsLine, RiWindow2Fill, RiWindow2Line, RiYoutubeFill, RiYoutubeLine } from "react-icons/ri";
 import { _t, langCode } from "../language/lang";
 import logo from "../public/logo.jpg";
 
@@ -73,13 +73,13 @@ export const Global = {
             }
         },
         posts: {
-            href: "https://www.instagram.com/tcsh_periodicals/",
+            href: "/posts",
             title: (lang: langCode) => _t(lang).webMap.posts.title,
             nav: {
                 show: true,
                 admin: false,
-                icon: RiInstagramLine,
-                iconHover: RiInstagramFill,
+                icon: RiNewspaperLine,
+                iconHover: RiNewspaperFill,
             },
         },
         youtube: {

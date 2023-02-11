@@ -1,10 +1,11 @@
 import EditorJS, { OutputData } from "@editorjs/editorjs";
-import { MutableRefObject, useEffect, useRef, useState } from "react";
-import { EDITOR_JS_TOOLS, Undo } from '../utils/editor-tool.js';
-import { PostDocument } from "../types/firestore.js";
+import { ChangeEvent, RefObject, useEffect, useRef, useState } from "react";
+import { langCode } from "../../language/lang.jsx";
+import { EDITOR_JS_TOOLS, Undo } from '../../utils/editor-tool.js';
 
 
-const EditorBlock = ({ data, onChange, editorId, serverData, titleRef }: { data?: OutputData; onChange(val: OutputData): void; editorId: string; serverData: PostDocument; titleRef: MutableRefObject<HTMLInputElement> }) => {
+const EditorBlock = ({ lang, initalData, onChange, titleRef }: { lang: langCode; initalData: { title: string; editor: OutputData }; onChange: (data: OutputData | ChangeEvent<HTMLInputElement>) => void; titleRef: RefObject<HTMLInputElement> }) => {
+  const editorId = "editor";
   const refEditor = useRef<EditorJS>();
   const [titleFocus, setTitleFocus] = useState<boolean>(false);
 
@@ -13,11 +14,11 @@ const EditorBlock = ({ data, onChange, editorId, serverData, titleRef }: { data?
       const editor = new EditorJS({
         holder: editorId,
         tools: EDITOR_JS_TOOLS,
-        data: data,
+        data: initalData.editor,
         placeholder: "Write your thought",
         onReady: () => {
           const undo = new Undo({ editor, debounceTimer: 100 });
-          if (data) undo.initialize(data);
+          if (initalData.editor) undo.initialize(initalData.editor);
         },
         async onChange(api, event) {
           const data = await api.saver.save();
@@ -39,7 +40,7 @@ const EditorBlock = ({ data, onChange, editorId, serverData, titleRef }: { data?
       <div className="w-full">
         <div className="flex flex-row -ml-4 lg:ml-[54px]">
           <span className={`hidden md:block text-sm border-r-2 border-main/40 pr-3 mr-6 py-[22px] ${titleFocus ? "opacity-100" : "opacity-0"} transition-all duration-150`}>Title</span>
-          <input id={"title"} defaultValue={serverData.title || ""} ref={titleRef} placeholder="Title" className="text-5xl font-bold bg-transparent focus:outline-none mb-2 flex-grow" onFocus={() => setTitleFocus(true)} onBlur={() => setTitleFocus(false)} />
+          <input id={"title"} defaultValue={initalData.title || ""} ref={titleRef} placeholder="Title" className="text-5xl font-bold bg-transparent focus:outline-none mb-2 flex-grow" onFocus={() => setTitleFocus(true)} onBlur={() => setTitleFocus(false)} onChange={onChange} />
         </div>
       </div>
     </div>
