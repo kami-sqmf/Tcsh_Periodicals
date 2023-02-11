@@ -2,20 +2,21 @@
 'use client'
 
 import { Combobox, Dialog, Menu, Transition } from "@headlessui/react"
-import { ChangeEvent, Dispatch, Fragment, MutableRefObject, SetStateAction, useCallback, useEffect, useState } from "react"
+import { FieldValue, addDoc, collection, getDocs, serverTimestamp } from "firebase/firestore"
+import { ChangeEvent, Dispatch, Fragment, MutableRefObject, RefObject, SetStateAction, useCallback, useEffect, useState } from "react"
 import { RiAddCircleFill, RiAddCircleLine, RiArrowDownSFill } from "react-icons/ri"
 import { SetterOrUpdater } from "recoil"
-import { _t, langCode } from "../language/lang"
-import { AccountsUni, PostDocument } from "../types/firestore"
-import { PostType } from "../types/posts"
-import { FieldValue, addDoc, collection, getDocs, serverTimestamp, setDoc } from "firebase/firestore"
-import { db } from "../utils/firebase"
-import { timestampBefrore } from "./chat"
+import { langCode } from "../../language/lang"
+import { AccountsUni, PostDocument } from "../../types/firestore"
+import { PostType } from "../../types/posts"
+import { db } from "../../utils/firebase"
+import { timestampBefrore } from "../chat"
 
-export const ModalEditorPublish = ({ lang, modalOpen, setModalOpen, data, setData, user, titleRef, onPublishedClick }: { lang: langCode; modalOpen: boolean; setModalOpen: SetterOrUpdater<boolean>; data: PostDocument; setData: SetterOrUpdater<PostDocument | undefined>; user: AccountsUni; titleRef: MutableRefObject<HTMLInputElement>; onPublishedClick: () => void }) => {
+export const ModalEditorPublish = ({ lang, modalOpen, setModalOpen, queueData, titleRef, onPublishedClick }: { lang: langCode; modalOpen: boolean; setModalOpen: SetterOrUpdater<boolean>; queueData: MutableRefObject<PostDocument | undefined>; user: AccountsUni; titleRef: RefObject<HTMLInputElement>; onPublishedClick: () => void }) => {
+  const data = queueData.current!;
+  const [addingTag, setAddingTag] = useState(false);
   const [rowTextarea, setTextarea] = useState<number>(1);
   const [currentPostType, setCurrentPostType] = useState(data.type || 0);
-  const [addingTag, setAddingTag] = useState(false);
   const [tags, setTags] = useState<ComboboxTagsObject[]>([{ title: "請輸入想要新增的標籤", type: 0 }]);
   const handleTextArea = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const hiddenTextarea = document.querySelector("#hidden-textarea") as HTMLTextAreaElement;
@@ -23,10 +24,7 @@ export const ModalEditorPublish = ({ lang, modalOpen, setModalOpen, data, setDat
       hiddenTextarea.value = e.target.value;
       setTextarea(hiddenTextarea.scrollHeight / 24);
     }
-    setData(data => {
-      if (data) data.description = e.target.value;
-      return data;
-    })
+    queueData.current!.description = e.target.value;
   }
   const onRefChange = useCallback((node: HTMLTextAreaElement) => {
     if (node === null) return;
@@ -46,10 +44,7 @@ export const ModalEditorPublish = ({ lang, modalOpen, setModalOpen, data, setDat
     return setAddingTag(!addingTag);
   }
   useEffect(() => {
-    setData(data => {
-      if (data) data.type = currentPostType;
-      return data;
-    })
+    queueData.current!.type = currentPostType;
     return () => { }
   }, [currentPostType])
   return (
@@ -84,7 +79,7 @@ export const ModalEditorPublish = ({ lang, modalOpen, setModalOpen, data, setDat
                     <h1>投稿成品預覽</h1>
                     <div className="flex flex-col border-main border-b-2">
                       <p className="text-xs text-main/80">標題</p>
-                      <input className="bg-transparent focus:outline-none text-2xl" defaultValue={titleRef.current ? titleRef.current.value : "未命名"} onChange={e => { titleRef.current.value = e.target.value; setData(data => { if (data) data.title = e.target.value; return data }) }} />
+                      <input className="bg-transparent focus:outline-none text-2xl" defaultValue={titleRef.current ? titleRef.current.value : "未命名"} onChange={e => { titleRef.current!.value = e.target.value; queueData.current!.title = e.target.title; }} />
                     </div>
                     <div className="flex flex-col border-main border-b-2">
                       <p className="text-xs text-main/80">預覽簡述：</p>
@@ -102,15 +97,10 @@ export const ModalEditorPublish = ({ lang, modalOpen, setModalOpen, data, setDat
                     <div className="flex flex-col border-main border-b-2" key={key}>
                       <p className="text-xs text-main/80">{title}</p>
                       <input className="bg-transparent focus:outline-none" onChange={e => {
-                        setData(data => {
-                          if (data) {
-                            if (!data.requiredAnswer) {
-                              data.requiredAnswer = {};
-                            }
-                            (data.requiredAnswer as any)[Object.keys(PostType[currentPostType].requiredInformation)[key]] = e.target.value;
-                          }
-                          return data;
-                        })
+                        if (!data.requiredAnswer) {
+                          queueData.current!.requiredAnswer = {};
+                        }
+                        (queueData.current!.requiredAnswer as any)[Object.keys(PostType[currentPostType].requiredInformation)[key]] = e.target.value;
                       }} />
                     </div>
                   ))}
@@ -126,7 +116,7 @@ export const ModalEditorPublish = ({ lang, modalOpen, setModalOpen, data, setDat
                       </div>
                     </div>
                     {addingTag && <div className="block">
-                      <ComboboxTag tags={tags} setBox={setAddingTag} setData={setData} />
+                      <ComboboxTag tags={tags} setBox={setAddingTag} queueData={queueData} />
                     </div>}
                   </div>
                   <div className='flex flex-col-reverse md:flex-row w-full justify-around'>
@@ -166,7 +156,7 @@ function DropdownPostType({ currentPostType, setCurrentPostType }: { currentPost
   )
 }
 
-function ComboboxTag({ tags, setBox, setData }: { tags: ComboboxTagsObject[]; setBox: Dispatch<SetStateAction<boolean>>; setData: SetterOrUpdater<PostDocument | undefined>; }) {
+function ComboboxTag({ tags, setBox, queueData }: { tags: ComboboxTagsObject[]; setBox: Dispatch<SetStateAction<boolean>>; queueData: MutableRefObject<PostDocument | undefined>; }) {
   const [selectedTag, setSelectedTag] = useState('');
   const [queryState, setQuery] = useState('');
   const filteredTag: () => ComboboxTagsObject[] = () => {
@@ -187,7 +177,8 @@ function ComboboxTag({ tags, setBox, setData }: { tags: ComboboxTagsObject[]; se
       })
     }
     setBox(false);
-    return setData(data => { if (data) data.tag.push(selected); return data });
+    if (!Array.isArray(queueData.current!.tag)) queueData.current!.tag = [];
+    return queueData.current!.tag.push(selected);
   }
   return (
     <Combobox value={selectedTag} onChange={onTagSelected}>

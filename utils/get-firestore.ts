@@ -32,7 +32,7 @@ export async function getProps_Global_Members_DB(ctx: GetStaticPropsContext) {
 export async function getProps_Session(ctx: GetServerSidePropsContext) {
     const lang = await ctx.locale;
     const session = await getSession(ctx.res);
-    if (!session) {
+    if (!session || !ctx.query.pid) {
         return {
             redirect: {
                 destination: '/',
@@ -44,6 +44,7 @@ export async function getProps_Session(ctx: GetServerSidePropsContext) {
         props: {
             session,
             lang: lang ? lang as langCode : "zh",
+            postId: ctx.query.pid as string
         },
     }
 }

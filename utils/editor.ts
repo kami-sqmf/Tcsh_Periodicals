@@ -11,7 +11,7 @@ export const newPost = async (userId: string) => {
     title: "",
     description: "",
     thumbnail: "",
-    tag: [""],
+    tag: [],
     owner: userId,
     isPublic: false,
     createdTimestamp: serverTimestamp(),
