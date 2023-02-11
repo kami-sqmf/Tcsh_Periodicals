@@ -1,8 +1,6 @@
-import { addDoc, collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
-import { PostDocument } from "../types/firestore";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { Global } from "../types/global";
 import { db } from "./firebase";
-import { Dispatch, SetStateAction, use } from "react";
 
 export const newPost = async (userId: string) => {
   const post = await addDoc(collection(db, "posts"), {

@@ -11,7 +11,7 @@ import { _t } from "../../language/lang";
 import { PostDocument } from "../../types/firestore";
 import { Global } from "../../types/global";
 import { db } from "../../utils/firebase";
-import { getProps_Session } from "../../utils/get-firestore";
+import { getProps_PostID_Session } from "../../utils/get-firestore";
 
 const EditorBlock = dynamic(() => import("../../components/editor/editor-block"), {
   ssr: false,
@@ -20,7 +20,7 @@ const ModalEditorPublish = dynamic(() => import('../../components/editor/editor-
   ssr: false,
 })
 
-const Editor = ({ postId, lang, session }: InferGetStaticPropsType<typeof getProps_Session>) => {
+const Editor = ({ postId, lang, session }: InferGetStaticPropsType<typeof getProps_PostID_Session>) => {
   let queueToCloud: any;
   const router = useRouter();
   const titleRef = useRef<HTMLInputElement>(null);
@@ -47,6 +47,7 @@ const Editor = ({ postId, lang, session }: InferGetStaticPropsType<typeof getPro
   }, []);
   // Firestore Snapshot initalize
   const initalRun = useCallback(() => {
+    console.log("I am initallizing")
     onSnapshot(doc(db, "posts", postId), async (doc) => {
       if (!doc.exists()) return router.push(`/${lang}`);
       if (doc.data().owner !== session.firestore.data.uid) return router.push(`/${lang}`);
@@ -59,7 +60,7 @@ const Editor = ({ postId, lang, session }: InferGetStaticPropsType<typeof getPro
       }
     })
   }, [],)
-  useEffect(() => initalRun, [initalRun]);
+  useEffect(() => initalRun(), [initalRun]);
   // EditorListenr
   const editorListener = (data: OutputData | ChangeEvent<HTMLInputElement>) => {
     clearTimeout(queueToCloud);
@@ -129,4 +130,4 @@ function isOutputData(data: OutputData | ChangeEvent<HTMLInputElement>): data is
 
 export default Editor
 
-export const getServerSideProps: GetServerSideProps = getProps_Session;
+export const getServerSideProps: GetServerSideProps = getProps_PostID_Session;

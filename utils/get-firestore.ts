@@ -29,10 +29,10 @@ export async function getProps_Global_Members_DB(ctx: GetStaticPropsContext) {
     }
 }
 
-export async function getProps_Session(ctx: GetServerSidePropsContext) {
+export async function getProps_PostID_Session(ctx: GetServerSidePropsContext) {
     const lang = await ctx.locale;
     const session = await getSession(ctx.res);
-    if (!session || !ctx.query.pid) {
+    if (!session) {
         return {
             redirect: {
                 destination: '/',
@@ -45,6 +45,25 @@ export async function getProps_Session(ctx: GetServerSidePropsContext) {
             session,
             lang: lang ? lang as langCode : "zh",
             postId: ctx.query.pid as string
+        },
+    }
+}
+
+export async function getProps_Session(ctx: GetServerSidePropsContext) {
+    const lang = await ctx.locale;
+    const session = await getSession(ctx.res);
+    if (!session) {
+        return {
+            redirect: {
+                destination: '/',
+                permanent: false,
+            },
+        }
+    }
+    return {
+        props: {
+            session,
+            lang: lang ? lang as langCode : "zh",
         },
     }
 }

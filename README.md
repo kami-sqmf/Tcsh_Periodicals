@@ -38,6 +38,10 @@
 > ⚠️ 注意：好像沒有什麼好注意的？
 > 💻 <- 代表曾發布到[正式伺服器](https://periodicals.kami.tw/)，其餘僅發布在[測試伺服器](https://periodicalsalpha.kami.tw/)。
 
+#### Stable Alpha 1.4.1
+- 修復新增投稿不新增的錯誤
+- 嘗試修正新版投稿編輯器無法載入資訊的問題 (修正 InitalCallback)
+
 #### Stable Alpha 1.4.0
 - 新增文章瀏覽器
 - 因投稿編輯器太多問題所以重構了編輯器
