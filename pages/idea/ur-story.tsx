@@ -267,6 +267,30 @@ const SectionFinish = ({ setSection, data }: { setSection: SetterOrUpdater<numbe
     location.reload();
   }
   const onNextClicked = async () => {
+    if (data.current?.type === "text") {
+      await fetch("/api/sendNotificationLine", {
+        method: "POST",
+        body: JSON.stringify({
+          message: `收到了一個新的匿名投稿！\n內容：${data.current.content}`
+        })
+      })
+    } else if (data.current?.type === "voice") {
+      await fetch("/api/sendNotificationLine", {
+        method: "POST",
+        body: JSON.stringify({
+          message: "收到了一個新的匿名(語音)投稿！",
+          voiceUrl: fileRef.current!.downloadUrl,
+        })
+      })
+    } else if (data.current?.type === "picture") {
+      await fetch("/api/sendNotificationLine", {
+        method: "POST",
+        body: JSON.stringify({
+          message: "收到了一個新的匿名(圖片)投稿！",
+          imageUrl: fileRef.current!.downloadUrl,
+        })
+      })
+    }
     location.replace("/");
   }
   return (
@@ -286,7 +310,7 @@ const SectionFinish = ({ setSection, data }: { setSection: SetterOrUpdater<numbe
         <div className='border-2 border-main px-6 py-4 rounded-md'>
           {data.current?.type === "text" && <span>{data.current.content}</span>}
           {data.current?.type === "voice" && <audio controls><source src={fileRef.current!.downloadUrl} />您的瀏覽器不支援播放啊啊啊！</audio>}
-          {data.current?.type === "picture" && <div className="relative min-w-[128px] min-h-[64px]"><Image className='object-contain w-auto h-auto' fill={true} src={fileRef.current!.downloadUrl} alt="您的上傳，如果你看不到他可能代表您的網路不佳否則就代表你失敗了" /></div>}
+          {data.current?.type === "picture" && <div className="relative w-[65vw] min-h-[64vh]"><Image className='object-contain w-[65vw] min-h-[64vh]' fill={true} src={fileRef.current!.downloadUrl} alt="您的上傳，如果你看不到他可能代表您的網路不佳否則就代表你失敗了" /></div>}
         </div>
         <div className='flex flex-row space-x-2 mt-2'>
           <button className='bg-red-800/70 text-background2 rounded px-3 py-2' onClick={onCancelClicked}>刪除，再來一次</button>

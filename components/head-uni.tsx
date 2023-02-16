@@ -22,7 +22,9 @@ function HeadUni({
       <meta property="og:title" content={data.title} />
       <meta property="og:description" content={data.description} />
       <meta property="og:image" content={imagePath ? imagePath : `${url}/logo.jpg`} />
-
+      <meta property="og:image:alt" content={title} />
+      <meta property="fb:app_id" content="5964310810278637" />
+      
       <meta name="twitter:card" content="summary_large_image" />
       <meta property="twitter:domain" content={`${Global.subdomian ? Global.subdomian + "." : ""}${Global.domain}`} />
       <meta property="twitter:url" content={data.url} />

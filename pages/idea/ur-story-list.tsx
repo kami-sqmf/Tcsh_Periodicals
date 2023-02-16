@@ -62,9 +62,11 @@ const UrStoryList = () => {
         <span className='text-lg font-medium text-main mt-2'>正在載入中</span>
       </div>}
       {severSnapshot && <div className='max-w-xs md:max-w-2xl lg:max-w-4xl xl:max-w-6xl mx-auto my-8 space-y-6'>
-        {severSnapshot?.map((doc, key) => (
-          <CardWrapper data={doc} key={key} />
-        ))}
+        <div className='-ml-6'>
+          {severSnapshot?.map((doc, key) => (
+            <CardWrapper data={doc} key={key} />
+          ))}
+        </div>
       </div>}
     </div>
   )
@@ -79,18 +81,24 @@ const CardWrapper = ({ data }: { data: { id: string; data: IdeaUrStory } }) => {
     try {
       const blob = await toBlob(document.getElementById(data.id)!);
       const file = new File([blob!], `${sections[type].title}-${data.id}.png`, { type: blob!.type });
-      await navigator.share({
+      setTimeout(() => {
+        setSharing(false);
+      }, 3000)
+      const share = await navigator.share({
         title: '分享回覆！',
         text: `${sections[type].title} - ${data.data.type === "text" ? data.data.content : data.data.url}`,
         files: [file],
-      })
-    } catch (error) {
+      });
+    } catch (error: any) {
+      if (error.toString().includes('AbortError')) {
+        console.log("Aborted")
+      }
       alert(`Error: ${error}`);
     }
     setSharing(false);
   }
-  return (<div id={data.id} className='flex flex-col space-y-2 group w-fit'>
-    <div className='flex flex-row justify-between items-end bg-transparent'>
+  return (<div id={data.id} className='flex flex-col space-y-2 group w-fit bg-background px-6 py-4'>
+    <div className='flex flex-row justify-between items-end'>
       {sections.flatMap((section, key) => {
         if (key !== type) return [];
         return (
@@ -103,18 +111,17 @@ const CardWrapper = ({ data }: { data: { id: string; data: IdeaUrStory } }) => {
           </div>
         )
       })}
-      <div className={`flex flex-row cursor-pointer items-center space-x-2 group text-main hover:text-main2 ${sharing ? "animate-bounce" : ""}`} onClick={onShareClick}>
+      <div className={`flex flex-row cursor-pointer items-center space-x-2 group text-main hover:text-main2 ${sharing ? "hidden" : ""}`} onClick={onShareClick}>
         <div className='relative w-5 h-5'>
           <RiShareBoxFill className='absolute w-5 h-5 opacity-0 group-hover:opacity-100 transition-all duration-300' />
           <RiShareBoxLine className='absolute w-5 h-5 opacity-100 group-hover:opacity-0 transition-all duration-300' />
         </div>
         {!sharing && <span>分享</span>}
-        {sharing && <span>分享中⋯⋯</span>}
       </div>
     </div>
     <div className='border-main group-hover:border-main2 text-main group-hover:text-main2 border-2 rounded-md px-6 py-4 w-fit flex flex-col'>
       {data.data.type === "text" && <span className='transition-all duration-300'>{data.data.content}</span>}
-      {data.data.type === "picture" && <div className="relative w-[1024px] max-h-[1024px] aspect-video"><Image className='object-contain w-auto h-auto' fill={true} src={data.data.url!} alt="您的上傳，如果你看不到他可能代表您的網路不佳否則就代表你失敗了" /></div>}
+      {data.data.type === "picture" && <div className="relative w-[75vw] max-h-[75vw] aspect-video"><Image className='object-contain w-auto h-auto' fill={true} src={data.data.url!} alt="您的上傳，如果你看不到他可能代表您的網路不佳否則就代表你失敗了" /></div>}
       {data.data.type === "voice" && <audio controls><source src={data.data.url} />您的瀏覽器不支援播放啊啊啊！</audio>}
       <span className='text-xs opacity-70 transition-all duration-300 w-full text-right mt-2'>{timestamp2Chinese((data.data.createdTimestamp as any).seconds)}</span>
     </div>

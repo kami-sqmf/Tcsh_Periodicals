@@ -38,6 +38,9 @@
 > ⚠️ 注意：好像沒有什麼好注意的？
 > 💻 <- 代表曾發布到[正式伺服器](https://periodicals.kami.tw/)，其餘僅發布在[測試伺服器](https://periodicalsalpha.kami.tw/)。
 
+#### Stable Alpha 1.4.5
+- 新增匿名投稿通知系統
+
 #### Stable Alpha 1.4.4
 - 新增匿名投稿系統查看清單
 
@@ -45,7 +48,7 @@
 - Navbar 滑動問題嘗試
 - 新增匿名投稿系統
 
-#### Stable Alpha 1.4.1
+#### Stable 1.4.1 💻
 - 修復新增投稿不新增的錯誤
 - 嘗試修正新版投稿編輯器無法載入資訊的問題 (修正 InitalCallback)
 
