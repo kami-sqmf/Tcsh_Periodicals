@@ -7,7 +7,7 @@ import { useScroll } from "../../utils/use-scroll";
 import { NavbarAccountMenu } from "../navbar";
 import Link from "next/link";
 
-const floatNav = 38;
+const floatNav = 59;
 
 const EditorNavbar = ({ lang, status, user, setModalPublish, isPageReady }: { lang: langCode; status: string; user: AccountsUni; setModalPublish: Dispatch<SetStateAction<boolean>>; isPageReady: boolean }) => {
   const { scrollY } = useScroll();
