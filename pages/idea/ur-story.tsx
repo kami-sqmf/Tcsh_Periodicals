@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { addDoc, collection, deleteDoc, doc } from 'firebase/firestore';
+import { FieldValue, addDoc, collection, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { StorageReference, deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -70,8 +70,8 @@ const UrStory = () => {
 
   return (
     <div className='min-h-screen overflow-hidden bg-background'>
-      <HeadUni title={"你的故事，我們來寫"} description={"生活中，我們總會面臨各式各樣的事，或好或壞。只要你願意與我們分享，不限題材，我們團隊就會將你的故事以文字、圖像定期呈現在刊物、貼文或限時動態與大家分享。"} lang={lang} pages='/idea/ur-story' />
-      <IdeaNavbar lang={lang} status={statusNavbar} />
+      <HeadUni title={"你的故事，我們來寫"} imagePath='https://firebasestorage.googleapis.com/v0/b/tcsh-periodicals.appspot.com/o/posts%2Fimage%2FIzrbxIQJHa3Z3VDPJR?alt=media&token=f970c48a-a9ab-4067-afd0-6a0120f98756' description={"生活中，我們總會面臨各式各樣的事，或好或壞。只要你願意與我們分享，不限題材，我們團隊就會將你的故事以文字、圖像定期呈現在刊物、貼文或限時動態與大家分享。"} lang={lang} pages='/idea/ur-story' />
+      <IdeaNavbar lang={lang} />
       <div className={`h-1 bg-main2/50`}><div className={`h-1 bg-main animate-bright w-[${progressbar}%] transition-all duration-500`}><div className='hidden w-[33%] md:w-[66%] xl:w-[100%]' /></div></div>
       <div className='max-w-xs md:max-w-2xl lg:max-w-4xl xl:max-w-6xl mx-auto'>
         {section !== 0 && section !== 4 && <div className='flex flex-row items-center space-x-2 cursor-pointer text-main ml-2 mt-2' onClick={() => setSection(0)}>
@@ -125,7 +125,8 @@ const SectionText = ({ setSection, data }: { setSection: SetterOrUpdater<number>
     const hiddenTextarea = document.querySelector("#hidden-textarea") as HTMLTextAreaElement;
     data.current = {
       type: "text",
-      content: hiddenTextarea.value
+      content: hiddenTextarea.value,
+      createdTimestamp: serverTimestamp()
     }
     setSection(4);
   }
@@ -166,7 +167,8 @@ const SectionVoice = ({ setSection, data }: { setSection: SetterOrUpdater<number
   const onNextClick = () => {
     data.current = {
       type: "voice",
-      file: inputRef.current!.files![0]
+      file: inputRef.current!.files![0],
+      createdTimestamp: serverTimestamp()
     }
     setSection(4);
   }
@@ -207,7 +209,8 @@ const SectionPicture = ({ setSection, data }: { setSection: SetterOrUpdater<numb
   const onNextClick = () => {
     data.current = {
       type: "picture",
-      file: inputRef.current!.files![0]
+      file: inputRef.current!.files![0],
+      createdTimestamp: serverTimestamp()
     }
     setSection(4);
   }
@@ -232,7 +235,8 @@ const SectionFinish = ({ setSection, data }: { setSection: SetterOrUpdater<numbe
     if (data.current?.type === "text") {
       const doc = await addDoc(collection(db, "idea-urstory"), {
         type: data.current?.type,
-        content: data.current.content
+        content: data.current.content,
+        createdTimestamp: data.current?.createdTimestamp,
       })
       fileRef.current = { docId: doc.id };
       setUploading(false);
@@ -243,7 +247,8 @@ const SectionFinish = ({ setSection, data }: { setSection: SetterOrUpdater<numbe
         const downloadUrl = await getDownloadURL(imageRef);
         const doc = await addDoc(collection(db, "idea-urstory"), {
           type: data.current?.type,
-          url: downloadUrl
+          url: downloadUrl,
+          createdTimestamp: data.current?.createdTimestamp,
         })
         fileRef.current = { docId: doc.id, imageRef: imageRef, downloadUrl: downloadUrl };
         setUploading(false);
@@ -305,13 +310,18 @@ const App = ({ setSection, info }: { setSection: SetterOrUpdater<number>; info: 
 
 export default UrStory;
 
-type IdeaUrStory = {
+export type IdeaUrStory = {
   type: "text";
   content: string;
+  createdTimestamp: FieldValue,
 } | {
   type: "picture";
   file: File;
+  url?: string;
+  createdTimestamp: FieldValue,
 } | {
   type: "voice";
   file: File;
+  url?: string;
+  createdTimestamp: FieldValue,
 }
