@@ -11,6 +11,9 @@ const config = {
         tellUs: {
             title: "給予匿名回饋",
         },
+        "idea-urstory": {
+            title: "匿名投稿系統",
+        },
         ebook: {
             title: "電子書",
             description: '你是不是想要來 GET 你的電子書了？ 趕快點進來吧！',
@@ -123,8 +126,8 @@ const config = {
     },
     login: {
         requiredLogin: "您必須先登入！",
-        googleAccountTCSH: "使用 慈中 Gooogle 帳號登入",
-        otherAccountEDU: "或是其他 Google 帳號",
+        googleAccountTCSH: "或是慈中 Google 帳號",
+        otherAccountEDU: "使用 Gooogle 帳號登入",
     },
     accounts: {
         logout: "登出",

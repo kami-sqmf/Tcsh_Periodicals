@@ -17,6 +17,7 @@
     "@vercel/analytics": "^0.1.8",
     "editorjs-undo": "^2.0.18",
     "firebase": "^9.17.1",
+    "html-to-image": "^1.11.11",
     "next": "13.0.6",
     "next-auth": "^4.19.2",
     "react": "18.2.0",

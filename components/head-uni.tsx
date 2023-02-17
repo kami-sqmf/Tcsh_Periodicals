@@ -5,8 +5,8 @@ import { Global } from '../types/global';
 const url = `https://${Global.subdomian ? Global.subdomian + "." : ""}${Global.domain}`
 
 function HeadUni({
-  title, description, pages, lang
-}: { title: string, description: string; pages: string, lang: langCode }) {
+  title, description, pages, lang, imagePath
+}: { title: string, description: string; pages: string, lang: langCode, imagePath?: string }) {
   const data = {
     description: description,
     url: `${url}/${lang}${pages}`,
@@ -21,14 +21,16 @@ function HeadUni({
       <meta property="og:type" content="website" />
       <meta property="og:title" content={data.title} />
       <meta property="og:description" content={data.description} />
-      <meta property="og:image" content={`${url}/logo.jpg`} />
-
+      <meta property="og:image" content={imagePath ? imagePath : `${url}/logo.jpg`} />
+      <meta property="og:image:alt" content={title} />
+      <meta property="fb:app_id" content="5964310810278637" />
+      
       <meta name="twitter:card" content="summary_large_image" />
       <meta property="twitter:domain" content={`${Global.subdomian ? Global.subdomian + "." : ""}${Global.domain}`} />
       <meta property="twitter:url" content={data.url} />
       <meta name="twitter:title" content={data.title} />
       <meta name="twitter:description" content={data.description} />
-      <meta name="twitter:image" content={`${url}/logo.jpg`} />
+      <meta name="twitter:image" content={imagePath ? imagePath : `${url}/logo.jpg`} />
 
       <link rel="icon" type="image/x-icon" href="/favicon.ico"></link>
       <link rel="alternate" href={`${url}/zh${pages}`} hrefLang="x-default" />

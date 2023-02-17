@@ -1,5 +1,5 @@
 import { IconType } from "react-icons";
-import { RiAccountBoxFill, RiAccountBoxLine, RiAdminFill, RiAdminLine, RiBookFill, RiBookLine, RiChatForwardFill, RiChatForwardLine, RiEditFill, RiEditLine, RiFilePaper2Fill, RiFilePaper2Line, RiGroup2Fill, RiGroup2Line, RiHome2Fill, RiHome2Line, RiNewspaperFill, RiNewspaperLine, RiNotification2Line, RiProfileFill, RiProfileLine, RiSlideshowFill, RiSlideshowLine, RiUserSettingsFill, RiUserSettingsLine, RiWindow2Fill, RiWindow2Line, RiYoutubeFill, RiYoutubeLine } from "react-icons/ri";
+import { RiAccountBoxFill, RiAccountBoxLine, RiAdminFill, RiAdminLine, RiBookFill, RiBookLine, RiChatForwardFill, RiChatForwardLine, RiEditFill, RiEditLine, RiFilePaper2Fill, RiFilePaper2Line, RiFileUnknowFill, RiFileUnknowLine, RiGroup2Fill, RiGroup2Line, RiHome2Fill, RiHome2Line, RiLock2Fill, RiLockLine, RiNewspaperFill, RiNewspaperLine, RiNotification2Line, RiProfileFill, RiProfileLine, RiSlideshowFill, RiSlideshowLine, RiUserSettingsFill, RiUserSettingsLine, RiWindow2Fill, RiWindow2Line, RiYoutubeFill, RiYoutubeLine } from "react-icons/ri";
 import { _t, langCode } from "../language/lang";
 import logo from "../public/logo.jpg";
 
@@ -29,38 +29,6 @@ export const Global = {
                 iconHover: RiHome2Fill,
             },
         },
-        member: {
-            href: "/member",
-            title: (lang: langCode) => _t(lang).webMap.member.title,
-            description: (lang: langCode) => _t(lang).webMap.member.description,
-            nav: {
-                show: true,
-                admin: false,
-                icon: RiGroup2Line,
-                iconHover: RiGroup2Fill,
-            },
-        },
-        tellUs: {
-            href: "https://tellonym.me/user.669983",
-            title: (lang: langCode) => _t(lang).webMap.tellUs.title,
-            nav: {
-                show: true,
-                admin: false,
-                icon: RiChatForwardLine,
-                iconHover: RiChatForwardFill,
-            },
-        },
-        editor: {
-            href: "/editor",
-            title: (lang: langCode) => _t(lang).webMap.editor.title,
-            description: (lang: langCode) => _t(lang).webMap.editor.description,
-            nav: {
-                show: false,
-                admin: false,
-                icon: RiBookLine,
-                iconHover: RiBookFill,
-            }
-        },
         ebook: {
             href: "/ebook",
             title: (lang: langCode) => _t(lang).webMap.ebook.title,
@@ -82,16 +50,6 @@ export const Global = {
                 iconHover: RiNewspaperFill,
             },
         },
-        youtube: {
-            href: "https://www.youtube.com/@tcsh_periodicals",
-            title: (lang: langCode) => _t(lang).webMap.youtube.title,
-            nav: {
-                show: true,
-                admin: false,
-                icon: RiYoutubeLine,
-                iconHover: RiYoutubeFill,
-            },
-        },
         postIt: {
             href: "https://linktr.ee/tcsh_periodicals",
             title: (lang: langCode) => _t(lang).webMap.postIt.title,
@@ -102,12 +60,64 @@ export const Global = {
                 iconHover: RiEditFill,
             },
         },
+        "idea-urstory": {
+            href: "/idea/ur-story",
+            title: (lang: langCode) => _t(lang).webMap["idea-urstory"].title,
+            nav: {
+                show: true,
+                admin: false,
+                icon: RiFileUnknowLine,
+                iconHover: RiFileUnknowFill,
+            },
+        },
+        tellUs: {
+            href: "https://tellonym.me/user.669983",
+            title: (lang: langCode) => _t(lang).webMap.tellUs.title,
+            nav: {
+                show: false,
+                admin: false,
+                icon: RiChatForwardLine,
+                iconHover: RiChatForwardFill,
+            },
+        },
+        editor: {
+            href: "/editor",
+            title: (lang: langCode) => _t(lang).webMap.editor.title,
+            description: (lang: langCode) => _t(lang).webMap.editor.description,
+            nav: {
+                show: false,
+                admin: false,
+                icon: RiBookLine,
+                iconHover: RiBookFill,
+            }
+        },
+        member: {
+            href: "/member",
+            title: (lang: langCode) => _t(lang).webMap.member.title,
+            description: (lang: langCode) => _t(lang).webMap.member.description,
+            nav: {
+                show: true,
+                admin: false,
+                icon: RiGroup2Line,
+                iconHover: RiGroup2Fill,
+            },
+        },
+        youtube: {
+            href: "https://www.youtube.com/@tcsh_periodicals",
+            title: (lang: langCode) => _t(lang).webMap.youtube.title,
+            nav: {
+                show: true,
+                admin: false,
+                icon: RiYoutubeLine,
+                iconHover: RiYoutubeFill,
+            },
+        },
         accounts: {
             href: "/accounts",
             title: (lang: langCode) => _t(lang).webMap.accounts.title,
             description: (lang: langCode) => _t(lang).webMap.accounts.description,
             nav: {
-                show: true,
+                show: false,
                 admin: false,
                 icon: RiAccountBoxLine,
                 iconHover: RiAccountBoxFill,
@@ -186,10 +196,10 @@ export const Global = {
             title: (lang: langCode) => _t(lang).policy.policy,
             description: (lang: langCode) => _t(lang).policy.policy,
             nav: {
-                show: false,
+                show: true,
                 admin: false,
-                icon: RiAdminLine,
-                iconHover: RiAdminFill,
+                icon: RiLockLine,
+                iconHover: RiLock2Fill,
             },
             child: {
                 privacy: {

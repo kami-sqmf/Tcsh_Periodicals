@@ -21,6 +21,7 @@ specifiers:
   eslint: 8.24.0
   eslint-config-next: 13.0.6
   firebase: ^9.17.1
+  html-to-image: ^1.11.11
   next: 13.0.6
   next-auth: ^4.19.2
   postcss: ^8.4.21
@@ -41,6 +42,7 @@ dependencies:
   '@vercel/analytics': 0.1.8_react@18.2.0
   editorjs-undo: 2.0.18
   firebase: 9.17.1
+  html-to-image: 1.11.11
   next: 13.0.6_biqbaboplfbrettd7655fr4n2y
   next-auth: 4.19.2_6jx7hpii6hgsrmhxgqrmo3277u
   react: 18.2.0
@@ -2090,6 +2092,10 @@ packages:
 
   /html-janitor/2.0.4:
     resolution: {integrity: sha512-92J5h9jNZRk30PMHapjHEJfkrBWKCOy0bq3oW2pBungky6lzYSoboBGPMvxl1XRKB2q+kniQmsLsPbdpY7RM2g==}
+    dev: false
+
+  /html-to-image/1.11.11:
+    resolution: {integrity: sha512-9gux8QhvjRO/erSnDPv28noDZcPZmYE7e1vFsBLKLlRlKDSqNJYebj6Qz1TGd5lsRV+X+xYyjCKjuZdABinWjA==}
     dev: false
 
   /http-parser-js/0.5.8:

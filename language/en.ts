@@ -11,6 +11,9 @@ const config = {
         tellUs: {
             title: "Feedback",
         },
+        "idea-urstory": {
+            title: "Anonymous Posting System",
+        },
         ebook: {
             title: "eBook",
             description: "We know you're excited for the Ebook, just click me!",
@@ -123,8 +126,8 @@ const config = {
     },
     login: {
         requiredLogin: "You must login first!",
-        googleAccountTCSH: "Login with TCSH Gooogle Account",
-        otherAccountEDU: "or other Google Account",
+        googleAccountTCSH: "or other TCSH Account",
+        otherAccountEDU: "Login with Gooogle Account",
     },
     accounts: {
         logout: "Sign out",

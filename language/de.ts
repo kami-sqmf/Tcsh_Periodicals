@@ -8,6 +8,9 @@ const config = {
             title: "Konzern",
             description: "Willkommen im Tzuchi Senior Periodicals Konzern! Was möchtest du heute machen? Beiträgen oder beschwerde...",
         },
+        "idea-urstory": {
+            title: "Anonymes beiträge system",
+        },
         tellUs: {
             title: "Feedback",
         },
@@ -123,8 +126,8 @@ const config = {
     },
     login: {
         requiredLogin: "Sie müssen sich zuerst einloggen!",
-        googleAccountTCSH: "Anmeldung min TCSH-Gooogle-Konto",
-        otherAccountEDU: "oder anderes Google-Knoto",
+        googleAccountTCSH: "oder anderes TCSH-Google-Knoto",
+        otherAccountEDU: "Anmeldung mit Gooogle-Konto",
     },
     accounts: {
         logout: "Abmelden",
