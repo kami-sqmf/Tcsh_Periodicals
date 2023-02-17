@@ -38,6 +38,9 @@
 > ⚠️ 注意：好像沒有什麼好注意的？
 > 💻 <- 代表曾發布到[正式伺服器](https://periodicals.kami.tw/)，其餘僅發布在[測試伺服器](https://periodicalsalpha.kami.tw/)。
 
+#### Stable Alpha 1.4.7
+- 移除註冊步驟
+
 #### Stable Alpha 1.4.6
 - 修改導覽行條目
 - 新增匿名投稿投稿成功動畫

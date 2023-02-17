@@ -126,8 +126,8 @@ const config = {
     },
     login: {
         requiredLogin: "Sie müssen sich zuerst einloggen!",
-        googleAccountTCSH: "Anmeldung min TCSH-Gooogle-Konto",
-        otherAccountEDU: "oder anderes Google-Knoto",
+        googleAccountTCSH: "oder anderes TCSH-Google-Knoto",
+        otherAccountEDU: "Anmeldung mit Gooogle-Konto",
     },
     accounts: {
         logout: "Abmelden",

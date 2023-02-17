@@ -126,8 +126,8 @@ const config = {
     },
     login: {
         requiredLogin: "You must login first!",
-        googleAccountTCSH: "Login with TCSH Gooogle Account",
-        otherAccountEDU: "or other Google Account",
+        googleAccountTCSH: "or other TCSH Account",
+        otherAccountEDU: "Login with Gooogle Account",
     },
     accounts: {
         logout: "Sign out",

@@ -25,19 +25,19 @@ export const authOptions: NextAuthOptions = {
             if (!profile.email) return "/?error=4";
             const res = await getAccount(profile.email);
             if (res) return true;
-            const secretR = await addDoc(collection(db, "Temp"), {
+            const secretR = await addDoc(collection(db, "Accounts"), {
+                name: profile.name,
+                username: profile.name,
+                email: profile.email,
                 avatar: profile.picture,
-                bio: null,
+                isSchool: !!profile.hd,
                 class: null,
                 customTitle: null,
-                email: profile.email,
+                bio: null,
                 insta: null,
-                username: profile.name,
-                name: profile.name,
-                isSchool: !!profile.hd
             });
-            const secret = encrypt(secretR.id);
-            return `/accounts/signup?i=${secret.iv}&c=${secret.content}`;
+            // const secret = encrypt(secretR.id);
+            return true;
         },
 
         async redirect({ url, baseUrl }) {

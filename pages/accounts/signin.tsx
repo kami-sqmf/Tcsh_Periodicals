@@ -37,9 +37,9 @@ export const LoginInner = ({ providers, userAgent, callback, lang }: { providers
                         <div className="flex flex-col justify-center">
                             <div className="group flex flex-row space-x-2 items-center max-w-max mt-2 mb-2 cursor-pointer" onClick={() => signin(provider)}>
                                 <Image src={GoogleLogo} height={20} width={20} className="object-contain" alt="使用 Google 帳號登入" />
-                                <span className="text-sm text-blue-800 group-hover:text-blue-900 font-semibold">{_t(lang).login.googleAccountTCSH}</span>
+                                <span className="text-sm text-blue-800 group-hover:text-blue-900 font-semibold">{_t(lang).login.otherAccountEDU}</span>
                             </div>
-                            <span onClick={() => signin(provider)} className="text-xs text-gray-400 text-center cursor-pointer hover:text-gray-500">{_t(lang).login.otherAccountEDU}</span>
+                            <span onClick={() => signin(provider)} className="text-xs text-gray-400 text-center cursor-pointer hover:text-gray-500">{_t(lang).login.googleAccountTCSH}</span>
                         </div>
                     }
                 </div>
