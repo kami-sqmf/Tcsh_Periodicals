@@ -38,7 +38,7 @@
 > ⚠️ 注意：好像沒有什麼好注意的？
 > 💻 <- 代表曾發布到[正式伺服器](https://periodicals.kami.tw/)，其餘僅發布在[測試伺服器](https://periodicalsalpha.kami.tw/)。
 
-#### Stable 1.4.8
+#### Stable 1.4.8 💻
 - 修正匿名投稿簡述未上傳
 - 匿名投稿查看分類系統
 
