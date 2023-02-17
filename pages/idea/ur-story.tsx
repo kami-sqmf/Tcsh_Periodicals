@@ -254,6 +254,7 @@ const SectionFinish = ({ setSection, data }: { setSection: SetterOrUpdater<numbe
         const doc = await addDoc(collection(db, "idea-urstory"), {
           type: data.current?.type,
           url: downloadUrl,
+          content: data.current?.content,
           createdTimestamp: data.current?.createdTimestamp,
         })
         fileRef.current = { docId: doc.id, imageRef: imageRef, downloadUrl: downloadUrl };
