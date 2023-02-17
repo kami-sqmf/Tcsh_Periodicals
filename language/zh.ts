@@ -11,6 +11,9 @@ const config = {
         tellUs: {
             title: "給予匿名回饋",
         },
+        "idea-urstory": {
+            title: "匿名投稿系統",
+        },
         ebook: {
             title: "電子書",
             description: '你是不是想要來 GET 你的電子書了？ 趕快點進來吧！',

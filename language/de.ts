@@ -8,6 +8,9 @@ const config = {
             title: "Konzern",
             description: "Willkommen im Tzuchi Senior Periodicals Konzern! Was möchtest du heute machen? Beiträgen oder beschwerde...",
         },
+        "idea-urstory": {
+            title: "Anonymes beiträge system",
+        },
         tellUs: {
             title: "Feedback",
         },

@@ -11,6 +11,9 @@ const config = {
         tellUs: {
             title: "Feedback",
         },
+        "idea-urstory": {
+            title: "Anonymous Posting System",
+        },
         ebook: {
             title: "eBook",
             description: "We know you're excited for the Ebook, just click me!",

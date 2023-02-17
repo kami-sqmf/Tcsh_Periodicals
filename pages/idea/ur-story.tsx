@@ -144,11 +144,12 @@ const SectionText = ({ setSection, data }: { setSection: SetterOrUpdater<number>
 }
 
 const SectionVoice = ({ setSection, data }: { setSection: SetterOrUpdater<number>; data: MutableRefObject<IdeaUrStory | undefined> }) => {
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
+  const [textValue, setTextValue] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
   const [nextDisabled, setNextDisabled] = useState<boolean>(true);
   useEffect(() => {
-    if (error == "") setNextDisabled(false);
+    if (error === "") setNextDisabled(false);
     else setNextDisabled(true);
   }, [error])
   const onFileInput = (e: ChangeEvent<HTMLInputElement>) => {
@@ -168,6 +169,7 @@ const SectionVoice = ({ setSection, data }: { setSection: SetterOrUpdater<number
     data.current = {
       type: "voice",
       file: inputRef.current!.files![0],
+      content: textValue,
       createdTimestamp: serverTimestamp()
     }
     setSection(4);
@@ -175,9 +177,10 @@ const SectionVoice = ({ setSection, data }: { setSection: SetterOrUpdater<number
   return (
     <div className='min-h-[74vh] w-full flex flex-col justify-center text-main my-8'>
       <h1 className='text-4xl font-bold mb-4'>請選擇您的語音檔案！</h1>
-      <input type="file" id="input" accept="audio/*,application/ogg" onChange={onFileInput} ref={inputRef} />
+      <input type="file" accept="audio/*,application/ogg" onChange={onFileInput} ref={inputRef} />
+      <input value={textValue} onChange={(e) => setTextValue(e.target.value)} className="text-lg resize-none w-[83vw] bg-transparent focus:outline-none mt-2" placeholder="請輸入簡述" />
       <span className='text-medium text-red-700'>{error}</span>
-      <button disabled={nextDisabled} className='group flex flex-row items-center space-x-2 self-end mt-6 select-none cursor-pointer disabled:cursor-default text-main disabled:opacity-70' onClick={onNextClick}>
+      <button disabled={nextDisabled || textValue.length === 0} className='group flex flex-row items-center space-x-2 self-end mt-6 select-none cursor-pointer disabled:cursor-default text-main disabled:opacity-70' onClick={onNextClick}>
         <RiPlaneFill className='h-4 w-4 md:h-5 md:w-5 rotate-[35deg] group-enabled:group-hover:rotate-[90deg] transition-all duration-300 mb-0.5' />
         <span className='md:text-lg group-enabled:group-hover:font-medium transition-all duration-300'>下一步</span>
       </button>
@@ -186,11 +189,12 @@ const SectionVoice = ({ setSection, data }: { setSection: SetterOrUpdater<number
 }
 
 const SectionPicture = ({ setSection, data }: { setSection: SetterOrUpdater<number>; data: MutableRefObject<IdeaUrStory | undefined> }) => {
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
+  const [textValue, setTextValue] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
   const [nextDisabled, setNextDisabled] = useState<boolean>(true);
   useEffect(() => {
-    if (error == "") setNextDisabled(false);
+    if (error === "") setNextDisabled(false);
     else setNextDisabled(true);
   }, [error])
   const onFileInput = (e: ChangeEvent<HTMLInputElement>) => {
@@ -209,6 +213,7 @@ const SectionPicture = ({ setSection, data }: { setSection: SetterOrUpdater<numb
   const onNextClick = () => {
     data.current = {
       type: "picture",
+      content: textValue,
       file: inputRef.current!.files![0],
       createdTimestamp: serverTimestamp()
     }
@@ -218,8 +223,9 @@ const SectionPicture = ({ setSection, data }: { setSection: SetterOrUpdater<numb
     <div className='min-h-[74vh] w-full flex flex-col justify-center text-main my-8'>
       <h1 className='text-4xl font-bold mb-4'>請選擇您的圖片檔案！</h1>
       <input type="file" id="input" accept="image/*" onChange={onFileInput} ref={inputRef} />
+      <input value={textValue} onChange={(e) => setTextValue(e.target.value)} className="text-lg resize-none w-[83vw] bg-transparent focus:outline-none mt-2" placeholder="請輸入簡述" />
       <span className='text-medium text-red-700'>{error}</span>
-      <button disabled={nextDisabled} className='group flex flex-row items-center space-x-2 self-end mt-6 select-none cursor-pointer disabled:cursor-default text-main disabled:opacity-70' onClick={onNextClick}>
+      <button disabled={nextDisabled || textValue.length === 0} className='group flex flex-row items-center space-x-2 self-end mt-6 select-none cursor-pointer disabled:cursor-default text-main disabled:opacity-70' onClick={onNextClick}>
         <RiPlaneFill className='h-4 w-4 md:h-5 md:w-5 rotate-[35deg] group-enabled:group-hover:rotate-[90deg] transition-all duration-300 mb-0.5' />
         <span className='md:text-lg group-enabled:group-hover:font-medium transition-all duration-300'>下一步</span>
       </button>
@@ -229,7 +235,7 @@ const SectionPicture = ({ setSection, data }: { setSection: SetterOrUpdater<numb
 
 const SectionFinish = ({ setSection, data }: { setSection: SetterOrUpdater<number>; data: MutableRefObject<IdeaUrStory | undefined> }) => {
   const fileRef = useRef<any>();
-  const [uploading, setUploading] = useState(true);
+  const [uploading, setUploading] = useState(0);
   const onRefChange = useCallback(async (node: HTMLDivElement) => {
     if (node === null) return;
     if (data.current?.type === "text") {
@@ -239,7 +245,7 @@ const SectionFinish = ({ setSection, data }: { setSection: SetterOrUpdater<numbe
         createdTimestamp: data.current?.createdTimestamp,
       })
       fileRef.current = { docId: doc.id };
-      setUploading(false);
+      setUploading(1);
     } else {
       try {
         const imageRef = ref(storage, `/idea-urstory/${makeid(18)}`);
@@ -251,9 +257,9 @@ const SectionFinish = ({ setSection, data }: { setSection: SetterOrUpdater<numbe
           createdTimestamp: data.current?.createdTimestamp,
         })
         fileRef.current = { docId: doc.id, imageRef: imageRef, downloadUrl: downloadUrl };
-        setUploading(false);
+        setUploading(1);
       } catch (e) {
-        setUploading(false);
+        setUploading(1);
       }
     }
   }, []);
@@ -267,6 +273,7 @@ const SectionFinish = ({ setSection, data }: { setSection: SetterOrUpdater<numbe
     location.reload();
   }
   const onNextClicked = async () => {
+    setUploading(2);
     if (data.current?.type === "text") {
       await fetch("/api/sendNotificationLine", {
         method: "POST",
@@ -278,7 +285,7 @@ const SectionFinish = ({ setSection, data }: { setSection: SetterOrUpdater<numbe
       await fetch("/api/sendNotificationLine", {
         method: "POST",
         body: JSON.stringify({
-          message: "收到了一個新的匿名(語音)投稿！",
+          message: `收到了一個新的匿名(語音)投稿！\n簡述：${data.current.content}`,
           voiceUrl: fileRef.current!.downloadUrl,
         })
       })
@@ -286,16 +293,15 @@ const SectionFinish = ({ setSection, data }: { setSection: SetterOrUpdater<numbe
       await fetch("/api/sendNotificationLine", {
         method: "POST",
         body: JSON.stringify({
-          message: "收到了一個新的匿名(圖片)投稿！",
+          message: `收到了一個新的匿名(圖片)投稿！\n簡述：${data.current.content}`,
           imageUrl: fileRef.current!.downloadUrl,
         })
       })
     }
-    location.replace("/");
   }
   return (
     <>
-      {uploading && <div className='min-h-[74vh] w-full flex flex-col justify-center items-center text-main my-8' ref={onRefChange}>
+      {uploading === 0 && <div className='min-h-[74vh] w-full flex flex-col justify-center items-center text-main my-8' ref={onRefChange}>
         <div role="status">
           <svg aria-hidden="true" className="w-14 h-14 animate-spin text-main2 fill-main" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" />
@@ -305,17 +311,29 @@ const SectionFinish = ({ setSection, data }: { setSection: SetterOrUpdater<numbe
         </div>
         <span className='text-lg font-medium text-main mt-2'>正在處理中</span>
       </div>}
-      {!uploading && <div className='min-h-[74vh] w-full flex flex-col justify-center items-center text-main my-8'>
+      {uploading === 1 && <div className='min-h-[74vh] w-full flex flex-col justify-center items-center text-main my-8'>
         <h1 className='text-4xl font-bold mb-4'>預覽</h1>
         <div className='border-2 border-main px-6 py-4 rounded-md'>
-          {data.current?.type === "text" && <span>{data.current.content}</span>}
-          {data.current?.type === "voice" && <audio controls><source src={fileRef.current!.downloadUrl} />您的瀏覽器不支援播放啊啊啊！</audio>}
-          {data.current?.type === "picture" && <div className="relative w-[65vw] min-h-[64vh]"><Image className='object-contain w-[65vw] min-h-[64vh]' fill={true} src={fileRef.current!.downloadUrl} alt="您的上傳，如果你看不到他可能代表您的網路不佳否則就代表你失敗了" /></div>}
+          {data.current?.type === "voice" && <audio controls className='mb-4'><source src={fileRef.current!.downloadUrl} />您的瀏覽器不支援播放啊啊啊！</audio>}
+          {data.current?.type === "picture" && <div className="relative w-[65vw] min-h-[64vh] mb-4 mx-auto"><Image className='object-contain w-[65vw] min-h-[64vh]' fill={true} src={fileRef.current!.downloadUrl} alt="您的上傳，如果你看不到他可能代表您的網路不佳否則就代表你失敗了" /></div>}
+          {data.current?.type !== "text" && <span className='text-main font-medium'>簡述：</span>}
+          <span className='text-main'>{data.current?.content}</span>
         </div>
         <div className='flex flex-row space-x-2 mt-2'>
           <button className='bg-red-800/70 text-background2 rounded px-3 py-2' onClick={onCancelClicked}>刪除，再來一次</button>
           <button className='bg-green-800/70 text-background2 rounded px-3 py-2' onClick={onNextClicked}>確定了，提交 !</button>
         </div>
+      </div>}
+      {uploading === 2 && <div className="min-h-[74vh] w-full flex flex-col justify-center items-center" onAnimationEnd={() => setTimeout(() => location.replace("/"), 1000)}>
+        <div className="success-checkmark scale-75">
+          <div className="check-icon">
+            <span className="icon-line line-tip"></span>
+            <span className="icon-line line-long"></span>
+            <div className="icon-circle"></div>
+            <div className="icon-fix"></div>
+          </div>
+        </div>
+        <span className="text-green-700/80 select-none">上傳成功</span>
       </div>}
     </>
   )
@@ -342,10 +360,12 @@ export type IdeaUrStory = {
   type: "picture";
   file: File;
   url?: string;
+  content: string;
   createdTimestamp: FieldValue,
 } | {
   type: "voice";
   file: File;
   url?: string;
+  content: string;
   createdTimestamp: FieldValue,
 }

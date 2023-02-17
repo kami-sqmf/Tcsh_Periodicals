@@ -23,7 +23,6 @@ export default async function sendNotificationLine(req: NextApiRequest, res: Nex
       "originalContentUrl": body.voiceUrl,
       "duration": 60000
     });
-    console.log(messages)
     try {
       const ress = await fetch("https://api.line.me/v2/bot/message/push", {
         method: "POST",
