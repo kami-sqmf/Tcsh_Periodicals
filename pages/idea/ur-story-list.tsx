@@ -67,7 +67,7 @@ const UrStoryList = () => {
         <Tab.Group selectedIndex={selectedIndex} onChange={setSelectedIndex}>
           <Tab.List className="flex flex-row space-x-4 justify-center">
             <Tab as='div' className="flex flex-col md:flex-row items-center relative rounded bg-main group text-background px-4 py-2 md:text-lg space-x-2 hover:bg-background2 hover:text-main ui-selected:bg-main2 transition-all duration-500 outline-none cursor-pointer">
-              <div className='absolute -top-3 -right-2 text-sm bg-main2 rounded-full px-[6px] text-background2'>{severSnapshot?.filter((doc) => (doc.data as any).status == 0).length}</div>
+              <div className='absolute -top-3 -right-2 text-sm bg-main2 rounded-full px-[6px] text-background2'>{severSnapshot?.filter((doc) => !(doc.data as any).status).length}</div>
               <div className='relative w-6 h-6'>
                 <RiMailUnreadFill className='absolute w-6 h-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500' />
                 <RiMailUnreadLine className='absolute w-6 h-6 opacity-100 group-hover:opacity-0 transition-opacity duration-500' />
@@ -93,7 +93,7 @@ const UrStoryList = () => {
           </Tab.List>
           <Tab.Panels className='-ml-6 w-max'>
             <Tab.Panel>
-              {severSnapshot?.filter((doc) => (doc.data as any).status == 0 ).map((doc, key) => (
+              {severSnapshot?.filter((doc) => !(doc.data as any).status ).map((doc, key) => (
                 <CardWrapper data={doc} key={key} />
               ))}
             </Tab.Panel>
