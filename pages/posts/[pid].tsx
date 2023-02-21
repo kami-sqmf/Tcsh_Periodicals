@@ -1,6 +1,6 @@
 import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
-import { RiFocus2Line, RiHome2Line } from "react-icons/ri";
+import { RiArrowUpSFill, RiFile2Fill, RiFileDownloadFill, RiFileDownloadLine, RiFocus2Line, RiHome2Line } from "react-icons/ri";
 import { Breadcrumb } from "../../components/breadcrumb";
 import { PageWrapper } from "../../components/page-wrapper";
 import { langCode } from "../../language/lang";
@@ -12,11 +12,13 @@ import { Dispatch, useState } from "react";
 import { SetterOrUpdater } from "recoil";
 import { Recomended } from "../../components/recomended";
 import { getDBObject } from "../../utils/get-firestore";
+import Link from "next/link";
+import Image from "next/image";
 
 const Posts = ({ post, lang }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const [scaleLevel, setScaleLevel] = useState<number>(0)
   return (
-    <PageWrapper lang={lang} page={{ ...Global.webMap.posts, title: (lang) => { return post.title; } }} withNavbar={true} className="!max-w-xs md:!max-w-4xl lg:!max-w-5xl pb-8" operating={false}>
+    <PageWrapper lang={lang} page={{ ...Global.webMap.posts, title: (lang) => { return post.title; }, description: (lang) => { return post.description; } }} withNavbar={true} className="!max-w-xs md:!max-w-4xl lg:!max-w-5xl pb-8" operating={false}>
       <Breadcrumb args={[{ title: Global.webMap.posts.title(lang), href: "/posts", icon: Global.webMap.posts.nav.icon }, { title: post.title, href: `/posts/${post.postId}`, icon: RiFocus2Line }]} />
       <div className={`flex flex-col text-main md:ml-7 ${ScaleClassName(scaleLevel)}`}>
         <div className="flex flex-row justify-between">
@@ -36,6 +38,20 @@ const Posts = ({ post, lang }: InferGetStaticPropsType<typeof getStaticProps>) =
                 return (<p className="mb-4" id={data.id} dangerouslySetInnerHTML={{ __html: data.data.text }}></p>);
               case "header":
                 return (<h2 className="mt-2 font-bold" id={data.id} dangerouslySetInnerHTML={{ __html: data.data.text }}></h2>);
+              case "attaches":
+                return (<Attaches title={data.data.title} link={data.data.file.url} />);
+              case "image":
+                return (
+                  <div className="flex flex-col py-6">
+                    <div className="relative w-full h-auto aspect-[21/9] xl:aspect-[21/7] rounded-lg overflow-hidden">
+                      <Image src={data.data.file.url} fill={true} className="object-cover" alt="圖片" />
+                    </div>
+                    {data.data.caption !== "" && <div className="flex flex-row space-x-1 text-xs font-medium mt-0.5">
+                      <RiArrowUpSFill className="w-4 h-4" />
+                      <span>{data.data.caption}</span>
+                    </div>}
+                  </div>
+                )
               default:
                 console.log(key, data);
                 return (<></>);
@@ -45,6 +61,18 @@ const Posts = ({ post, lang }: InferGetStaticPropsType<typeof getStaticProps>) =
         <ScrollToTop />
       </div>
     </PageWrapper>
+  )
+}
+
+const Attaches = ({ title, link }: { title: string; link: string }) => {
+  return (
+    <Link href={link} className="group grid grid-flow-col justify-start row-span-2 items-center w-full select-none bg-background2 text-main/80 hover:text-main rounded-md px-6 py-3 my-4">
+      <div className="relative w-6 h-6 mr-4">
+        <RiFileDownloadFill className="absolute w-6 h-6 opacity-0 group-hover:opacity-100 transition-all duration-500" />
+        <RiFileDownloadLine className="absolute w-6 h-6 opacity-100 group-hover:opacity-0 transition-all duration-500" />
+      </div>
+      <p className="w-full h-6 truncate transition-all duration-500">{title}</p>
+    </Link>
   )
 }
 
@@ -101,6 +129,7 @@ export async function getStaticProps(context: GetStaticPropsContext<{ pid: strin
   const post = {
     postId: context.params.pid,
     title: postData.title,
+    description: postData.description,
     data: postData.data,
     tag: postData.tag,
     author: postData.owner,
@@ -109,8 +138,9 @@ export async function getStaticProps(context: GetStaticPropsContext<{ pid: strin
   return {
     props: {
       post: post,
-      lang: lang ? lang as langCode : "zh"
+      lang: lang ? lang as langCode : "zh",
     },
+    revalidate: 86400,
   }
 }
 

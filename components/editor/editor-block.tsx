@@ -36,8 +36,8 @@ const EditorBlock = ({ lang, initalData, onChange, titleRef }: { lang: langCode;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <div id={editorId} className="w-full text-main prose-h2:text-lg prose-h2:font-medium my-6 flex flex-col">
-      <div className="w-full">
+    <div id={editorId} className="w-full text-main prose-h2:text-lg prose-h2:font-medium my-6 flex flex-col prose-img:w-full prose-img:h-auto prose-img:aspect-[21/9] prose-img:xl:aspect-[21/7] prose-img:rounded-lg prose-img:overflow-hidden prose-img:object-cover">
+      <div className="w-full overflow-scroll md:overflow-auto">
         <div className="flex flex-row -ml-4 lg:ml-[54px]">
           <span className={`hidden md:block text-sm border-r-2 border-main/40 pr-3 mr-6 py-[22px] ${titleFocus ? "opacity-100" : "opacity-0"} transition-all duration-150`}>Title</span>
           <input id={"title"} defaultValue={initalData.title || ""} ref={titleRef} placeholder="Title" className="text-5xl font-bold bg-transparent focus:outline-none mb-2 flex-grow" onFocus={() => setTitleFocus(true)} onBlur={() => setTitleFocus(false)} onChange={onChange} />

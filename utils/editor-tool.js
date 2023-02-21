@@ -1,13 +1,15 @@
-import Delimiter from '@editorjs/delimiter'
-import Embed from '@editorjs/embed'
-import Image from '@editorjs/image'
-import SimpleImage from '@editorjs/simple-image'
-import Underline from '@editorjs/underline';
+import AttachesTool from '@editorjs/attaches';
+import Delimiter from '@editorjs/delimiter';
+import Embed from '@editorjs/embed';
 import Header from '@editorjs/header';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import { storage } from './firebase';
-import { makeid } from '../components/ebook-modal';
+import Image from '@editorjs/image';
+import NestedList from '@editorjs/nested-list';
+import SimpleImage from '@editorjs/simple-image';
+import Underline from '@editorjs/underline';
 import Undo from 'editorjs-undo';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { makeid } from '../components/ebook-modal';
+import { storage } from './firebase';
 
 export const EDITOR_JS_TOOLS = {
   header: {
@@ -52,9 +54,46 @@ export const EDITOR_JS_TOOLS = {
       shortcut: "CMD+SHIFT+P"
     },
   },
+  attaches: {
+    class: AttachesTool,
+    config: {
+      uploader: {
+        /**
+         * Upload file to the server and return an uploaded image data
+         * @param {File} file - file selected from the device or pasted by drag-n-drop
+         * @return {Promise.<{success, file: {url}}>}
+         */
+        uploadByFile(file) {
+          if (!file) return {
+            success: false,
+            file: {
+              url: ""
+            }
+          }
+          const fileRef = ref(storage, `/posts/file/${makeid(18)}-${file.name}`);
+          return uploadBytes(fileRef, file).then(async snapshot => {
+            const downloadUrl = await getDownloadURL(fileRef);
+            return {
+              success: true,
+              file: {
+                url: downloadUrl
+              }
+            }
+          })
+        }
+      },
+    }
+  },
+  list: {
+    class: NestedList,
+    inlineToolbar: true,
+    config: {
+      defaultStyle: 'ordered'
+    },
+  },
   delimiter: { class: Delimiter, shortcut: "CMD+SHIFT+D" },
   underline: { class: Underline, shortcut: "CMD+U" },
   simpleImage: SimpleImage,
 }
 
-export { Undo }
+export { Undo };
