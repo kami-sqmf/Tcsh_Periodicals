@@ -146,3 +146,10 @@ interface PostDocument {
     isPublic: boolean;
     requiredAnswer?: { [x: sting]: string };
 }
+
+interface CategoriesDocument {
+    title: string;
+    description: string;
+    thumbnail: string;
+    createdTimestamp: FieldValue;
+}

@@ -11,7 +11,7 @@ export async function getPropsGlobalDB(ctx: GetStaticPropsContext) {
     return {
         props: {
             data: await getDBObject("Global") as GlobalDB,
-            lang: lang ? lang as langCode : "zh"
+            lang: lang ? lang as langCode : "zh",
         },
         revalidate: 900,
     }

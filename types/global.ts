@@ -1,5 +1,5 @@
 import { IconType } from "react-icons";
-import { RiAccountBoxFill, RiAccountBoxLine, RiAdminFill, RiAdminLine, RiBookFill, RiBookLine, RiChatForwardFill, RiChatForwardLine, RiEditFill, RiEditLine, RiFilePaper2Fill, RiFilePaper2Line, RiFileUnknowFill, RiFileUnknowLine, RiGroup2Fill, RiGroup2Line, RiHome2Fill, RiHome2Line, RiLock2Fill, RiLockLine, RiNewspaperFill, RiNewspaperLine, RiNotification2Line, RiProfileFill, RiProfileLine, RiSlideshowFill, RiSlideshowLine, RiUserSettingsFill, RiUserSettingsLine, RiWindow2Fill, RiWindow2Line, RiYoutubeFill, RiYoutubeLine } from "react-icons/ri";
+import { RiAccountBoxFill, RiAccountBoxLine, RiAdminFill, RiAdminLine, RiArchiveDrawerFill, RiArchiveDrawerLine, RiBookFill, RiBookLine, RiChatForwardFill, RiChatForwardLine, RiEditFill, RiEditLine, RiFilePaper2Fill, RiFilePaper2Line, RiFileUnknowFill, RiFileUnknowLine, RiGroup2Fill, RiGroup2Line, RiHome2Fill, RiHome2Line, RiLock2Fill, RiLockLine, RiNewspaperFill, RiNewspaperLine, RiNotification2Line, RiProfileFill, RiProfileLine, RiSlideshowFill, RiSlideshowLine, RiUserSettingsFill, RiUserSettingsLine, RiWindow2Fill, RiWindow2Line, RiYoutubeFill, RiYoutubeLine } from "react-icons/ri";
 import { _t, langCode } from "../language/lang";
 import logo from "../public/logo.jpg";
 
@@ -187,6 +187,26 @@ export const Global = {
                         admin: true,
                         icon: RiNotification2Line,
                         iconHover: RiNotification2Line
+                    },
+                },
+                posts: {
+                    href: "/admin/posts",
+                    title: (lang: langCode) => _t(lang).webMap.posts.title,
+                    nav: {
+                        show: true,
+                        admin: true,
+                        icon: RiNewspaperLine,
+                        iconHover: RiNewspaperFill
+                    },
+                },
+                categories: {
+                    href: "/admin/categories",
+                    title: (lang: langCode) => "文章類別",
+                    nav: {
+                        show: true,
+                        admin: true,
+                        icon: RiArchiveDrawerLine,
+                        iconHover: RiArchiveDrawerFill
                     },
                 },
             }
