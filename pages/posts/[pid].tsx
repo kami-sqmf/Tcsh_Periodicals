@@ -43,7 +43,7 @@ const Posts = ({ post, lang }: InferGetStaticPropsType<typeof getStaticProps>) =
               case "image":
                 return (
                   <div className="flex flex-col py-6">
-                    <div className="relative w-full h-auto aspect-[21/9] xl:aspect-[21/7] rounded-lg overflow-hidden">
+                    <div className="relative w-full h-auto aspect-[16/9] xl:aspect-[21/9] rounded-lg overflow-hidden">
                       <Image src={data.data.file.url} fill={true} className="object-cover" alt="圖片" />
                     </div>
                     {data.data.caption !== "" && <div className="flex flex-row space-x-1 text-xs font-medium mt-0.5">
@@ -51,6 +51,14 @@ const Posts = ({ post, lang }: InferGetStaticPropsType<typeof getStaticProps>) =
                       <span>{data.data.caption}</span>
                     </div>}
                   </div>
+                )
+              case "list":
+                return (
+                  <ol className="list-decimal space-y-2 ml-4 mt-2">
+                    {(data.data.items as { content: string }[]).map((item, key) => (
+                      <li key={key}>{item.content}</li>
+                    ))}
+                  </ol>
                 )
               default:
                 console.log(key, data);
@@ -88,13 +96,13 @@ const ScaleButtons = ({ setScaleLevel }: { setScaleLevel: SetterOrUpdater<number
 
 const ScaleClassName = (scaleLevel: number) => {
   if (scaleLevel === 0) {
-    return "prose-h1:text-4xl prose-h1:md:text-5xl prose-p:text-base prose-h2:text-lg"
+    return "prose-h1:text-4xl prose-h1:md:text-5xl prose-p:text-base prose-li:text-base prose-h2:text-lg"
   }
   else if (scaleLevel === 1) {
-    return "prose-h1:text-5xl prose-h1:md:text-6xl prose-p:text-lg prose-h2:text-xl"
+    return "prose-h1:text-5xl prose-h1:md:text-6xl prose-p:text-lg prose-li:text-lg prose-h2:text-xl"
   }
   else {
-    return "prose-h1:text-3xl prose-h1:md:text-4xl prose-p:text-sm prose-h2:text-base"
+    return "prose-h1:text-3xl prose-h1:md:text-4xl prose-p:text-sm prose-li:text-sm prose-h2:text-base"
   }
 }
 

@@ -249,7 +249,7 @@ const SectionFinish = ({ setSection, data }: { setSection: SetterOrUpdater<numbe
     } else {
       try {
         const imageRef = ref(storage, `/idea-urstory/${makeid(18)}`);
-        const snapshot = await uploadBytes(imageRef, data.current!.file)
+        const snapshot = await uploadBytes(imageRef, data.current!.file);
         const downloadUrl = await getDownloadURL(imageRef);
         const doc = await addDoc(collection(db, "idea-urstory"), {
           type: data.current?.type,

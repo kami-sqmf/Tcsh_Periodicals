@@ -12,6 +12,7 @@ import { timestamp2Chinese } from '../posts/[pid]';
 import Image from 'next/image';
 import { toBlob } from 'html-to-image';
 import { Tab } from '@headlessui/react';
+import { Loading } from '../../components/Loading';
 
 const sections = [{
   title: "筆墨",
@@ -53,16 +54,7 @@ const UrStoryList = () => {
     <div className='min-h-screen overflow-hidden bg-background'>
       <HeadUni title={"[回覆] 你的故事，我們來寫"} imagePath='https://firebasestorage.googleapis.com/v0/b/tcsh-periodicals.appspot.com/o/posts%2Fimage%2FIzrbxIQJHa3Z3VDPJR?alt=media&token=f970c48a-a9ab-4067-afd0-6a0120f98756' description={"生活中，我們總會面臨各式各樣的事，或好或壞。只要你願意與我們分享，不限題材，我們團隊就會將你的故事以文字、圖像定期呈現在刊物、貼文或限時動態與大家分享。"} lang={lang} pages='/idea/ur-story' />
       <IdeaNavbar lang={lang} />
-      {!severSnapshot && <div className='min-h-[74vh] w-full flex flex-col justify-center items-center text-main my-8'>
-        <div role="status">
-          <svg aria-hidden="true" className="w-14 h-14 animate-spin text-main2 fill-main" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" />
-            <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill" />
-          </svg>
-          <span className="sr-only">載入中...</span>
-        </div>
-        <span className='text-lg font-medium text-main mt-2'>正在載入中</span>
-      </div>}
+      {!severSnapshot && <Loading text='正在載入中' />}
       {severSnapshot && <div className='max-w-[21.5em] md:max-w-2xl lg:max-w-4xl xl:max-w-6xl mx-auto my-8'>
         <Tab.Group selectedIndex={selectedIndex} onChange={setSelectedIndex}>
           <Tab.List className="flex flex-row space-x-4 justify-center">
