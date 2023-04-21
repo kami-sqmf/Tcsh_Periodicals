@@ -1,0 +1,12 @@
+{
+    "accounts-logout": "Abmelden",
+    "instagram-unsuported": "Sie können lieder nicht mit Instagram Browser surfen! Bitte mit anderem browser surfen.",
+    "accounts-login-with-google": "Anmelden mit Google-Konto",
+    "edit_name_zh_up5": "Username mit Chinesisch darf nur weniger als 5 Wörter sein",
+    "edit_name_up30": "Der Userrname besteht aus mehr als 30 Wörtern",
+    "edit_name_empty": "Bitte geben Sie Ihren Username ein",
+    "edit_class_format_error": "Fehler beim Klasseformat",
+    "edit_customTitle_up18": "Nachsteckbrief dürfen nur weniger als 18 Wörter sein",
+    "edit_bio_up64": "Steckbrief dürfen nur weniger als 64 Wörter sein",
+    "edit_insta_format_error": "Fehler im Format des Instagram-Kontos"
+}

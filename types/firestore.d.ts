@@ -1,34 +1,47 @@
 import { OutputData } from "@editorjs/editorjs";
-import { MemberRoleKey } from "./role";
-import { FieldValue } from "firebase/firestore";
+import { MemberRoleKey } from "../../tcsh_periodicals/types/role";
+import { DocumentData, FieldValue } from "firebase/firestore";
+import { CategoriesDocument } from "@/../tcsh_periodicals/types/firestore";
+import { LangCode } from "./i18n";
+import { DocumentReference } from "firebase/firestore";
 
 /** Collections */
 interface DB {
     Global: GlobalDB;
-    Members: Member[];
-    Accounts: Account[];
+    Accounts: Account[]; /** Will Deceperate in Next.js 13 Version **/
     books: Books[];
+    categoreis: CategoriesDocument[];
+    notifications: Notification[];
+    posts: PostDocument[];
+    slides: Slide[];
+    members: Members[];
 }
 
 /** Col: Global */
 interface GlobalDB {
     About: About;
-    Notification: Notifications;
     Posts: Posts;
-    Slide: Slides;
 };
+
 /** Col: Global => Doc: About */
 interface About {
+    zh: {
+        description: string;
+    },
+    en: {
+        description: string;
+    },
+    de: {
+        description: string;
+    },
     description: string;
     email: string;
     insta: string;
 };
-/** Col: Global => Doc: Notifications */
-interface Notifications {
-    Now: Notification[];
-};
-/** Col: Global => Doc: Notifications Inner */
+
+/** Col: Notification */
 interface Notification {
+    order: number;
     button: {
         href: string;
         text: string;
@@ -36,37 +49,42 @@ interface Notification {
     title: string;
     type: "alert" | "error" | "success";
 };
-/** Col: Global => Doc: Posts */
-interface Posts {
-    posts: Post[];
+
+/** Col: Slides */
+interface Slide {
+    href: string;
+    image: string;
+    title: string;
+    order: number
 };
+
 /** Col: Global => Doc: Posts Inner */
+interface Posts {
+    posts: Post[]
+};
+
 interface Post {
     categories: string[],
     thumbnail: string;
     title: string;
     url: string;
 };
-/** Col: Global => Doc: Slides */
-interface Slides {
-    slide: Slide[];
-};
-/** Col: Global => Doc: Slides Inner*/
-interface Slide {
-    href: string;
-    image: string;
-    title: string;
-};
+
 /** Col: Accounts or Member */
 type AccountsUni = Accounts<"Account"> | Accounts<"Member">;
 interface Accounts<Type extends "Member" | "Account"> {
     type: Type;
-    data: Type extends "Member" ? Member : Account;
+    data: Account;
 };
 
 type classLevel = "1" | "2" | "3";
 type Class = `J${classLevel}${"1" | "2" | "3" | "4" | "5" | "6" | "7"}` | `S${classLevel}${"1" | "2" | "3" | "4" | "5"}`
 /** Col: Members' Doc */
+interface Members {
+    team: number;
+    teamId: string;
+    profiles: Member[];
+}
 interface Member {
     uid: string;
     avatar: string;
@@ -83,26 +101,30 @@ interface Account {
     uid: string;
     avatar: string;
     bio: string | null;
-    class: Class | "Teacher" | null;
+    class: Class | null;
     customTitle: string | null | undefined;
     email: string | null;
     insta: string | null;
     name: string;
     username: string;
     isSchool: boolean;
+    memberRef: DocumentReference<DocumentData>;
+    ownedBooks: string[];
 };
 
 /** Col: Ebooks' Doc */
 interface EBooks {
-    name: string;
     thumbnail: string;
     title: string;
+    name: string;
+    description: string;
+    files: EbookFile;
+    price: number;
+    locked: boolean;
     published: boolean;
     timestamp: EpochTimeStamp;
-    locked: boolean;
-    owner: string[];
-    price: number;
-    files?: EbookFile;
+    owner?: string[];
+    voucher?: string[];
 };
 /** Col: Ebooks' Doc files */
 type EbookFile = {
@@ -116,6 +138,38 @@ type EbookFileInfo = {
     link: string;
     size: number;
 };
+
+type EbookLicenses = {
+    voucher: true;
+    code: string;
+    used: true;
+    usedTimestamp: FieldValue;
+    customer: DocumentReference;
+    createdTimestamp: FieldValue;
+} | {
+    voucher: true;
+    code: string;
+    used: false;
+    createdTimestamp: FieldValue;
+} | {
+    voucher: false;
+    used: boolean;
+    usedTimestamp: FieldValue;
+    customer: DocumentReference;
+    payment: "credit_card";
+    payment_id: string;
+    payment_charged: number;
+    payment_success: boolean;
+    createdTimestamp: FieldValue;
+} | {
+    voucher: false;
+    used: boolean;
+    usedTimestamp: FieldValue;
+    customer: DocumentReference;
+    payment: "unlocked";
+    createdTimestamp: FieldValue;
+}
+
 
 interface TempUser {
     "name": string,
@@ -136,20 +190,37 @@ interface PostsCollection {
 interface PostDocument {
     type?: number;
     title: string;
-    description: string;
     thumbnail?: string;
     tag: string[];
     data: OutputData;
     owner: string;
     createdTimestamp: FieldValue;
     lastEditTimestamp: FieldValue;
-    isPublic: boolean;
-    requiredAnswer?: { [x: sting]: string };
 }
 
-interface CategoriesDocument {
+type IdeaUrStory = {
+    type: "text";
+    content: string;
+    createdTimestamp: FieldValue,
+} | {
+    type: "picture";
+    file: File;
+    url?: string;
+    content: string;
+    createdTimestamp: FieldValue,
+} | {
+    type: "voice";
+    file: File;
+    url?: string;
+    content: string;
+    createdTimestamp: FieldValue,
+}
+
+interface IdeaUrStoryConfig {
+    accept: number[];
     title: string;
+    name: string;
     description: string;
-    thumbnail: string;
-    createdTimestamp: FieldValue;
+    version: string;
+    resultPublic: boolean;
 }

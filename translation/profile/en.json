@@ -1,0 +1,14 @@
+{
+  "avatar-alt": "{{name}}'s Avatar",
+  "class": "Class",
+  "teacher": "Teacher",
+  "bio": "Bio：",
+  "customTitle": "Custom Title",
+  "classChange": "Class (Enter Class Number, eg. J11, S11)",
+  "customTitleChange": "Edit Custom Title",
+  "name": "Name",
+  "username": "Username",
+  "noBio": "He/She wrote down absolutely zilch",
+  "insta": "Instagram Account",
+  "prefixClickChange": "Click here to edit {{option}}"
+}

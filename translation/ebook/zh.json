@@ -1,0 +1,21 @@
+{
+  "current_periodical": "當期雜誌",
+  "free_download": "免費下載刊物",
+  "immediate_download": "立即下載刊物",
+  "buy_periodical": "購買刊物",
+  "unpublished": "向未推出",
+  "unpublished_waiting": "敬請期待...",
+  "select_platform": "請選擇平台",
+  "select_version": "請選擇版本",
+  "format": "{{format}} 格式",
+  "format_compressed": "{{format}} 格式 - 壓縮版",
+  "platform_apple": "蘋果裝置",
+  "platform_others": "其他平台",
+  "purchase_method": "請選擇付款方式！",
+  "purchase_voucher": "兌換序號",
+  "purchase_voucher_use": "使用序號",
+  "purchase_voucher_input": "請在此輸入序號⋯⋯",
+  "message_book_not_exist": "系統錯誤！本書不存在！",
+  "message_voucher_unmatched": "序號錯誤，請檢查序號⋯⋯",
+  "message_purchase_successfully": "購買成功！感謝您選擇慈中後生！"
+}

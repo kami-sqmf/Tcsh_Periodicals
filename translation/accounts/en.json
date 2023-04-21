@@ -1,0 +1,12 @@
+{
+    "accounts-logout": "Sign Out",
+    "instagram-unsuported": "Instagram Browser is not supported! Please use another browser.",
+    "accounts-login-with-google": "Login with Google Account",
+    "edit_name_zh_up5": "Username with Chinese can only be less than 5 words",
+    "edit_name_up30": "Username is more than 30 words",
+    "edit_name_empty": "Please enter your username",
+    "edit_class_format_error": "Class format error",
+    "edit_customTitle_up18": "Custom title can only be less than 18 words",
+    "edit_bio_up64": "Bio can only be less than 64 words",
+    "edit_insta_format_error": "Instagram Account format error"
+}

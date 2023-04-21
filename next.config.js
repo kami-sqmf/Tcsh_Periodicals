@@ -1,7 +1,10 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-  swcMinify: true,
+const { withPlaiceholder } = require("@plaiceholder/next");
+
+const nextConfig = withPlaiceholder({
+  experimental: {
+    appDir: true,
+  },
   images: {
     remotePatterns: [
       {
@@ -21,12 +24,12 @@ const nextConfig = {
         hostname: 'firebasestorage.googleapis.com',
         pathname: '/v0/b/tcsh-periodicals.appspot.com/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'i.imgur.com',
+      },
     ],
   },
-  i18n: {
-    locales: ['en', 'zh', 'de'],
-    defaultLocale: 'zh',
-  },
-}
+});
 
 module.exports = nextConfig
