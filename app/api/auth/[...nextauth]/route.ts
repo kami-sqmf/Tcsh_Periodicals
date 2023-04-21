@@ -1,7 +1,7 @@
 import { auth, db } from '@/utils/firebase';
 import { getAccount } from '@/utils/get-firestore';
-import { signInWithCredential, GoogleAuthProvider, signOut } from 'firebase/auth';
-import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
+import { GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 
@@ -69,7 +69,7 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         if (session.user.email) {
           const res = await getAccount(session.user.email);
-          res ? session.firestore = res : 0; 
+          res ? session.firestore = res : 0;
         }
       }
       return session;
