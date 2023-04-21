@@ -32,7 +32,7 @@ const MembersContent = ({ lang, className = "", teamsInfo, defaultProfiles }: { 
   const showWhat = (e: MouseEvent<SVGElement>, change: number) => {
     const list = Object.keys(MemberRole).filter(i => parseInt(i) % 100 == 1);
     const index = findValidRole(list, change);
-    change > 0 ? setRightMenu(<p className='text-sm text-main/90 font-bold animate-opacity text-center'>{MemberRole[index].name(lang)}</p>) : setLeftMenu(<p className='text-sm text-main/90 animate-opacity text-center ml-2'>{MemberRole[index].name(lang)}</p>)
+    change > 0 ? setRightMenu(<p className='text-sm text-main/90 font-bold animate-opacity text-center'>{MemberRole[index].name(lang)}</p>) : setLeftMenu(<p className='text-sm text-main/90 animate-opacity text-center ml-2'>{MemberRole[index as MemberRoleKey].name(lang)}</p>)
   }
   const ridWhat = (e: MouseEvent<SVGElement>, change: number) => {
     change > 0 ? setRightMenu(<RiArrowRightSFill className='h-8 w-8 invisible' />) : setLeftMenu(<RiArrowLeftSFill className='h-8 w-8 invisible' />)
@@ -78,7 +78,7 @@ const MembersContent = ({ lang, className = "", teamsInfo, defaultProfiles }: { 
           <div className="flex flex-row justify-around items-center border-[1.5px] border-main text-main2 rounded w-full h-16">
             <div className='transition-all basis-2/9'>{LeftMenu}</div>
             <RiArrowLeftSFill className='h-8 w-8 cursor-pointer basis-1/9' onClick={(e) => clickWhat(e, -1)} onMouseEnter={(e) => showWhat(e, -1)} onMouseLeave={(e) => ridWhat(e, -1)} />
-            <p className='md:text-lg font-medium basis-3/9 text-center'>{MemberRole[roleFilter].name(lang)}</p>
+            <p className='md:text-lg font-medium basis-3/9 text-center'>{MemberRole[roleFilter as MemberRoleKey].name(lang)}</p>
             <RiArrowRightSFill className='h-8 w-8 cursor-pointer basis-1/9' onClick={(e) => clickWhat(e, 1)} onMouseEnter={(e) => showWhat(e, 1)} onMouseLeave={(e) => ridWhat(e, 1)} />
             <div className='transition-all basis-2/9'>{RightMenu}</div>
           </div>

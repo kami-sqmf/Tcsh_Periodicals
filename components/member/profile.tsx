@@ -3,6 +3,7 @@
 import i18nDefault from '@/translation/profile/zh.json';
 import { Member } from "@/types/firestore";
 import { LangCode } from "@/types/i18n";
+import { MemberRoleKey } from '@/types/role';
 import i18n from "@/utils/i18n";
 import { classParser, MemberRole } from "@/utils/role";
 import Image from "next/image";
@@ -19,7 +20,7 @@ export const Profile = ({ profile, lang }: { profile: Member; lang: LangCode; })
       <div className='flex flex-col px-5 py-6 space-y-4 font-["GenJyuuGothic"] w-full'>
         <div className='flex flex-row items-baseline font-serif'>
           <p className='basis-5/12 text-2xl font-bold text-main'>{profile.name}</p>
-          <p className='basis-7/12 text-main/80 text-sm'>{MemberRole[profile.role].name(lang)}</p>
+          <p className='basis-7/12 text-main/80 text-sm'>{MemberRole[profile.role as MemberRoleKey].name(lang)}</p>
         </div>
         <div className='flex flex-col mt-3 space-y-2'>
           {profile.class && <div className='flex flex-col'>

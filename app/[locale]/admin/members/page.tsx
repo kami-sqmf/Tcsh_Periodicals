@@ -76,7 +76,7 @@ export default function AdminMembers({ params }: { params: { locale: LangCode } 
                   <Image placeholder='blur' blurDataURL="/assests/defaultProfile.png" src={profile.avatar} fill={true} className="rounded-full overflow-hidden object-cover bg-background2" alt={`${profile.name}的大頭貼`} sizes="(max-width: 1024px) 272px, (max-width: 768px) 188vw, 268vw" />
                 </div>
                 <p>{profile.name}</p>
-                <p className="text-sm text-main/80">{MemberRole[profile.role].name("zh")}</p>
+                <p className="text-sm text-main/80">{MemberRole[profile.role as MemberRoleKey].name("zh")}</p>
               </div>
             ))}
           </div>
@@ -189,7 +189,7 @@ const ModalInfo = ({ modalInfo }: { modalInfo: Member }) => (
     <div className='flex flex-col px-5 py-6 space-y-4 font-["GenJyuuGothic"] w-full'>
       <div className='flex flex-row items-baseline font-serif'>
         <p className='basis-5/12 text-2xl font-bold text-main'>{modalInfo.name}</p>
-        <p className='basis-7/12 text-main/80 text-sm'>{MemberRole[modalInfo.role].name("zh")}</p>
+        <p className='basis-7/12 text-main/80 text-sm'>{MemberRole[modalInfo.role as MemberRoleKey].name("zh")}</p>
       </div>
       <div className='flex flex-col mt-3 space-y-2'>
         {modalInfo.class && <div className='flex flex-col'>
