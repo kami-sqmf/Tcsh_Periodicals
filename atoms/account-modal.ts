@@ -18,17 +18,5 @@ export const profileModalSelection = atom({
 
 export const profileModalUser = atom({
     key: "profile",
-    default: {
-        type: "Account",
-        data: {
-            avatar: "",
-            bio: "",
-            class: null,
-            customTitle: "",
-            email: "",
-            insta: "",
-            name: "",
-            username: "",
-        }
-    } as AccountsUni
+    default: {} as Account
 })

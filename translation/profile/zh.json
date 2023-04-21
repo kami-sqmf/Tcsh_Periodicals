@@ -1,0 +1,14 @@
+{
+  "avatar-alt": "{{name}} 的大頭貼",
+  "class": "班級",
+  "teacher": "老師",
+  "bio": "自我介紹：",
+  "customTitle": "自我介紹標題",
+  "classChange": "班級 （請輸入班級代號，如 J11、S11）",
+  "customTitleChange": "更改自我介紹標題",
+  "name": "名稱",
+  "username": "用戶名稱",
+  "noBio": "ta很懶，沒有留下任何東西",
+  "insta": "Instagram 帳號",
+  "prefixClickChange": "點此編輯 {{option}}"
+}

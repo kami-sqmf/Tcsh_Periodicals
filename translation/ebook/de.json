@@ -1,0 +1,21 @@
+{
+  "current_periodical": "Aktuelle Zeitschrift",
+  "free_download": "Kostenlos Herunterladen",
+  "immediate_download": "Jetzt Herunterladen",
+  "buy_periodical": "Kaufen",
+  "unpublished": "Unveröffentlichten",
+  "unpublished_waiting": "Bald verfügbar",
+  "select_platform": "Bitte Plattform wählen",
+  "select_version": "Bitte Version wählen",
+  "format": "{{format}}",
+  "format_compressed": "{{format}} - Gezippte",
+  "platform_apple": "Apple-Geräten",
+  "platform_others": "Andere Plattform",
+  "purchase_method": "Zahlungsart",
+  "purchase_voucher": "Gutschein einlösen",
+  "purchase_voucher_use": "Gutschein",
+  "purchase_voucher_input": "Bitte geben Sie hier Ihren Gutschein ein",
+  "message_book_not_exist": "Systemfehler! Das Ebook existiert nicht.",
+  "message_voucher_unmatched": "Dieser Gutscheincode ist ungültig.",
+  "message_purchase_successfully": "Erfolgreicher Kauf! Ein herzliches Dankeschön von Periodicals TCSH"
+}

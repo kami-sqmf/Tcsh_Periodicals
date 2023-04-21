@@ -1,0 +1,21 @@
+{
+  "current_periodical": "Current Periodical",
+  "free_download": "Free Download",
+  "immediate_download": "Download Now",
+  "buy_periodical": "Purchase",
+  "unpublished": "Unpublished",
+  "unpublished_waiting": "Upcomming!",
+  "select_platform": "Select your platform",
+  "select_version": "Select the version",
+  "format": "{{format}}",
+  "format_compressed": "{{format}} - Compressed",
+  "platform_apple": "Apple devices",
+  "platform_others": "Other devices",
+  "purchase_method": "Payment Method",
+  "purchase_voucher": "Redeem Voucher",
+  "purchase_voucher_use": "Redeem Voucher",
+  "purchase_voucher_input": "Enter your voucher here...",
+  "message_book_not_exist": "System Error! This ebook doesn't exist.",
+  "message_voucher_unmatched": "The voucher code you entered isn't valid.",
+  "message_purchase_successfully": "Purchase Completed！Thank you for choosing Periodicals TCSH！"
+}

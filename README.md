@@ -1,6 +1,6 @@
 
 # 慈中後生官方網站
-![Algorithm schema](https://i.imgur.com/YKKC6xE.png)
+![Preview Image](https://i.imgur.com/t00kMPl.png)
 
 ## 目錄
 * [概覽](#概覽)
@@ -15,28 +15,33 @@
 > ### 公開頁面
 >  - [x] 首頁
 >  - [x] 成員
->  - [ ] 投稿
->  - [ ] 文章
+>  - [x] 投稿
+>  - [x] 文章
 
 > ### 帳號中心
 >  - [x] 註冊
 >  - [x] 登入
->  - [ ] 管理文章
+>  - [x] 管理文章
 >  - [x] 管理帳號
 >  - [x] 登出
 
 > ### 管理員中心
 > - [x] 成員管理
 > - [x] 網站設定
-> - [] 焦點管理
+> - [x] 焦點管理
 > - [x] 手機版「通知」管理
-> - [ ] 投稿文章管理
+> - [x] 投稿文章管理
 
 ## 更新日誌
 
 ### Stable 紀錄（正式版階段）
 > ⚠️ 注意：好像沒有什麼好注意的？
 > 💻 <- 代表曾發布到[正式伺服器](https://periodicals.kami.tw/)，其餘僅發布在[測試伺服器](https://periodicalsalpha.kami.tw/)。
+
+#### Stable 2.0.0 💻
+- 修改程式架構 (升級至 Next.js 13)
+- 新的管理員介面
+- 新的電子書介面
 
 #### Stable 1.5.0 💻
 - 新增文章瀏覽與管理功能
@@ -147,6 +152,7 @@
 
 > ⚠️ 注意：只對重大改變進行記錄
 > 💻 <- 代表曾發布到[正式伺服器](https://periodicals.kami.tw/)，其餘僅發布在[測試伺服器](https://periodicalsalpha.kami.tw/)。
+![Preview Image](https://i.imgur.com/YKKC6xE.png)
 
 #### PreAlpha 2.6.0 💻
  - 新增管理員中心 - 網站設定
