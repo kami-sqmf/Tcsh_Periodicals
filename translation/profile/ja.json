@@ -1,14 +1,14 @@
 {
-  "avatar-alt": "{{name}} 的大頭貼",
-  "class": "班級",
-  "teacher": "老師",
-  "bio": "自我介紹：",
-  "customTitle": "自我介紹標題",
-  "classChange": "班級 （請輸入班級代號，如 J11、S11）",
-  "customTitleChange": "更改自我介紹標題",
+  "avatar-alt": "{{name}} のプロフィール写真",
+  "class": "クラス",
+  "teacher": "教師",
+  "bio": "自己紹介：",
+  "customTitle": "自己紹介表題：",
+  "classChange": "クラス（ごクラスコードを入力してください、例：J11、S11）",
+  "customTitleChange": "自己紹介表題を変更",
   "name": "名前",
   "username": "ユーザーネーム",
   "noBio": "あいつは不精で、何でも書きませんでした",
   "insta": "インスタグムアカウント",
-  "prefixClickChange": "ここをクリックして {{option}} 編集"
+  "prefixClickChange": "ここをクリックして {{option}} を編集"
 }
