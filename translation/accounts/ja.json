@@ -1,7 +1,7 @@
 {
     "accounts-logout": "登出",
     "instagram-unsuported": "抱歉，向不支援 Instagram！請使用其他瀏覽器！",
-    "accounts-login-with-google": "使用 Google 帳號登入",
+    "accounts-login-with-google": "Googleでログイン",
     "edit_name_zh_up5": "用戶名稱（含中文）不能超過5個字",
     "edit_name_up30": "用戶名稱大於30個字",
     "edit_name_empty": "請輸入用戶名稱",
