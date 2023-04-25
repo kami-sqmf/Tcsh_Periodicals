@@ -17,5 +17,5 @@
   "purchase_voucher_input": "Enter your voucher here...",
   "message_book_not_exist": "System Error! This ebook doesn't exist.",
   "message_voucher_unmatched": "The voucher code you entered isn't valid.",
-  "message_purchase_successfully": "Purchase Completed！Thank you for choosing Periodicals TCSH！"
+  "message_purchase_successfully": "Purchase Completed! Thank you for choosing Periodicals TCSH!"
 }
