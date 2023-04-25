@@ -2,7 +2,7 @@
   "avatar-alt": "{{name}}'s Avatar",
   "class": "Class",
   "teacher": "Teacher",
-  "bio": "Bio：",
+  "bio": "Bio:",
   "customTitle": "Custom Title",
   "classChange": "Class (Enter Class Number, eg. J11, S11)",
   "customTitleChange": "Edit Custom Title",
