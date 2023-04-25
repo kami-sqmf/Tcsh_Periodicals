@@ -2,9 +2,5 @@ project_identifier: TCSH-Periodicals
 api_key_env: CROWDIN_API_KEY
 base_path: .
 files:
-  - source: '/translation/zh/**/*.json'
-    translation: '/translation/%two_letters_code%/**/%original_file_name%'
-    languages_mapping:
-      locale:
-        'en': 'en'
-        'de': 'de'
+  - source: /translation/**/zh.json
+    translation: /translation/**/%two_letters_code%.json
