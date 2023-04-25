@@ -1,0 +1,12 @@
+{
+    "accounts-logout": "登出",
+    "instagram-unsuported": "抱歉，向不支援 Instagram！請使用其他瀏覽器！",
+    "accounts-login-with-google": "使用 Google 帳號登入",
+    "edit_name_zh_up5": "用戶名稱（含中文）不能超過5個字",
+    "edit_name_up30": "用戶名稱大於30個字",
+    "edit_name_empty": "請輸入用戶名稱",
+    "edit_class_format_error": "班級格式錯誤",
+    "edit_customTitle_up18": "自我介紹不可超過18個字",
+    "edit_bio_up64": "自我介紹不可超過64個字",
+    "edit_insta_format_error": "Instagram 帳號格式錯誤，請再次檢查"
+}
