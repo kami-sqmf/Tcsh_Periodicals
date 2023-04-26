@@ -11,7 +11,7 @@ export const Language = ({ lang }: { lang: LangCode }) => {
     const [menu, setMenu] = useState(false)
     const pathname = usePathname();
     return (
-        <div className="flex flex-row items-center text-main2 px-2 justify-start cursor-pointer" onClick={() => setMenu(!menu)}>
+        <div className="flex flex-row flex-wrap gap-1 items-center text-main2 px-2 justify-start cursor-pointer" onClick={() => setMenu(!menu)}>
             {languages[lang].icon}
             <p className="text ml-2">{languages[lang].name}</p>
             <RiArrowDownSFill className={`h-6 w-6 ml-2 ${menu ? "-rotate-90 translate-y-0.5" : ""} transition-all duration-600`} />

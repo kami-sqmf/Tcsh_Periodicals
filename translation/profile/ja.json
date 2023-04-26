@@ -1,0 +1,14 @@
+{
+  "avatar-alt": "{{name}} のプロフィール写真",
+  "class": "クラス",
+  "teacher": "教師",
+  "bio": "自己紹介：",
+  "customTitle": "自己紹介表題：",
+  "classChange": "クラス（ごクラスコードを入力してください、例：J11、S11）",
+  "customTitleChange": "自己紹介表題を変更",
+  "name": "名前",
+  "username": "ユーザーネーム",
+  "noBio": "あいつは不精で、何でも書きませんでした",
+  "insta": "インスタグムアカウント",
+  "prefixClickChange": "ここをクリックして {{option}} を編集"
+}
