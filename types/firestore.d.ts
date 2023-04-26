@@ -28,6 +28,9 @@ interface About {
     zh: {
         description: string;
     },
+    ja: {
+        description: string;
+    },
     en: {
         description: string;
     },

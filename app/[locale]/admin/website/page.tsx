@@ -4,12 +4,9 @@ import { BreadcrumbWrapper } from "@/components/breadcumb/breadcumb";
 import { Loading } from "@/components/global/loading";
 import { About } from "@/types/firestore";
 import { LangCode } from "@/types/i18n";
-import { MemberRoleKey } from "@/types/role";
 import { webInfo } from "@/utils/config";
 import { db } from "@/utils/firebase";
-import { MemberRole } from "@/utils/role";
-import { collection, getDocs, updateDoc, writeBatch } from "firebase/firestore";
-import { doc, onSnapshot } from "firebase/firestore";
+import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import { RiPlaneFill } from "react-icons/ri";
 
@@ -37,6 +34,7 @@ export default function AdminSlide({ params }: { params: { locale: LangCode } })
           <TextAreaField text="請輸入介紹（中文）" value={serverSnapshot.zh.description} onClick={async (value: string) => { setUploading(true); await updateDoc(doc(db, "Global", "About"), { zh: { description: value } }); setUploading(false) }} />
           <TextAreaField text="請輸入介紹（英文）" value={serverSnapshot.en.description} onClick={async (value: string) => { setUploading(true); await updateDoc(doc(db, "Global", "About"), { en: { description: value } }); setUploading(false) }} />
           <TextAreaField text="請輸入介紹（德文）" value={serverSnapshot.de.description} onClick={async (value: string) => { setUploading(true); await updateDoc(doc(db, "Global", "About"), { de: { description: value } }); setUploading(false) }} />
+          <TextAreaField text="請輸入介紹（日文）" value={serverSnapshot.ja.description} onClick={async (value: string) => { setUploading(true); await updateDoc(doc(db, "Global", "About"), { ja: { description: value } }); setUploading(false) }} />
         </div>
         : <div className="min-h-[74vh] w-full flex justify-center items-center"><Loading text={serverSnapshot ? "上傳中" : "載入中"} /></div>}
     </>
