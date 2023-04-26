@@ -1,0 +1,12 @@
+{
+    "accounts-logout": "ログアウト",
+    "instagram-unsuported": "申し訳ありません、Instagram は今か非対応です。",
+    "accounts-login-with-google": "Googleでログイン",
+    "edit_name_zh_up5": "ユーザーネーム（漢字を含む）が5文字以上",
+    "edit_name_up30": "ユーザーネームが 30 文字以上",
+    "edit_name_empty": "ユーザーネームを入力してください",
+    "edit_class_format_error": "クラスコードの不正確なフォーマット",
+    "edit_customTitle_up18": "自己紹介表題が 18 文字以上",
+    "edit_bio_up64": "自己紹介が 64 文字以上",
+    "edit_insta_format_error": "インスタグムアカウントの不正確なフォーマット"
+}

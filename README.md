@@ -38,6 +38,9 @@
 > ⚠️ 注意：好像沒有什麼好注意的？
 > 💻 <- 代表曾發布到[正式伺服器](https://periodicals.kami.tw/)，其餘僅發布在[測試伺服器](https://periodicalsalpha.kami.tw/)。
 
+#### Stable 2.0.1 💻
+- 新增日文介面
+
 #### Stable 2.0.0 💻
 - 修改程式架構 (升級至 Next.js 13)
 - 新的管理員介面

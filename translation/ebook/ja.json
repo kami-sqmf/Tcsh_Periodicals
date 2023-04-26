@@ -1,0 +1,21 @@
+{
+  "current_periodical": "当期の雑誌",
+  "free_download": "刊行物の無料ダウンロード",
+  "immediate_download": "即座に刊行物をダウンロード",
+  "buy_periodical": "刊行物の購入",
+  "unpublished": "未発売",
+  "unpublished_waiting": "ご期待ください",
+  "select_platform": "ご利用の機種をお選びください",
+  "select_version": "ご形式をお選びください",
+  "format": "{{format}} 形式",
+  "format_compressed": "{{format}} 形式 - 圧縮版",
+  "platform_apple": "Apple デバイス",
+  "platform_others": "その他の機種",
+  "purchase_method": "お支払い方法を選択してください！",
+  "purchase_voucher": "バウチャーを使用する",
+  "purchase_voucher_use": "バウチャーを使用する",
+  "purchase_voucher_input": "バウチャーコードを入力⋯⋯",
+  "message_book_not_exist": "システムエラー！この書籍は存在しません！",
+  "message_voucher_unmatched": "入力したクーポン番号が認識されません。番号をもう一度ご確認のうえ、再入力してください",
+  "message_purchase_successfully": "ご購入ありがとうございます！慈中後生を選んでいただき、誠にありがとうございます！"
+}

@@ -3,6 +3,7 @@ import Image from "next/image";
 import { RiAccountBoxFill, RiAccountBoxLine, RiAdminFill, RiAdminLine, RiBookFill, RiBookLine, RiChatForwardFill, RiChatForwardLine, RiEditFill, RiEditLine, RiFilePaper2Fill, RiFilePaper2Line, RiGroup2Fill, RiGroup2Line, RiHome2Fill, RiHome2Line, RiInstagramFill, RiInstagramLine, RiLock2Fill, RiLockLine, RiNotification2Line, RiProfileFill, RiProfileLine, RiQuestionnaireFill, RiQuestionnaireLine, RiSlideshowFill, RiSlideshowLine, RiUserSettingsFill, RiUserSettingsLine, RiWindow2Fill, RiWindow2Line, RiYoutubeFill, RiYoutubeLine } from "react-icons/ri";
 import GermanIcon from "../public/language/de.svg";
 import EnglishIcon from "../public/language/en.svg";
+import JapaneseIcon from "../public/language/ja.svg";
 import ChineseIcon from "../public/language/zh.svg";
 import logo from "../public/logo/logo.jpg";
 import logoSVG from '../public/logo/logo-nav.svg';
@@ -275,6 +276,11 @@ export const languages = {
     name: "繁體中文",
     code: "zh",
     icon: <Image src={ChineseIcon} height={18} width={18} alt="繁體中文" />,
+  },
+  "ja": {
+    name: "日本語",
+    code: "ja",
+    icon: <Image src={JapaneseIcon} height={18} width={18} alt="日本語" />,
   },
   "de": {
     name: "Deutsch",

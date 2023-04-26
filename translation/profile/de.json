@@ -1,14 +1,14 @@
 {
   "avatar-alt": "{{name}}'s Avatar",
   "class": "Klasse",
+  "teacher": "Lerher/Lerherin",
   "bio": "Steckbrief",
-  "noBio": "Er/Sie niedergeschrieben Null",
+  "customTitle": "Nachsteckbrief",
+  "classChange": "Klasse (Klassenummer engänzen, Bleispiel: J11, S11)",
+  "customTitleChange": "Nachsteckbrief anpassen",
   "name": "Name",
   "username": "Kontoname",
-  "customTitle": "Nachsteckbrief",
-  "customTitleChange": "Nachsteckbrief anpassen",
-  "classChange": "Klasse (Klassenummer engänzen, Bleispiel: J11, S11)",
-  "teacher": "Lerher/Lerherin",
+  "noBio": "Er/Sie niedergeschrieben Null",
   "insta": "Konto von Instagram",
   "prefixClickChange": "Zum Bearbeiten Ihren {{option}} hier klicken"
 }
