@@ -11,7 +11,7 @@ const SlideElement = ({ className = "", slides, mobile = false }: { className?: 
     <div className={`${className} space-y-4`}>
       <div className={`relative w-full h-auto ${mobile ? "aspect-[21/9]" : "aspect-[21/9] xl:aspect-[21/7]"} border-2 border-main rounded-lg cursor-pointer overflow-hidden`}>
         <Link href={slides.at(nowSlide)!.href}>
-          <Image src={slides.at(nowSlide)!.image} priority={true} fill={true} className="object-cover" alt="圖片" sizes="(max-width: 1024px) 272px, (max-width: 768px) 188vw, 268vw" />
+          <Image src={slides.at(nowSlide)!.image} blurDataURL={(slides.at(nowSlide)! as any).image_blur} placeholder="blur" priority={true} fill={true} className="object-cover" alt="圖片" sizes="(max-width: 1024px) 272px, (max-width: 768px) 188vw, 268vw" />
         </Link>
       </div>
       <div className="flex flex-row items-center">

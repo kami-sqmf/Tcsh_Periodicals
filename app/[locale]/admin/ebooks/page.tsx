@@ -6,20 +6,23 @@ import { BreadcrumbWrapper } from "@/components/breadcumb/breadcumb";
 import { HoverICON } from "@/components/global/hover-icon";
 import { Loading } from "@/components/global/loading";
 import i18nDefault from '@/translation/ebook/zh.json';
-import { EBooks } from "@/types/firestore";
+import { Account, EbookLicenses, EBooks } from "@/types/firestore";
 import { LangCode } from "@/types/i18n";
-import { webInfo } from "@/utils/config";
+import { colors, webInfo } from "@/utils/config";
 import { createEbookVoucher } from "@/utils/ebook-voucher";
 import { db, storage } from "@/utils/firebase";
 import i18n from "@/utils/i18n";
+import { classParser } from "@/utils/role";
 import { timestamp2Chinese } from "@/utils/timestamp";
-import { Dialog, Transition } from "@headlessui/react";
-import { addDoc, collection, deleteDoc, doc, onSnapshot, orderBy, query, updateDoc } from "firebase/firestore";
+import { Dialog, Popover, Tab, Transition } from "@headlessui/react";
+import { ArcElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Tooltip } from "chart.js";
+import { addDoc, collection, deleteDoc, doc, DocumentData, DocumentReference, getDoc, getDocs, onSnapshot, orderBy, query, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import Image from "next/image";
 import Link from "next/link";
 import { ChangeEvent, Dispatch, FormEvent, Fragment, MouseEvent, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
-import { RiAddCircleFill, RiAddCircleLine, RiCheckDoubleFill, RiClipboardFill, RiClipboardLine, RiCloseFill, RiCloseLine, RiDeleteBin5Fill, RiDeleteBin5Line, RiEdit2Fill, RiEdit2Line, RiInformationFill, RiInformationLine, RiKey2Fill, RiKey2Line } from "react-icons/ri";
+import { Line } from 'react-chartjs-2';
+import { RiAddCircleFill, RiAddCircleLine, RiCheckDoubleFill, RiClipboardFill, RiClipboardLine, RiCloseFill, RiCloseLine, RiDeleteBin5Fill, RiDeleteBin5Line, RiEdit2Fill, RiEdit2Line, RiInformationFill, RiInformationLine, RiKey2Fill, RiKey2Line, RiLineChartFill, RiLineChartLine } from "react-icons/ri";
 
 const EbookBookCover = ({ className = "", thumbnail, title, size }: { className?: string; thumbnail: string; title: string; size: "big" | "small"; }) => {
   return (<div className={`${className} book-container`}>
@@ -40,6 +43,7 @@ export default function AdminEbooks({ params }: { params: { locale: LangCode } }
   useEffect(() => {
     if (dataFetchedRef.current) return;
     dataFetchedRef.current = true;
+    ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement);
     onSnapshot(query(collection(db, 'books'), orderBy("timestamp", 'desc')), snapshot => {
       setServerSnapshot(snapshot.docs.map((doc) => {
         return { id: doc.id, data: doc.data() as EBooks };
@@ -116,6 +120,10 @@ const ToolBar = ({ toolbarStatus, setModalOpen, setModalType }: { toolbarStatus:
         <HoverICON className='w-5 h-5' Icon={RiKey2Line} IconHover={RiKey2Fill} size={5} />
         <span className='transition-all duration-300'>批量產生序號</span>
       </div>}
+      {toolbarStatus === "edit" && <div className='group flex flex-row space-x-1 hover:text-main2 cursor-pointer items-center' onClick={() => { setModalOpen(true); setModalType("analytics") }}>
+        <HoverICON className='w-5 h-5' Icon={RiLineChartLine} IconHover={RiLineChartFill} size={5} />
+        <span className='transition-all duration-300'>下載分析</span>
+      </div>}
       {toolbarStatus === "edit" && <div className='group flex flex-row space-x-1 hover:text-main2 cursor-pointer items-center' onClick={() => { setModalOpen(true); setModalType("info") }}>
         <HoverICON className='w-5 h-5' Icon={RiInformationLine} IconHover={RiInformationFill} size={5} />
         <span className='transition-all duration-300'>詳細資訊</span>
@@ -158,6 +166,7 @@ const Modal = ({ modalOpen, setModalOpen, modalType, modalInfo }: { modalOpen: b
                   {modalType === "edit" && <h1 className='font-medium text-xl mb-2'>編輯書籍</h1>}
                   {modalType === "delete" && <h1 className='font-medium text-xl mb-2'>確定要刪除『{modalInfo?.data.title}』嗎？</h1>}
                   {modalType === "voucher" && <h1 className='font-medium text-xl mb-2'>批量產生序號</h1>}
+                  {modalType === "analytics" && <h1 className='font-medium text-xl mb-2'>電子書下載分析</h1>}
                   {modalType === "info" && <h1 className='font-medium text-xl mb-2'>書籍資訊</h1>}
                   <div onClick={() => setModalOpen(false)}><HoverICON className="w-7 h-7 cursor-pointer" Icon={RiCloseLine} IconHover={RiCloseFill} size={7} /></div>
                 </Dialog.Title>
@@ -167,6 +176,7 @@ const Modal = ({ modalOpen, setModalOpen, modalType, modalInfo }: { modalOpen: b
                     {modalType === "info" && <ModalInfo modalInfo={modalInfo.data} />}
                     {modalType === "delete" && <ModalDelete modalId={modalInfo.id} modalInfo={modalInfo.data} setModal={setModalOpen} />}
                     {modalType === "voucher" && <ModalVoucher modalId={modalInfo.id} modalInfo={modalInfo.data} setModal={setModalOpen} />}
+                    {modalType === "analytics" && <ModalAnalytics modalId={modalInfo.id} modalInfo={modalInfo.data} setModal={setModalOpen} />}
                   </div>
                 }
                 {modalType !== "add" && !modalInfo && <h2>錯誤，目前無法取得書籍資訊</h2>}
@@ -490,9 +500,194 @@ const ModalVoucher = ({ modalId, modalInfo, setModal }: { modalId: string; modal
   )
 }
 
+const ModalAnalytics = ({ modalId, modalInfo, setModal }: { modalId: string; modalInfo: EBooks; setModal: Dispatch<SetStateAction<boolean>> }) => {
+  const dataFetchedRef = useRef<boolean>(false);
+  const [data, setData] = useState<EbookLicenses[]>();
+  const [account, setAccount] = useState<Account | null>();
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  useEffect(() => {
+    if (dataFetchedRef.current) return;
+    dataFetchedRef.current = true;
+    getDocs(query(collection(db, "books", modalId, "license"))).then((data) => {
+      setData(data.docs.map(d => d.data()) as EbookLicenses[])
+    });
+  })
+  const onGetAccountClick = async (memberRef: DocumentReference<DocumentData>) => {
+    const doc = await getDoc(memberRef);
+    if (doc.exists()) {
+      setAccount(doc.data() as Account);
+    } else {
+      setAccount(null);
+    }
+  }
+  if (!data) return (<div className="w-full h-full flex justify-center items-center"><Loading className="justify-center items-center" text="正在載入資料中" /></div>)
+  else return (
+    <div className="border-main/80 border rounded-xl overflow-hidden bg-background w-[60vw] min-h-[70vh]">
+      <Tab.Group selectedIndex={selectedIndex} onChange={setSelectedIndex}>
+        <Tab.List as="div" className="flex flex-row w-full border-b border-main/80 select-none outline-none cursor-pointer">
+          <Tab as="div" className="px-6 py-2 border-r border-main/80 hover:bg-background2/60 hover:border-b-2 ui-selected:bg-background2/60 ui-selected:border-b-2 transition-all duration-300">
+            <h2 className="text-sm">下載人數</h2>
+            <span className="text-xl font-bold">{data.filter(d => d.used === true).length} 人</span>
+          </Tab>
+          <Tab as="div" className="px-6 py-2 border-r border-main/80 hover:bg-background2/60 hover:border-b-2 ui-selected:bg-background2/60 ui-selected:border-b-2 transition-all duration-300">
+            <h2 className="text-sm">序號分析</h2>
+            <span className="text-xl font-bold">{data.filter(d => d.voucher).length} 組</span>
+          </Tab>
+        </Tab.List>
+        <Tab.Panels className="px-6 py-4 select-none outline-none h-[70vh] overflow-y-scroll">
+          <Tab.Panel className="">
+            <Line
+              datasetIdKey='download_count'
+              data={{
+                datasets: [{
+                  label: "下載人數",
+                  pointHitRadius: 25,
+                  borderWidth: 3,
+                  borderColor: colors.main + "CD",
+                  backgroundColor: colors.main,
+                  hoverBackgroundColor: colors.main2,
+                  borderCapStyle: "round",
+                  data: data.filter(d => d.used === true).sort((a: any, b: any) => a.usedTimestamp - b.usedTimestamp).reduce((tmp: any, license: any) => {
+                    const time = new Date(license.usedTimestamp.seconds * 1000).toISOString().slice(0, 10);
+                    const index = tmp.findIndex((t: any) => t.x === time);
+                    index >= 0 ? tmp[index] = { x: time, y: tmp[index].y + 1 } : tmp.push({ x: time, y: 1 })
+                    return tmp;
+                  }, [{ x: new Date(modalInfo.timestamp * 1000).toISOString().slice(0, 10), y: 0 }]),
+                }, {
+                  label: "免費下載",
+                  pointHitRadius: 25,
+                  borderWidth: 3,
+                  borderColor: colors.main2 + "CD",
+                  backgroundColor: colors.main2,
+                  hoverBackgroundColor: colors.main,
+                  borderCapStyle: "round",
+                  data: data.filter(d => d.used === true).filter(d => d.voucher === false).sort((a: any, b: any) => a.usedTimestamp - b.usedTimestamp).reduce((tmp: any, license: any) => {
+                    const time = new Date(license.usedTimestamp.seconds * 1000).toISOString().slice(0, 10);
+                    const index = tmp.findIndex((t: any) => t.x === time);
+                    index >= 0 ? tmp[index] = { x: time, y: tmp[index].y + 1 } : tmp.push({ x: time, y: 1 })
+                    return tmp;
+                  }, [{ x: new Date(modalInfo.timestamp * 1000).toISOString().slice(0, 10), y: 0 }]),
+                }, {
+                  label: "序號兌換",
+                  pointHitRadius: 25,
+                  borderWidth: 3,
+                  borderColor: colors.background2 + "CD",
+                  backgroundColor: colors.background2,
+                  hoverBackgroundColor: colors.background,
+                  borderCapStyle: "round",
+                  data: data.filter(d => d.used === true).filter(d => d.voucher === true).sort((a: any, b: any) => a.usedTimestamp - b.usedTimestamp).reduce((tmp: any, license: any) => {
+                    const time = new Date(license.usedTimestamp.seconds * 1000).toISOString().slice(0, 10);
+                    const index = tmp.findIndex((t: any) => t.x === time);
+                    index >= 0 ? tmp[index] = { x: time, y: tmp[index].y + 1 } : tmp.push({ x: time, y: 1 })
+                    return tmp;
+                  }, [{ x: new Date(modalInfo.timestamp * 1000).toISOString().slice(0, 10), y: 0 }]),
+                }]
+              }}
+            />
+            <div className="mt-4 text-main space-y-2">
+              <h2 className="text-xl font-bold">下載資訊</h2>
+              <table className="border-collapse border border-main/80 table-auto w-full font-normal">
+                <thead>
+                  <tr>
+                    <th className="border-collapse border border-main/80">種類</th>
+                    <th className="border-collapse border border-main/80">授權帳號ID</th>
+                    <th className="border-collapse border border-main/80">授權時間</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.filter(d => d.used).sort((a: any, b: any) => b.usedTimestamp - a.usedTimestamp).map((d, index) => {
+                    if (!d.used) return (<></>);
+                    return (
+                      <tr key={index}>
+                        <th className="border-collapse border border-main/80">{d.voucher ? "序號" : "免費"}</th>
+                        <th className="border-collapse border border-main/80">
+                          <Popover className="relative">
+                            <Popover.Button as="div" className="relative cursor-pointer group" onClick={() => onGetAccountClick(d.customer)}>
+                              <span>{d.customer.id}</span>
+                              <div className="absolute w-max px-2 py-1 text-xs z-40 bg-background2 rounded-md hidden opacity-0 group-hover:block group-hover:opacity-90 transition-opacity top-0 right-0">
+                                <span>點擊以獲取詳細用戶資訊</span>
+                              </div>
+                            </Popover.Button>
+                            <Popover.Panel as="div" className="absolute left-1/2 -translate-x-1/2 z-50 px-4 py-3 border-2 rounded-lg border-main bg-background2 shadow-xl flex flex-col items-center justify-center select-auto">
+                              <div className="relative text-main h-24 w-24">
+                                <Image placeholder='blur' blurDataURL="/assests/defaultProfile.png" src={account?.avatar || "/assests/defaultProfile.png"} fill={true} className="rounded-full overflow-hidden object-cover bg-background2" alt={`${account?.name}的大頭貼`} sizes="(max-width: 1024px) 272px, (max-width: 768px) 188vw, 268vw" />
+                              </div>
+                              <p>{account?.name}</p>
+                              <div className='flex flex-col mt-3 items-baseline font-serif'>
+                                <p className='text-main2 text-sm'>電子郵件</p>
+                                <p className='text-main whitespace-pre-line'>{account?.email || "無法取得電子郵件"}</p>
+                              </div>
+                            </Popover.Panel>
+                          </Popover>
+                        </th>
+                        <th className="border-collapse border border-main/80">{timestamp2Chinese((d.usedTimestamp as any).seconds)}</th>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </Tab.Panel>
+          <Tab.Panel>
+            <Line
+              datasetIdKey='voucher_count'
+              data={{
+                datasets: [{
+                  label: "已兌換",
+                  pointHitRadius: 25,
+                  borderWidth: 3,
+                  borderColor: colors.main2 + "CD",
+                  backgroundColor: colors.main2,
+                  hoverBackgroundColor: colors.main,
+                  borderCapStyle: "round",
+                  data: data.filter(d => d.used === true).filter(d => d.voucher === true).sort((a: any, b: any) => a.createdTimestamp.seconds - b.createdTimestamp.seconds).reduce((tmp: any, license: any) => {
+                    const time = new Date(license.createdTimestamp.seconds * 1000).toISOString().slice(0, 10);
+                    const index = tmp.findIndex((t: any) => t.x === time);
+                    index >= 0 ? tmp[index] = { x: time, y: tmp[index].y + 1 } : tmp.push({ x: time, y: 1 })
+                    return tmp;
+                  }, [{ x: new Date(modalInfo.timestamp * 1000).toISOString().slice(0, 10), y: 0 }]),
+                }, {
+                  label: "未兌換",
+                  pointHitRadius: 25,
+                  borderWidth: 3,
+                  borderColor: colors.background2 + "CD",
+                  backgroundColor: colors.background2,
+                  hoverBackgroundColor: colors.background,
+                  borderCapStyle: "round",
+                  data: data.filter(d => d.used === false).filter(d => d.voucher === true).sort((a: any, b: any) => a.createdTimestamp - b.createdTimestamp).reduce((tmp: any, license: any) => {
+                    const time = new Date(license.createdTimestamp.seconds * 1000).toISOString().slice(0, 10);
+                    const index = tmp.findIndex((t: any) => t.x === time);
+                    index >= 0 ? tmp[index] = { x: time, y: tmp[index].y + 1 } : tmp.push({ x: time, y: 1 })
+                    return tmp;
+                  }, [{ x: new Date(modalInfo.timestamp * 1000).toISOString().slice(0, 10), y: 0 }]),
+                }, {
+                  label: "所有序號",
+                  pointHitRadius: 25,
+                  borderWidth: 3,
+                  borderColor: colors.main + "CD",
+                  backgroundColor: colors.main,
+                  hoverBackgroundColor: colors.main2,
+                  borderCapStyle: "round",
+                  data: data.filter(d => d.voucher === true).sort((a, b) => (a.createdTimestamp as any).seconds - (b.createdTimestamp as any).seconds).reduce((tmp: any, license: any) => {
+                    const time = new Date(license.createdTimestamp.seconds * 1000).toISOString().slice(0, 10);
+                    const index = tmp.findIndex((t: any) => t.x === time);
+                    index >= 0 ? tmp[index] = { x: time, y: tmp[index].y + 1 } : tmp.push({ x: time, y: 1 })
+                    return tmp;
+                  }, [{ x: new Date(modalInfo.timestamp * 1000).toISOString().slice(0, 10), y: 0 }]),
+                }]
+              }}
+            />
+          </Tab.Panel>
+        </Tab.Panels>
+      </Tab.Group>
+
+    </div>
+  )
+}
+
 type ModalInfo = {
   id: string;
   data: EBooks
 } | null;
 
-type ModalType = "add" | "edit" | "info" | "delete" | "voucher"
+type ModalType = "add" | "edit" | "info" | "delete" | "voucher" | "analytics";

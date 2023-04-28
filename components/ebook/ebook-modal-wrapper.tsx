@@ -4,17 +4,20 @@ import { AccountsUni, EBooks } from "@/types/firestore";
 import { LangCode } from "@/types/i18n";
 import { db } from "@/utils/firebase";
 import { addDoc, arrayUnion, collection, doc, serverTimestamp, updateDoc } from "firebase/firestore";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { checkOwnedBook } from "./ebook-current-book";
 import { LoginModal } from "./ebook-login-modal";
 import { EbookModal } from "./ebook-modal";
 import { PurchaseModal } from "./ebook-purchase-modal";
 
 const EbookModalWrapper = ({ lang, book, account, EbookBookCoverComponent }: { lang: LangCode; book: EBooks; account: AccountsUni | undefined; EbookBookCoverComponent: JSX.Element; }) => {
+  const uploadConfirmRef = useRef<boolean>(false);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [modalSelect, setModalSelect] = useState<number>(0);
   const onBookClick = () => {
     if (account) {
+      if (uploadConfirmRef.current) return;
+      if (!uploadConfirmRef.current) uploadConfirmRef.current = true;
       if (account.data.ownedBooks && account.data.ownedBooks.includes(book.files.bookId)) setModalSelect(2);
       else if (!book.locked) {
         addDoc(collection(db, "books", book.files.bookId, "license"), {

@@ -7,7 +7,7 @@ export default class i18n<i18nDefault> {
 
   constructor(locale: LangCode, path: string) {
     this.locale = locale;
-    if (locale as any === "favicon.ico") locale = "zh";
+    if (locale as any === "favicon.ico" || locale as any === "site.webmanifest.json") locale = "zh";
     this.i18n = require(`../translation/${path}/${locale}.json`) as i18nDefault;
   }
 
