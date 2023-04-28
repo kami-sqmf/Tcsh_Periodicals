@@ -4,7 +4,7 @@ import { collection, doc, DocumentData, DocumentReference, DocumentSnapshot, get
 import { ValueOf } from "next/dist/shared/lib/constants";
 import { db } from "./firebase";
 
-export async function getDocsFromCacheOrServer<T extends ValueOf<DB>>(collectionName: keyof DB, orderby = "createdTimestamp", orderFromLow = false): Promise<T> {
+export async function getDocsFromCacheOrServer<T>(collectionName: string, orderby = "createdTimestamp", orderFromLow = false): Promise<T> {
   const docRef = query(collection(db, collectionName), orderBy(orderby, orderFromLow ? 'asc' : "desc"));
   let col: QuerySnapshot<DocumentData>;
   try {

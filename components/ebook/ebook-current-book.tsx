@@ -17,8 +17,7 @@ const EbookCurrentBook = ({ lang, className = "", currentBook, account }: { lang
           <p className='text-main/80 text-sm mt-3 md:mt-4'>{currentBook.description}</p>
           <p className='text-main text-sm hidden md:block mt-1'>{!currentBook.published ? t._("unpublished") : (checkOwnedBook(account!, currentBook.files.bookId) ? t._("immediate_download") : (currentBook.locked && currentBook.price ? `${t._("buy_periodical")} NTD ${currentBook.price}` : t._("free_download")))}</p>
         </div>
-        {/* @ts-expect-error Server Component */}
-        <EbookModalWrapper lang={lang} book={currentBook} account={account} EbookBookCoverComponent={<EbookBookCover className='cursor-pointer' thumbnail={currentBook.thumbnail} title={currentBook.title} size="big" />} />
+        <EbookModalWrapper lang={lang} book={currentBook} account={account} EbookBookCoverComponent={<EbookBookCover className='cursor-pointer' thumbnail={currentBook.thumbnail} thumbnail_blur={(currentBook as any).thumbnail_blur} title={currentBook.title} size="big" />} />
         <p className='absolute -bottom-[49px] mr-8 w-full text-right text-main/80 text-xs md:hidden'>{!currentBook.published ? t._("unpublished") : (checkOwnedBook(account!, currentBook.files.bookId) ? t._("immediate_download") : (currentBook.locked && currentBook.price ? `${t._("buy_periodical")} NTD ${currentBook.price}` : t._("free_download")))}</p>
       </div>
       <EbookShelfHolder />

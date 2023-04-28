@@ -34,7 +34,7 @@ module.exports = {
         spinIG: 'spin 1.4s ease infinite',
         mailFly: 'mailFly 1.4s ease infinite',
       },
-      // spring-colors:{
+      // autunm-colors:{
       //   main: "#6D505D",
       //   main2: "#8C3F3F",
       //   background: "#E2D4B7",
@@ -72,5 +72,6 @@ module.exports = {
   ],
   plugins: [
     require('@tailwindcss/typography'),
+    require('@headlessui/tailwindcss')
   ],
 }

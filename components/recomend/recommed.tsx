@@ -27,7 +27,7 @@ const RecomendElement = ({ className = "", posts, lang }: { className?: string; 
           <Link key={key} href={post.url}>
             <div className="my-9 md:mt-11 flex flex-col md:flex-row items-center cursor-pointer hover:scale-[1.01] transition-all">
               <div className="relative w-full h-auto aspect-square md:aspect-[16/9] md:h-24 md:w-auto">
-                <Image src={post.thumbnail} fill={true} className="object-cover" alt="文章縮圖" loading="lazy" onError={() => reloadIG()} />
+                <Image src={post.thumbnail} fill={true} blurDataURL={(post as any).thumbnail_blur} placeholder="blur" className="object-cover" alt="文章縮圖" loading="lazy" onError={() => reloadIG()} />
               </div>
               <div className="md:ml-6 md:-mt-2">
                 <div className="text-sm text-main font-medium mt-1.5 flex flex-row">
