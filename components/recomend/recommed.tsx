@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import i18nDefault from "@/translation/recommend/zh.json";
 import i18n from "@/utils/i18n";
+import { useState } from "react";
 
 const reloadIG = async () => {
   await fetch("/api/updateIG");
@@ -14,6 +15,7 @@ const reloadIG = async () => {
 
 const RecomendElement = ({ className = "", posts, lang }: { className?: string; posts: Post[]; lang: LangCode }) => {
   const t = new i18n<typeof i18nDefault>(lang, "recommend");
+  const [isLoading, setLoading] = useState<boolean>(true);
   return (
     <div className={`${className} `}>
       <div className="text-main mb-4 md:mb-9 flex flex-row items-baseline justify-between">
@@ -26,8 +28,8 @@ const RecomendElement = ({ className = "", posts, lang }: { className?: string; 
         {posts.filter((item, index) => item.title.length > 18).filter((item, index) => index < 3).map((post, key) => (
           <Link key={key} href={post.url}>
             <div className="my-9 md:mt-11 flex flex-col md:flex-row items-center cursor-pointer hover:scale-[1.01] transition-all">
-              <div className="relative w-full h-auto aspect-square md:aspect-[16/9] md:h-24 md:w-auto">
-                <Image src={post.thumbnail} fill={true} blurDataURL={(post as any).thumbnail_blur} placeholder="blur" className="object-cover" alt="文章縮圖" loading="lazy" onError={() => reloadIG()} />
+              <div className={`relative w-full h-auto aspect-square md:aspect-[16/9] md:h-24 md:w-auto ${isLoading ? "animate-pulse bg-background2 rounded" : ""}`}>
+                <Image src={post.thumbnail} fill={true} className="object-cover" alt="文章縮圖" loading="lazy" onLoad={() => setLoading(false)} onError={() => reloadIG()} />
               </div>
               <div className="md:ml-6 md:-mt-2">
                 <div className="text-sm text-main font-medium mt-1.5 flex flex-row">

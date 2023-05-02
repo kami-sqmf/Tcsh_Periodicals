@@ -8,14 +8,16 @@ import i18n from "@/utils/i18n";
 import { classParser, MemberRole } from "@/utils/role";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from 'react';
 import { RiInstagramLine } from "react-icons/ri";
 
 export const Profile = ({ profile, lang }: { profile: Member; lang: LangCode; }) => {
   const t = new i18n<typeof i18nDefault>(lang, "profile");
+  const [isLoading, setLoading] = useState<boolean>(true);
   return (
     <div className={`w-72 flex flex-col min-h-[32em] max-h-[38em] rounded-2xl bg-white-light shadow-xl overflow-hidden bg-background2/90`}>
-      <div className="relative aspect-square h-72">
-        <Image alt={t._("avatar-alt", { name: profile.name }) as string} src={profile.avatar} fill={true} className="object-cover" />
+      <div className={`relative aspect-square h-72 ${isLoading ? "animate-pulse bg-main2/60" : ""}`}>
+        <Image alt={t._("avatar-alt", { name: profile.name }) as string} src={profile.avatar} fill={true} className="object-cover" loading='lazy' onLoad={() => setLoading(false)} />
       </div>
       <div className='flex flex-col px-5 py-6 space-y-4 font-["GenJyuuGothic"] w-full'>
         <div className='flex flex-row items-baseline font-serif'>
