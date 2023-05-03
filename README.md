@@ -38,7 +38,10 @@
 > ⚠️ 注意：好像沒有什麼好注意的？
 > 💻 <- 代表曾發布到[正式伺服器](https://periodicals.kami.tw/)，其餘僅發布在[測試伺服器](https://periodicalsalpha.kami.tw/)。
 
-#### Stable 2.0.3 💻
+#### Stable 2.0.4 💻
+- 修正電子書預設縮圖錯誤
+
+#### Stable Alpha 2.0.3
 - 修正上版IG圖片錯誤
 - 新增成員頁面載入特效
 
