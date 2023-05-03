@@ -15,8 +15,7 @@ const EbookOtherBooks = ({ lang, className = "", otherBooks, account }: { lang: 
           <div className={`${book.published ? "cursor-pointer" : "cursor-not-allowed"} relative flex flex-col items-center px-6 py-4 space-y-2 rounded-lg hover:bg-background/60 transition-all duration-500 group`}>
             {!book.published && <span className="absolute top-[40%] z-30 text-main bg-background/90 px-3 py-2 rounded-lg font-bold">{t._("unpublished_waiting")}</span>}
             <div className={`${book.published ? "" : "blur-sm"}`}>
-              {/* @ts-expect-error Server Component */}
-              <EbookBookCover thumbnail={book.thumbnail} title={book.title} size="small" key={key} />
+              <EbookBookCover thumbnail={book.thumbnail} thumbnail_blur={(book as any).thumbnail_blur} title={book.title} size="small" key={key} />
             </div>
             <p className='text-main font-medium group-hover:text-main2 group-hover:font-bold transition-all duration-500'>{book.title}</p>
             <p className='text-main text-xs !-mt-0.5 group-hover:text-main2 transition-all duration-500'>{!book.published ? t._("unpublished") : (checkOwnedBook(account!, book.files.bookId) ? t._("immediate_download") : (book.locked && book.price ? `${t._("buy_periodical")} NTD ${book.price}` : t._("free_download")))}</p>

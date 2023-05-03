@@ -4,12 +4,31 @@ import { EBooks } from "@/types/firestore";
 import { LangCode } from "@/types/i18n";
 import { getDocsFromCacheOrServer } from "@/utils/get-firestore";
 import { getServerSession } from "next-auth";
+import { getPlaiceholder } from "plaiceholder";
 import { Language } from "../global/language";
 import { EbookCurrentBook } from "./ebook-current-book";
 import { EbookOtherBooks } from "./ebook-other-books";
 
+const getThumbnailsBlurData = async (imageUrl: string) => {
+  try {
+    if (imageUrl.startsWith("/assests/ebook")) return "N9J8Cf9$5F~W-=4.0F$1v{E2IU%L00x@x=IUjs-;";
+    const { base64 } = await getPlaiceholder(imageUrl);
+    return base64;
+  } catch (error) {
+    return "N9J8Cf9$5F~W-=4.0F$1v{E2IU%L00x@x=IUjs-;";
+  }
+}
+
 async function getEbooks() {
-  const books = await getDocsFromCacheOrServer<EBooks[]>("books", "timestamp", false);
+  let books = await getDocsFromCacheOrServer<EBooks[]>("books", "timestamp", false);
+  for (let i = 0; i < books.length; i++) {
+    const book = books.at(i);
+    if (!book) continue;
+    books[i] = {
+      ...book,
+      thumbnail_blur: await getThumbnailsBlurData(book.thumbnail)
+    } as any
+  }
   return books;
 }
 

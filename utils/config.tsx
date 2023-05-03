@@ -266,6 +266,13 @@ export const webInfo = {
   },
 }
 
+export const colors = {
+  main: "#475952",
+  main2: "#5DA67C",
+  background: "#BAD9CD",
+  background2: "#E4F2EA",
+}
+
 export const languages = {
   "en": {
     name: "English",

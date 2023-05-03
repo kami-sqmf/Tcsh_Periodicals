@@ -16,7 +16,7 @@ const AboutElement = ({ lang, className = "", info }: { lang: LangCode; classNam
   return (
     <div className={`${className}`}>
       <LogoPNG className="w-full h-12 mt-8 rounded-lg" ring={false} />
-      <p className="mt-7 text-lg md:text-base xl:text-lg text-gray-700">{info[lang].description}</p>
+      <p className="mt-7 text-lg md:text-base xl:text-lg text-gray-700">{info[lang] ? info[lang].description : ""}</p>
       <div className="flex flex-col mt-5 space-y-2">
         {aboutLinks.map((link, key) => (
           <AboutLink text={link.title(lang) as string} href={link.href} key={key} />

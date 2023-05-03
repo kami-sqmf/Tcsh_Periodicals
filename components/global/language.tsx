@@ -1,7 +1,7 @@
 "use client";
 
 import { LangCode } from "@/types/i18n";
-import { languages } from "@/utils/config";
+import { i18nConfig, languages } from "@/utils/config";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -10,6 +10,7 @@ import { RiArrowDownSFill } from "react-icons/ri";
 export const Language = ({ lang }: { lang: LangCode }) => {
     const [menu, setMenu] = useState(false)
     const pathname = usePathname();
+    if (!i18nConfig.locales.includes(lang)) lang = "zh";
     return (
         <div className="flex flex-row flex-wrap gap-1 items-center text-main2 px-2 justify-start cursor-pointer" onClick={() => setMenu(!menu)}>
             {languages[lang].icon}

@@ -159,16 +159,6 @@ type EbookLicenses = {
     used: boolean;
     usedTimestamp: FieldValue;
     customer: DocumentReference;
-    payment: "credit_card";
-    payment_id: string;
-    payment_charged: number;
-    payment_success: boolean;
-    createdTimestamp: FieldValue;
-} | {
-    voucher: false;
-    used: boolean;
-    usedTimestamp: FieldValue;
-    customer: DocumentReference;
     payment: "unlocked";
     createdTimestamp: FieldValue;
 }
