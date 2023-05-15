@@ -6,16 +6,18 @@ import Image from "next/image";
 import Link from "next/link";
 import i18nDefault from "@/translation/recommend/zh.json";
 import i18n from "@/utils/i18n";
-import { useState } from "react";
-
-const reloadIG = async () => {
-  await fetch("/api/updateIG");
-  window.location.reload;
-}
+import { useRef, useState } from "react";
 
 const RecomendElement = ({ className = "", posts, lang }: { className?: string; posts: Post[]; lang: LangCode }) => {
   const t = new i18n<typeof i18nDefault>(lang, "recommend");
+  const errorRef = useRef<boolean>(false);
   const [isLoading, setLoading] = useState<boolean>(true);
+  const errorHandler = async () => {
+    if (errorRef.current === true) return;
+    errorRef.current = true;
+    await fetch("/api/updateIG");
+    window.location.reload;
+  }
   return (
     <div className={`${className} `}>
       <div className="text-main mb-4 md:mb-9 flex flex-row items-baseline justify-between">
@@ -29,7 +31,7 @@ const RecomendElement = ({ className = "", posts, lang }: { className?: string; 
           <Link key={key} href={post.url}>
             <div className="my-9 md:mt-11 flex flex-col md:flex-row items-center cursor-pointer hover:scale-[1.01] transition-all">
               <div className={`relative w-full h-auto aspect-square md:aspect-[16/9] md:h-24 md:w-auto ${isLoading ? "animate-pulse bg-background2 rounded" : ""}`}>
-                <Image src={post.thumbnail} fill={true} className="object-cover" alt="文章縮圖" loading="lazy" onLoad={() => setLoading(false)} onError={() => reloadIG()} />
+                <Image src={post.thumbnail} fill={true} className="object-cover" alt="文章縮圖" loading="lazy" onLoad={() => setLoading(false)} onError={() => errorHandler()} />
               </div>
               <div className="md:ml-6 md:-mt-2">
                 <div className="text-sm text-main font-medium mt-1.5 flex flex-row">

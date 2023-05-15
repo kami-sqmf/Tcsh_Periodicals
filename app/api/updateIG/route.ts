@@ -3,12 +3,13 @@ import { doc, setDoc } from 'firebase/firestore';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  const options = {
+  const options: RequestInit = {
     method: 'GET',
     headers: {
       'X-RapidAPI-Key': '830a65ab1emsh2fd10e83a97df9fp115bf7jsnf9277d3031ee',
       'X-RapidAPI-Host': 'instagram-scraper-2022.p.rapidapi.com'
-    }
+    },
+    cache: "no-store",
   };
 
   try {

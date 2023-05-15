@@ -40,7 +40,7 @@ const EbookModal = ({ lang, modalOpen, setModalOpen, files }: { lang: LangCode; 
         <div className="fixed inset-0" aria-hidden="true">
           <div className="fixed inset-0 overflow-y-auto">
             <div className="flex min-h-full items-center justify-center p-4">
-              <Dialog.Panel as="div" className="flex flex-col px-8 py-6 bg-background/95 text-main rounded-lg items-start justify-center min-w-[75vw] md:min-w-fit">
+              <Dialog.Panel as="div" className="flex flex-col px-8 py-6 bg-background/95 text-main rounded-lg items-center justify-center min-w-[75vw] md:min-w-fit">
                 <Dialog.Title as="div" className="flex flex-row w-full justify-between items-start select-none gap-2">
                   {section == 0 && <h1 className='font-medium text-xl mb-2'>{t._("select_platform")}</h1>}
                   {section != 0 && <h1 className='font-medium text-xl mb-2'>{t._("select_version")}</h1>}

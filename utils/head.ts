@@ -30,7 +30,9 @@ return {
     description: (pageInfo.description ? pageInfo.description(lang) : webInfo.webMap.index.description(lang)) as string,
     siteName: name,
     images: [{
-      url: extendMetadata?.imageUrl ? extendMetadata?.imageUrl : `${url}/logo.jpg`,
+      url: extendMetadata?.imageUrl ? extendMetadata?.imageUrl : `/thumbnail.jpg`,
+      width: 1200,
+      height: 630
     }],
   },
 };

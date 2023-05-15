@@ -15,6 +15,7 @@ import { arrayUnion } from "firebase/firestore";
 import { collection, doc, onSnapshot, orderBy, query, updateDoc } from "firebase/firestore";
 import { toBlob } from 'html-to-image';
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { RiCheckLine, RiCloseLine, RiImage2Fill, RiImage2Line, RiMailCheckFill, RiMailCheckLine, RiMailCloseFill, RiMailCloseLine, RiMailUnreadFill, RiMailUnreadLine, RiMic2Fill, RiMic2Line, RiPlaneFill, RiQuillPenFill, RiQuillPenLine, RiSettings2Fill, RiSettings2Line, RiShareBoxFill, RiShareBoxLine } from "react-icons/ri";
 

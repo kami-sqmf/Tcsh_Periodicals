@@ -2,10 +2,11 @@
 import { IdeaUrStory } from "@/types/firestore";
 import { makeid } from "@/utils/ebook-voucher";
 import { db, storage } from "@/utils/firebase";
-import { addDoc, collection, deleteDoc, doc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, DocumentReference } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL, StorageReference, deleteObject } from "firebase/storage";
 import Image from "next/image";
 import { MutableRefObject, useRef, useState, useCallback, Dispatch, SetStateAction } from "react";
+import { encrypt } from "@/utils/crypt"
 
 const IdeaSectionFinish = ({ setSection, data }: { setSection: Dispatch<SetStateAction<number>>; data: MutableRefObject<IdeaUrStory | undefined> }) => {
   const fileRef = useRef<any>();
@@ -13,25 +14,27 @@ const IdeaSectionFinish = ({ setSection, data }: { setSection: Dispatch<SetState
   const onRefChange = useCallback(async (node: HTMLDivElement) => {
     if (node === null) return;
     if (data.current?.type === "text") {
+      const key = encrypt(data.current.content.slice(0, 6));
       const doc = await addDoc(collection(db, "idea-urstory"), {
         type: data.current?.type,
         content: data.current.content,
         createdTimestamp: data.current?.createdTimestamp,
       })
-      fileRef.current = { docId: doc.id };
+      fileRef.current = { docId: doc.id, key: key };
       setUploading(1);
     } else {
       try {
         const imageRef = ref(storage, `/idea-urstory/${makeid(18)}`);
         const snapshot = await uploadBytes(imageRef, data.current!.file);
         const downloadUrl = await getDownloadURL(imageRef);
+        const key = encrypt(data.current?.content.slice(0, 6) || downloadUrl.slice(0, 6));
         const doc = await addDoc(collection(db, "idea-urstory"), {
           type: data.current?.type,
           url: downloadUrl,
           content: data.current?.content,
           createdTimestamp: data.current?.createdTimestamp,
         })
-        fileRef.current = { docId: doc.id, imageRef: imageRef, downloadUrl: downloadUrl };
+        fileRef.current = { docId: doc.id, imageRef: imageRef, downloadUrl: downloadUrl, key: key };
         setUploading(1);
       } catch (e) {
         setUploading(1);
@@ -50,26 +53,32 @@ const IdeaSectionFinish = ({ setSection, data }: { setSection: Dispatch<SetState
   const onNextClicked = async () => {
     setUploading(2);
     if (data.current?.type === "text") {
-      await fetch("/api/sendNotificationLine", {
+      await fetch("/api/idea-urstory/send", {
         method: "POST",
         body: JSON.stringify({
-          message: `收到了一個新的匿名投稿！\n內容：${data.current.content}`
+          message: `收到了一個新的匿名投稿！\n內容：${data.current.content}`,
+          key: fileRef.current.key,
+          id: fileRef.current.docId
         })
       })
     } else if (data.current?.type === "voice") {
-      await fetch("/api/sendNotificationLine", {
+      await fetch("/api/idea-urstory/send", {
         method: "POST",
         body: JSON.stringify({
           message: `收到了一個新的匿名(語音)投稿！\n簡述：${data.current.content}`,
           voiceUrl: fileRef.current!.downloadUrl,
+          key: fileRef.current.key,
+          id: fileRef.current.docId
         })
       })
     } else if (data.current?.type === "picture") {
-      await fetch("/api/sendNotificationLine", {
+      await fetch("/api/idea-urstory/send", {
         method: "POST",
         body: JSON.stringify({
           message: `收到了一個新的匿名(圖片)投稿！\n簡述：${data.current.content}`,
           imageUrl: fileRef.current!.downloadUrl,
+          key: fileRef.current.key,
+          id: fileRef.current.docId
         })
       })
     }
