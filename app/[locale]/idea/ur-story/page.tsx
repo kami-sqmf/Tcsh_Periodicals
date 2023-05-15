@@ -8,7 +8,7 @@ import { getDocFromCacheOrServer } from "@/utils/get-firestore";
 import { MetadataDefaultGenerator } from "@/utils/head";
 import { Metadata } from "next";
 
-export const revalidate = 150;
+export const revalidate = 300;
 
 export async function generateMetadata({ params }: { params: { locale: LangCode } }): Promise<Metadata> {
   const config = await getDocFromCacheOrServer<IdeaUrStoryConfig>("idea-urstory", "config");

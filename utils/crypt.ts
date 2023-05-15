@@ -1,7 +1,7 @@
 import { createCipheriv, createDecipheriv, randomBytes } from "crypto";
 
 const algorithm = 'aes-256-ctr';
-const secretKey = Buffer.from(process.env.CRYPT_KEY!, "hex");
+const secretKey = Buffer.from(process.env.NEXT_PUBLIC_CRYPT_KEY!, "hex");
 
 export const encrypt = (text: string) => {
     const iv = randomBytes(16);
@@ -14,7 +14,11 @@ export const encrypt = (text: string) => {
 };
 
 export const decrypt = (iv: string, content: string) => {
-    const decipher = createDecipheriv(algorithm, secretKey, Buffer.from(iv, 'hex'));
-    const decrpyted = Buffer.concat([decipher.update(Buffer.from(content, 'hex')), decipher.final()]);
-    return decrpyted.toString();
+    try {
+        const decipher = createDecipheriv(algorithm, secretKey, Buffer.from(iv, 'hex'));
+        const decrpyted = Buffer.concat([decipher.update(Buffer.from(content, 'hex')), decipher.final()]);
+        return decrpyted.toString();
+    } catch (err) {
+        return null;
+    }
 };

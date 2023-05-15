@@ -4,9 +4,6 @@ const { withPlaiceholder } = require("@plaiceholder/next");
 const nextConfig = withPlaiceholder({
   reactStrictMode: true,
   swcMinify: true,
-  experimental: {
-    appDir: true,
-  },
   images: {
     remotePatterns: [
       {

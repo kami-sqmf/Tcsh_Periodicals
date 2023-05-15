@@ -50,5 +50,5 @@ const EbookContentWrapper = async ({ lang, className = "" }: { lang: LangCode; c
   )
 }
 
-export const revalidate = 150;
+export const revalidate = 300;
 export { EbookContentWrapper };

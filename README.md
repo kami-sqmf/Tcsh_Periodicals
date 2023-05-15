@@ -38,6 +38,11 @@
 > ⚠️ 注意：好像沒有什麼好注意的？
 > 💻 <- 代表曾發布到[正式伺服器](https://periodicals.kami.tw/)，其餘僅發布在[測試伺服器](https://periodicalsalpha.kami.tw/)。
 
+#### Stable 2.0.5 💻
+- 新增焦點管理員選單
+- 修正資料讀取快取
+- Next.js 13.4 App 資料夾全部升級
+
 #### Stable 2.0.4 💻
 - 修正電子書預設縮圖錯誤
 

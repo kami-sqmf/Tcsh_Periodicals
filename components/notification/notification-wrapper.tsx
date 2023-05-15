@@ -1,13 +1,8 @@
 import { Notification } from "@/types/firestore";
-import { db } from "@/utils/firebase";
-import { getDocsFromCacheOrServer } from "@/utils/get-firestore";
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import { getNotifications } from "@/utils/get-firestore";
 import { NotificationElement } from "./notification";
 
-async function getNotifications() {
-  const notifications = await getDocsFromCacheOrServer<Notification[]>("notifications", "order", true);
-  return notifications;
-}
+
 
 const NotificationWrapper = async ({ className, notificationsImported }: { className: string; notificationsImported?: Notification[] }) => {
   const notifications = notificationsImported ? notificationsImported : await getNotifications();
@@ -20,5 +15,5 @@ const NotificationWrapper = async ({ className, notificationsImported }: { class
   )
 }
 
-export const revalidate = 150;
+export const revalidate = 300;
 export { NotificationWrapper };

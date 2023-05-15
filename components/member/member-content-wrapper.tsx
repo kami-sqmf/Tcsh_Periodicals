@@ -1,39 +1,8 @@
-import { Member } from "@/types/firestore";
 import { LangCode } from "@/types/i18n";
 import { webInfo } from "@/utils/config";
-import { db } from "@/utils/firebase";
-import { collection, DocumentData, getDocs, getDocsFromCache, orderBy, query, QuerySnapshot } from "firebase/firestore";
+import { getProfiles, getTeams } from "@/utils/get-firestore";
 import { BreadcrumbServerWrapper } from "../breadcumb/breadcumb-server";
 import { MembersContent } from "./member-content";
-
-async function getTeams() {
-  const docRef = query(collection(db, "members"), orderBy("team", 'desc'));
-  let col: QuerySnapshot<DocumentData>;
-  try {
-    col = await getDocsFromCache(docRef);
-    if (col.empty) throw false;
-  } catch (e) {
-    col = await getDocs(docRef);
-  }
-  return col.docs.map((doc) => {
-    return {
-      team: doc.data().team,
-      teamId: doc.id
-    }
-  }) as TeamInfo[];
-}
-
-async function getProfiles(teamId: string) {
-  const docRef = collection(db, "members", teamId, "profiles");
-  let col: QuerySnapshot<DocumentData>;
-  try {
-    col = await getDocsFromCache(docRef);
-    if (col.empty) throw false;
-  } catch (e) {
-    col = await getDocs(docRef);
-  }
-  return col.docs.map((doc) => doc.data()) as Member[];
-}
 
 const MembersContentWrapper = async ({ lang, className = "" }: { lang: LangCode; className?: string }) => {
   const teams = await getTeams();
@@ -46,7 +15,7 @@ const MembersContentWrapper = async ({ lang, className = "" }: { lang: LangCode;
   )
 }
 
-export const revalidate = 150;
+export const revalidate = 300;
 export { MembersContentWrapper };
 
 export type TeamInfo = {

@@ -1,14 +1,9 @@
-import { About } from "@/types/firestore";
 import { LangCode } from "@/types/i18n";
 import { webInfo } from "@/utils/config";
-import { getDocFromCacheOrServer } from "@/utils/get-firestore";
+import { getAbout } from "@/utils/get-firestore";
 import Link from "next/link";
 import { AboutElement } from "./about";
 
-async function getAbout() {
-  const about = await getDocFromCacheOrServer<About>("Global", "About");
-  return about;
-}
 
 const AboutWrapper = async ({ lang, className = "" }: { lang: LangCode; className?: string; }) => {
   const about = await getAbout();
@@ -20,5 +15,5 @@ const AboutWrapper = async ({ lang, className = "" }: { lang: LangCode; classNam
   )
 }
 
-export const revalidate = 150;
+export const revalidate = 300;
 export { AboutWrapper };
