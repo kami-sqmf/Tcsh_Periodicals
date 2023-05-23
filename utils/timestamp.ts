@@ -1,8 +1,8 @@
 export const timestamp2Chinese = (timestamp: EpochTimeStamp) => {
   const date = new Date(timestamp * 1000);
   const amORpm = date.getHours() >= 12 ? "下午" : "上午";
-  const numChinese = ["一", "二", "三", "四", "五", "六", "日"];
-  return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日 週${numChinese[date.getDay() - 1]} ${amORpm}${date.getHours() % 12 || 12}時`
+  const numChinese = ["日", "一", "二", "三", "四", "五", "六"];
+  return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日 週${numChinese[date.getDay()]} ${amORpm}${date.getHours() % 12 || 12}時`
 }
 
 export const timestampBefrore = (oldTimestamp: EpochTimeStamp) => {

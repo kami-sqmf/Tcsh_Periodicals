@@ -2,8 +2,8 @@
 "use client";
 
 const _ = require('lodash');
+import { AdminManageWrapper } from "@/components/admin/admin";
 import { BreadcrumbWrapper } from "@/components/breadcumb/breadcumb";
-import { HoverICON } from "@/components/global/hover-icon";
 import { Loading } from "@/components/global/loading";
 import { teamParser } from "@/components/member/member-content";
 import { Member, Members } from "@/types/firestore";
@@ -13,21 +13,18 @@ import { webInfo } from "@/utils/config";
 import { makeid } from "@/utils/ebook-voucher";
 import { db, storage } from "@/utils/firebase";
 import { classParser, MemberRole } from "@/utils/role";
-import { Dialog, Transition } from "@headlessui/react";
-import { addDoc, collection, deleteDoc, doc, onSnapshot, orderBy, query, setDoc, Unsubscribe, updateDoc, writeBatch } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, onSnapshot, orderBy, query, Unsubscribe, writeBatch } from "firebase/firestore";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import Image from "next/image";
 import Link from "next/link";
-import { ChangeEvent, Dispatch, FormEvent, Fragment, MouseEvent, SetStateAction, useEffect, useRef, useState } from "react";
-import { RiAddBoxFill, RiAddBoxLine, RiAddCircleFill, RiAddCircleLine, RiCloseFill, RiCloseLine, RiDeleteBin5Fill, RiDeleteBin5Line, RiEdit2Fill, RiEdit2Line, RiInformationFill, RiInformationLine, RiInstagramLine } from "react-icons/ri";
+import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useEffect, useRef, useState } from "react";
+import { RiAddBoxFill, RiAddBoxLine, RiAddCircleFill, RiAddCircleLine, RiDeleteBin5Fill, RiDeleteBin5Line, RiEdit2Fill, RiEdit2Line, RiInformationFill, RiInformationLine, RiInstagramLine } from "react-icons/ri";
 
 export default function AdminMembers({ params }: { params: { locale: LangCode } }) {
   const dataFetchedRef = useRef<boolean>(false);
   const unsubscribeSnapshot = useRef<Unsubscribe>();
-  const [modalType, setModalType] = useState<ModalType>("add");
-  const [modalInfo, setModalInfo] = useState<ModalInfo>(null);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [toolbarStatus, setToolbarStatus] = useState<"add" | "edit">("add");
+  const [modalInfo, setModalInfo] = useState<ModalInfo>(null);
   const [teamFilter, setTeamFilter] = useState<number>(0);
   const [teamSnapshot, setTeamSnapshot] = useState<TeamSnapshot>([]);
   const [serverSnapshot, setServerSnapshot] = useState<Members>();
@@ -51,27 +48,93 @@ export default function AdminMembers({ params }: { params: { locale: LangCode } 
       });
     })
   }, [teamFilter])
-  const onEbookContainerClicked = (e: MouseEvent<HTMLDivElement>) => {
-    if (e.currentTarget.childNodes[0].contains(e.target as any)) return;
-    if (e.currentTarget.childNodes[1] !== e.target && e.currentTarget.childNodes[1].contains(e.target as any)) {
-      setToolbarStatus("edit");
-    }
-    else {
-      setToolbarStatus("add");
-      setModalType("add");
-      setModalInfo(null)
-    }
-    return;
-  }
   return (
     <>
       <BreadcrumbWrapper args={[{ title: webInfo.webMap.admin.title(params.locale) as string, href: webInfo.webMap.admin.href, icon: webInfo.webMap.admin.nav.icon }, { title: webInfo.webMap.admin.child.members.title(params.locale) as string, href: webInfo.webMap.admin.child.members.href, icon: webInfo.webMap.admin.child.members.nav.icon }]} />
       {serverSnapshot ?
-        <div className='mx-auto my-6 w-full bg-background2 rounded-md min-h-[70vh] px-8 py-6' onClickCapture={onEbookContainerClicked}>
-          <ToolBar toolbarStatus={toolbarStatus} teamSnapshot={teamSnapshot} teamFilter={teamFilter} setTeamFilter={setTeamFilter} setModalOpen={setModalOpen} setModalType={setModalType} />
+        <AdminManageWrapper
+          ready={!!serverSnapshot}
+          toolbar={{
+            actions: [{
+              name: "add",
+              text: "新增成員",
+              level: [0],
+              icon: RiAddCircleLine,
+              iconHover: RiAddCircleFill,
+            }, {
+              name: "addTeam",
+              text: `新增${teamParser('zh', teamFilter + 1)}`,
+              level: [0],
+              icon: RiAddBoxLine,
+              iconHover: RiAddBoxFill,
+            }, {
+              name: "removeTeam",
+              text: `移除${teamParser('zh', teamFilter)}`,
+              level: [0],
+              icon: RiDeleteBin5Line,
+              iconHover: RiDeleteBin5Fill,
+            }, {
+              name: "edit",
+              text: "編輯成員",
+              level: [1],
+              icon: RiEdit2Line,
+              iconHover: RiEdit2Fill,
+            }, {
+              name: "remove",
+              text: "刪除成員",
+              level: [1],
+              icon: RiDeleteBin5Line,
+              iconHover: RiDeleteBin5Fill,
+            }, {
+              name: "preview",
+              text: "預覽卡片",
+              level: [1],
+              icon: RiInformationLine,
+              iconHover: RiInformationFill,
+            }],
+            left: (
+              <select value={teamFilter} onChange={(e) => { setTeamFilter(parseInt(e.target.value)) }} className="text-sm text-main bg-transparent border-[1.5px] border-main px-2 py-1 rounded select-none outline-none">
+                {teamSnapshot.map((team) => (
+                  <option key={team.team} value={team.team}>{teamParser("zh", team.team)}</option>
+                ))}
+              </select>
+            )
+          }}
+          modalInfos={{
+            infos: [{
+              name: "add",
+              title: "新增成員",
+              modal: <ModalEditOrAdd teamId={teamSnapshot.filter(team => team.team === teamFilter)[0].tId} modalInfo={false} setModal={setModalOpen} />,
+            }, {
+              name: "edit",
+              title: "編輯成員",
+              modal: <ModalEditOrAdd teamId={teamSnapshot.filter(team => team.team === teamFilter)[0].tId} modalInfo={modalInfo!} setModal={setModalOpen} />,
+            }, {
+              name: "remove",
+              title: `確定要移除『${modalInfo?.name}』嗎？`,
+              modal: <ModalDelete teamId={teamSnapshot.filter(team => team.team === teamFilter)[0].tId} modalInfo={modalInfo!} setModal={setModalOpen} />,
+            }, {
+              name: "preview",
+              title: "成員卡片",
+              modal: <ModalInfo modalInfo={modalInfo!} />,
+            }, {
+              name: "addTeam",
+              title: "新增下一屆",
+              modal: <ModalAddTeam team={teamFilter} setModal={setModalOpen} />,
+            }, {
+              name: "removeTeam",
+              title: "確定要移除這屆嗎？",
+              modal: <ModalDeleteTeam team={teamFilter} teamId={teamSnapshot.filter(team => team.team === teamFilter)[0].tId} setModal={setModalOpen} />,
+            }],
+            modalInfo: modalInfo,
+            setModalInfo: setModalInfo,
+            modalOpen: modalOpen,
+            setModalOpen: setModalOpen
+          }}
+        >
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 justify-items-center my-4 h-full'>
             {serverSnapshot.profiles.sort((a, b) => a.role - b.role).map((profile, key) => (
-              <div key={key} className={`cursor-pointer relative flex flex-col items-center px-6 py-4 space-y-2 rounded-lg ${modalInfo?.uid === profile.uid ? "bg-background/60" : "hover:bg-background/60"} transition-all duration-500 group`} onClick={() => setModalInfo(profile)}>
+              <div key={key} className={`cursor-pointer relative flex flex-col items-center px-6 py-4 space-y-2 rounded-lg ${modalInfo?.uid === profile.uid ? "bg-background/60" : "hover:bg-background/60"} transition-all duration-500 group`} onClick={() => { setModalInfo(profile); }}>
                 <div className={`relative text-main cursor-pointer group h-24 w-24`}>
                   <Image placeholder='blur' blurDataURL="/assests/defaultProfile.png" src={profile.avatar} fill={true} className="rounded-full overflow-hidden object-cover bg-background2" alt={`${profile.name}的大頭貼`} sizes="(max-width: 1024px) 272px, (max-width: 768px) 188vw, 268vw" />
                 </div>
@@ -80,105 +143,12 @@ export default function AdminMembers({ params }: { params: { locale: LangCode } 
               </div>
             ))}
           </div>
-        </div>
+        </AdminManageWrapper>
         : <div className="min-h-[74vh] w-full flex justify-center items-center"><Loading text="載入中" /></div>
       }
-      {serverSnapshot && <Modal modalOpen={modalOpen} setModalOpen={setModalOpen} modalType={modalType} modalInfo={modalInfo} team={teamFilter} teamId={teamSnapshot.filter(team => team.team === teamFilter)[0].tId} />}
     </>
   )
 }
-
-const ToolBar = ({ toolbarStatus, teamSnapshot, teamFilter, setTeamFilter, setModalOpen, setModalType }: { toolbarStatus: "add" | "edit"; teamSnapshot: TeamSnapshot; teamFilter: number; setTeamFilter: Dispatch<SetStateAction<number>>; setModalOpen: Dispatch<SetStateAction<boolean>>; setModalType: Dispatch<SetStateAction<ModalType>>; }) => {
-  return (
-    <div className='flex flex-row justify-between text-main'>
-      <select value={teamFilter} onChange={(e) => { setTeamFilter(parseInt(e.target.value)) }} className="text-sm text-main bg-transparent border-[1.5px] border-main px-2 py-1 rounded select-none outline-none">
-        {teamSnapshot.map((team) => (
-          <option key={team.team} value={team.team}>{teamParser("zh", team.team)}</option>
-        ))}
-      </select>
-      <div className='flex flex-row space-x-6'>
-        <div className='group flex flex-row space-x-1 hover:text-main2 cursor-pointer items-center' onClick={() => { setModalOpen(true); setModalType(toolbarStatus === "edit" ? "edit" : "add"); }}>
-          <HoverICON className='w-5 h-5' Icon={toolbarStatus === "edit" ? RiEdit2Line : RiAddCircleLine} IconHover={toolbarStatus === "edit" ? RiEdit2Fill : RiAddCircleFill} size={5} />
-          <span className='transition-all duration-300'>{toolbarStatus === "edit" ? "編輯成員" : "新增成員"}</span>
-        </div>
-        {toolbarStatus === "add" && <div className='group flex flex-row space-x-1 hover:text-main2 cursor-pointer items-center' onClick={() => { setModalOpen(true); setModalType("addTeam") }}>
-          <HoverICON className='w-5 h-5' Icon={RiAddBoxLine} IconHover={RiAddBoxFill} size={5} />
-          <span className='transition-all duration-300'>新增{teamParser('zh', teamFilter + 1)}</span>
-        </div>}
-        {toolbarStatus === "add" && <div className='group flex flex-row space-x-1 hover:text-main2 cursor-pointer items-center' onClick={() => { setModalOpen(true); setModalType("deleteTeam") }}>
-          <HoverICON className='w-5 h-5' Icon={RiDeleteBin5Line} IconHover={RiDeleteBin5Fill} size={5} />
-          <span className='transition-all duration-300'>移除{teamParser('zh', teamFilter)}</span>
-        </div>}
-        {toolbarStatus === "edit" && <div className='group flex flex-row space-x-1 hover:text-main2 cursor-pointer items-center' onClick={() => { setModalOpen(true); setModalType("delete") }}>
-          <HoverICON className='w-5 h-5' Icon={RiDeleteBin5Line} IconHover={RiDeleteBin5Fill} size={5} />
-          <span className='transition-all duration-300'>刪除成員</span>
-        </div>}
-        {toolbarStatus === "edit" && <div className='group flex flex-row space-x-1 hover:text-main2 cursor-pointer items-center' onClick={() => { setModalOpen(true); setModalType("info") }}>
-          <HoverICON className='w-5 h-5' Icon={RiInformationLine} IconHover={RiInformationFill} size={5} />
-          <span className='transition-all duration-300'>預覽卡片</span>
-        </div>}
-      </div>
-    </div>
-  )
-}
-
-// Main Modal
-const Modal = ({ modalOpen, setModalOpen, modalType, modalInfo, team, teamId }: { modalOpen: boolean; setModalOpen: Dispatch<SetStateAction<boolean>>; modalType: ModalType; modalInfo: ModalInfo; team: number; teamId: string }) => (
-  <Transition show={modalOpen} as={Fragment}>
-    <Dialog onClose={() => { setModalOpen(false); }} as="div" className="fixed z-50 inset-0 overflow-y-auto">
-
-      {/* BackBlur */}
-      <Transition.Child as={Fragment}
-        enter="transition duration-75 ease-out"
-        leave="transition duration-75 ease-out"
-        enterFrom="transform opacity-0"
-        enterTo="transform opacity-100"
-        leaveFrom="transform opacity-100"
-        leaveTo="transform opacity-0">
-        <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
-      </Transition.Child>
-
-      {/* MenuContainer */}
-      <Transition.Child as={Fragment}
-        enter="transition duration-100 ease-out"
-        leave="transition duration-75 ease-out"
-        enterFrom="transform scale-75 opacity-50"
-        enterTo="transform scale-100 opacity-100"
-        leaveFrom="transform scale-100 opacity-100"
-        leaveTo="transform scale-75 opacity-50"
-      >
-        <div className="fixed inset-0" aria-hidden="true">
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4">
-              <Dialog.Panel as="div" className="flex flex-col px-8 py-6 bg-background/95 text-main rounded-lg items-start justify-center min-w-[75vw] md:min-w-fit">
-                <Dialog.Title as="div" className="flex flex-row w-full justify-between items-start">
-                  {modalType === "add" && <h1 className='font-medium text-xl mb-2'>新增成員</h1>}
-                  {modalType === "addTeam" && <h1 className='font-medium text-xl mb-2'>新增下一屆</h1>}
-                  {modalType === "deleteTeam" && <h1 className='font-medium text-xl mb-2'>確定要移除這屆嗎？</h1>}
-                  {modalType === "edit" && <h1 className='font-medium text-xl mb-2'>編輯成員</h1>}
-                  {modalType === "delete" && <h1 className='font-medium text-xl mb-2'>確定要移除『{modalInfo?.name}』嗎？</h1>}
-                  {modalType === "info" && <h1 className='font-medium text-xl mb-2'>成員卡片</h1>}
-                  <div onClick={() => setModalOpen(false)}><HoverICON className="w-7 h-7 cursor-pointer" Icon={RiCloseLine} IconHover={RiCloseFill} size={7} /></div>
-                </Dialog.Title>
-                {modalInfo &&
-                  <div className="flex flex-col w-full items-start md:flex-row md:space-x-6 text-main">
-                    {modalType === "edit" && <ModalEditOrAdd teamId={teamId} modalInfo={modalInfo} setModal={setModalOpen} />}
-                    {modalType === "info" && <ModalInfo modalInfo={modalInfo} />}
-                    {modalType === "delete" && <ModalDelete teamId={teamId} modalInfo={modalInfo} setModal={setModalOpen} />}
-                  </div>
-                }
-                {modalType !== "add" && !modalType.includes("Team") && !modalInfo && <h2>錯誤，目前無法取得書籍資訊</h2>}
-                {modalType === "addTeam" && <ModalAddTeam team={team} setModal={setModalOpen} />}
-                {modalType === "deleteTeam" && <ModalDeleteTeam team={team} teamId={teamId} setModal={setModalOpen} />}
-                {modalType === "add" && <ModalEditOrAdd teamId={teamId} modalInfo={false} setModal={setModalOpen} />}
-              </Dialog.Panel>
-            </div>
-          </div>
-        </div>
-      </Transition.Child>
-    </Dialog>
-  </Transition>
-)
 
 // Modal - Info
 const ModalInfo = ({ modalInfo }: { modalInfo: Member }) => (
@@ -276,7 +246,7 @@ const ModalDeleteTeam = ({ team, teamId, setModal }: { team: number; teamId: str
 }
 
 // Modal - Edit Or Add
-const ModalEditOrAdd = ({ teamId, modalInfo = false, setModal }: { teamId: string, modalInfo?: Member | false, setModal: Dispatch<SetStateAction<boolean>> }) => {
+const ModalEditOrAdd = ({ teamId, modalInfo, setModal }: { teamId: string, modalInfo: Member | false, setModal: Dispatch<SetStateAction<boolean>> }) => {
   const filePickerRef = useRef<HTMLInputElement | null>(null);
   const [lodaing, setLodaing] = useState<boolean>(false);
   const onChangeAvatar = (e: ChangeEvent<HTMLInputElement>) => {
@@ -433,8 +403,6 @@ const InputField = ({ className = "", name, text, value, setValue, onError, requ
 }
 
 type ModalInfo = Member | null;
-
-type ModalType = "add" | "addTeam" | "edit" | "info" | "delete" | "deleteTeam";
 
 type TeamSnapshot = { team: number; tId: string }[];
 
