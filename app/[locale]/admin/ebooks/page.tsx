@@ -2,8 +2,8 @@
 "use client";
 
 const _ = require('lodash');
+import { AdminManageWrapper } from "@/components/admin/admin";
 import { BreadcrumbWrapper } from "@/components/breadcumb/breadcumb";
-import { HoverICON } from "@/components/global/hover-icon";
 import { Loading } from "@/components/global/loading";
 import i18nDefault from '@/translation/ebook/zh.json';
 import { Account, EbookLicenses, EBooks } from "@/types/firestore";
@@ -12,17 +12,16 @@ import { colors, webInfo } from "@/utils/config";
 import { createEbookVoucher } from "@/utils/ebook-voucher";
 import { db, storage } from "@/utils/firebase";
 import i18n from "@/utils/i18n";
-import { classParser } from "@/utils/role";
 import { timestamp2Chinese } from "@/utils/timestamp";
-import { Dialog, Popover, Tab, Transition } from "@headlessui/react";
+import { Popover, Tab } from "@headlessui/react";
 import { ArcElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Tooltip } from "chart.js";
 import { addDoc, collection, deleteDoc, doc, DocumentData, DocumentReference, getDoc, getDocs, onSnapshot, orderBy, query, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import Image from "next/image";
 import Link from "next/link";
-import { ChangeEvent, Dispatch, FormEvent, Fragment, MouseEvent, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
+import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 import { Line } from 'react-chartjs-2';
-import { RiAddCircleFill, RiAddCircleLine, RiCheckDoubleFill, RiClipboardFill, RiClipboardLine, RiCloseFill, RiCloseLine, RiDeleteBin5Fill, RiDeleteBin5Line, RiEdit2Fill, RiEdit2Line, RiInformationFill, RiInformationLine, RiKey2Fill, RiKey2Line, RiLineChartFill, RiLineChartLine } from "react-icons/ri";
+import { RiAddCircleFill, RiAddCircleLine, RiCheckDoubleFill, RiClipboardFill, RiClipboardLine, RiDeleteBin5Fill, RiDeleteBin5Line, RiEdit2Fill, RiEdit2Line, RiInformationFill, RiInformationLine, RiKey2Fill, RiKey2Line, RiLineChartFill, RiLineChartLine } from "react-icons/ri";
 
 const EbookBookCover = ({ className = "", thumbnail, title, size }: { className?: string; thumbnail: string; title: string; size: "big" | "small"; }) => {
   return (<div className={`${className} book-container`}>
@@ -35,10 +34,8 @@ const EbookBookCover = ({ className = "", thumbnail, title, size }: { className?
 export default function AdminEbooks({ params }: { params: { locale: LangCode } }) {
   const t = new i18n<typeof i18nDefault>(params.locale, "ebook");
   const dataFetchedRef = useRef<boolean>(false);
-  const [modalType, setModalType] = useState<ModalType>("add");
   const [modalInfo, setModalInfo] = useState<ModalInfo>(null);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [toolbarStatus, setToolbarStatus] = useState<"add" | "edit">("add");
   const [serverSnapshot, setServerSnapshot] = useState<{ id: string; data: EBooks }[]>();
   useEffect(() => {
     if (dataFetchedRef.current) return;
@@ -59,23 +56,10 @@ export default function AdminEbooks({ params }: { params: { locale: LangCode } }
           data: info.data
         });
       } else {
-        setToolbarStatus("add");
         setModalInfo(null);
       }
     }
   }, [serverSnapshot])
-  const onEbookContainerClicked = (e: MouseEvent<HTMLDivElement>) => {
-    if (e.currentTarget.childNodes[0].contains(e.target as any)) return;
-    if (e.currentTarget.childNodes[1] !== e.target && e.currentTarget.childNodes[1].contains(e.target as any)) {
-      setToolbarStatus("edit");
-    }
-    else {
-      setToolbarStatus("add");
-      setModalType("add");
-      setModalInfo(null)
-    }
-    return;
-  }
   const onEbookClicked = (bId: string, book: EBooks) => {
     setModalInfo({
       id: bId,
@@ -86,8 +70,79 @@ export default function AdminEbooks({ params }: { params: { locale: LangCode } }
     <>
       <BreadcrumbWrapper args={[{ title: webInfo.webMap.admin.title(params.locale) as string, href: webInfo.webMap.admin.href, icon: webInfo.webMap.admin.nav.icon }, { title: webInfo.webMap.admin.child.ebooks.title(params.locale) as string, href: webInfo.webMap.admin.child.ebooks.href, icon: webInfo.webMap.admin.child.ebooks.nav.icon }]} />
       {serverSnapshot ?
-        <div className='mx-auto my-6 w-full bg-background2 rounded-md min-h-[70vh] px-8 py-6' onClickCapture={onEbookContainerClicked}>
-          <ToolBar toolbarStatus={toolbarStatus} setModalOpen={setModalOpen} setModalType={setModalType} />
+        <AdminManageWrapper
+          ready={!!serverSnapshot}
+          toolbar={{
+            actions: [{
+              name: "add",
+              text: "新增書籍",
+              level: [0],
+              icon: RiAddCircleLine,
+              iconHover: RiAddCircleFill,
+            }, {
+              name: "edit",
+              text: "編輯書籍",
+              level: [1],
+              icon: RiEdit2Line,
+              iconHover: RiEdit2Fill,
+            }, {
+              name: "remove",
+              text: "刪除書籍",
+              level: [1],
+              icon: RiDeleteBin5Line,
+              iconHover: RiDeleteBin5Fill,
+            }, {
+              name: "voucher",
+              text: "批量產生序號",
+              level: [1],
+              icon: RiKey2Line,
+              iconHover: RiKey2Fill,
+            }, {
+              name: "analytics",
+              text: "電子書下載分析",
+              level: [1],
+              icon: RiLineChartLine,
+              iconHover: RiLineChartFill,
+            }, {
+              name: "info",
+              text: "詳細資料",
+              level: [1],
+              icon: RiInformationLine,
+              iconHover: RiInformationFill,
+            }]
+          }}
+          modalInfos={{
+            infos: [{
+              name: "add",
+              title: "新增書籍",
+              modal: <ModalEditOrAdd modalInfo={false} setModal={setModalOpen} />
+            }, {
+              name: "edit",
+              title: "編輯書籍",
+              modal: <ModalEditOrAdd modalInfo={modalInfo} setModal={setModalOpen} />
+            }, {
+              name: "remove",
+              title: `確定要刪除『${modalInfo?.data.title}』嗎？`,
+              modal: <ModalDelete modalInfo={modalInfo} setModal={setModalOpen} />
+            }, {
+              name: "voucher",
+              title: "批量產生序號",
+              modal: <ModalVoucher modalInfo={modalInfo} setModal={setModalOpen} />
+            }, {
+              name: "analytics",
+              title: "下載分析",
+              modal: <ModalAnalytics modalInfo={modalInfo} setModal={setModalOpen} />
+            }, {
+              name: "info",
+              title: "書籍資訊",
+              modal: <ModalInfo modalInfo={modalInfo} />
+            }],
+            modalInfo: modalInfo,
+            setModalInfo: setModalInfo,
+            modalOpen: modalOpen,
+            setModalOpen: setModalOpen
+          }}
+        >
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 justify-items-center my-4 h-full'>
             {serverSnapshot.map((book, key) => (
               <div className={`cursor-pointer relative flex flex-col items-center px-6 py-4 space-y-2 rounded-lg ${modalInfo?.id === book.id ? "bg-background/60" : "hover:bg-background/60"} transition-all duration-500 group`} key={key} onClick={() => onEbookClicked(book.id, book.data)}>
@@ -97,122 +152,36 @@ export default function AdminEbooks({ params }: { params: { locale: LangCode } }
               </div>
             ))}
           </div>
-        </div>
+        </AdminManageWrapper>
         : <div className="min-h-[74vh] w-full flex justify-center items-center"><Loading text="載入中" /></div>
       }
-      {serverSnapshot && <Modal modalOpen={modalOpen} setModalOpen={setModalOpen} modalType={modalType} modalInfo={modalInfo} />}
     </>
   )
 }
 
-const ToolBar = ({ toolbarStatus, setModalOpen, setModalType }: { toolbarStatus: "add" | "edit", setModalOpen: Dispatch<SetStateAction<boolean>>; setModalType: Dispatch<SetStateAction<ModalType>>; }) => {
-  return (
-    <div className='flex flex-row justify-end text-main space-x-6'>
-      <div className='group flex flex-row space-x-1 hover:text-main2 cursor-pointer items-center' onClick={() => { setModalOpen(true); setModalType(toolbarStatus === "edit" ? "edit" : "add"); }}>
-        <HoverICON className='w-5 h-5' Icon={toolbarStatus === "edit" ? RiEdit2Line : RiAddCircleLine} IconHover={toolbarStatus === "edit" ? RiEdit2Fill : RiAddCircleFill} size={5} />
-        <span className='transition-all duration-300'>{toolbarStatus === "edit" ? "編輯書籍" : "新增書籍"}</span>
-      </div>
-      {toolbarStatus === "edit" && <div className='group flex flex-row space-x-1 hover:text-main2 cursor-pointer items-center' onClick={() => { setModalOpen(true); setModalType("delete") }}>
-        <HoverICON className='w-5 h-5' Icon={RiDeleteBin5Line} IconHover={RiDeleteBin5Fill} size={5} />
-        <span className='transition-all duration-300'>刪除書籍</span>
-      </div>}
-      {toolbarStatus === "edit" && <div className='group flex flex-row space-x-1 hover:text-main2 cursor-pointer items-center' onClick={() => { setModalOpen(true); setModalType("voucher") }}>
-        <HoverICON className='w-5 h-5' Icon={RiKey2Line} IconHover={RiKey2Fill} size={5} />
-        <span className='transition-all duration-300'>批量產生序號</span>
-      </div>}
-      {toolbarStatus === "edit" && <div className='group flex flex-row space-x-1 hover:text-main2 cursor-pointer items-center' onClick={() => { setModalOpen(true); setModalType("analytics") }}>
-        <HoverICON className='w-5 h-5' Icon={RiLineChartLine} IconHover={RiLineChartFill} size={5} />
-        <span className='transition-all duration-300'>下載分析</span>
-      </div>}
-      {toolbarStatus === "edit" && <div className='group flex flex-row space-x-1 hover:text-main2 cursor-pointer items-center' onClick={() => { setModalOpen(true); setModalType("info") }}>
-        <HoverICON className='w-5 h-5' Icon={RiInformationLine} IconHover={RiInformationFill} size={5} />
-        <span className='transition-all duration-300'>詳細資訊</span>
-      </div>}
-    </div>
-  )
-}
-
-// Main Modal
-const Modal = ({ modalOpen, setModalOpen, modalType, modalInfo }: { modalOpen: boolean; setModalOpen: Dispatch<SetStateAction<boolean>>; modalType: ModalType; modalInfo: ModalInfo; }) => (
-  <Transition show={modalOpen} as={Fragment}>
-    <Dialog onClose={() => { setModalOpen(false); }} as="div" className="fixed z-50 inset-0 overflow-y-auto">
-
-      {/* BackBlur */}
-      <Transition.Child as={Fragment}
-        enter="transition duration-75 ease-out"
-        leave="transition duration-75 ease-out"
-        enterFrom="transform opacity-0"
-        enterTo="transform opacity-100"
-        leaveFrom="transform opacity-100"
-        leaveTo="transform opacity-0">
-        <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
-      </Transition.Child>
-
-      {/* MenuContainer */}
-      <Transition.Child as={Fragment}
-        enter="transition duration-100 ease-out"
-        leave="transition duration-75 ease-out"
-        enterFrom="transform scale-75 opacity-50"
-        enterTo="transform scale-100 opacity-100"
-        leaveFrom="transform scale-100 opacity-100"
-        leaveTo="transform scale-75 opacity-50"
-      >
-        <div className="fixed inset-0" aria-hidden="true">
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4">
-              <Dialog.Panel as="div" className="flex flex-col px-8 py-6 bg-background/95 text-main rounded-lg items-start justify-center min-w-[75vw] md:min-w-fit">
-                <Dialog.Title as="div" className="flex flex-row w-full justify-between items-start">
-                  {modalType === "add" && <h1 className='font-medium text-xl mb-2'>新增書籍</h1>}
-                  {modalType === "edit" && <h1 className='font-medium text-xl mb-2'>編輯書籍</h1>}
-                  {modalType === "delete" && <h1 className='font-medium text-xl mb-2'>確定要刪除『{modalInfo?.data.title}』嗎？</h1>}
-                  {modalType === "voucher" && <h1 className='font-medium text-xl mb-2'>批量產生序號</h1>}
-                  {modalType === "analytics" && <h1 className='font-medium text-xl mb-2'>電子書下載分析</h1>}
-                  {modalType === "info" && <h1 className='font-medium text-xl mb-2'>書籍資訊</h1>}
-                  <div onClick={() => setModalOpen(false)}><HoverICON className="w-7 h-7 cursor-pointer" Icon={RiCloseLine} IconHover={RiCloseFill} size={7} /></div>
-                </Dialog.Title>
-                {modalInfo &&
-                  <div className="flex flex-col w-full items-start md:flex-row md:space-x-6 text-main">
-                    {modalType === "edit" && <ModalEditOrAdd modalId={modalInfo.id} modalInfo={modalInfo.data} setModal={setModalOpen} />}
-                    {modalType === "info" && <ModalInfo modalInfo={modalInfo.data} />}
-                    {modalType === "delete" && <ModalDelete modalId={modalInfo.id} modalInfo={modalInfo.data} setModal={setModalOpen} />}
-                    {modalType === "voucher" && <ModalVoucher modalId={modalInfo.id} modalInfo={modalInfo.data} setModal={setModalOpen} />}
-                    {modalType === "analytics" && <ModalAnalytics modalId={modalInfo.id} modalInfo={modalInfo.data} setModal={setModalOpen} />}
-                  </div>
-                }
-                {modalType !== "add" && !modalInfo && <h2>錯誤，目前無法取得書籍資訊</h2>}
-                {modalType === "add" && <ModalEditOrAdd modalId={false} modalInfo={false} setModal={setModalOpen} />}
-              </Dialog.Panel>
-            </div>
-          </div>
-        </div>
-      </Transition.Child>
-    </Dialog>
-  </Transition>
-)
-
 // Modal - Info
-const ModalInfo = ({ modalInfo }: { modalInfo: EBooks }) => (
+const ModalInfo = ({ modalInfo }: { modalInfo: ModalInfo }) => (
   <>
-    <div className="relative w-auto h-[220px] aspect-[14.8/21] mb-2"><Image src={modalInfo.thumbnail} fill={true} alt={modalInfo.title || "書籍封面"} className="ring-2 ring-main" /></div>
+    <div className="relative w-auto h-[220px] aspect-[14.8/21] mb-2"><Image src={modalInfo!.data.thumbnail} fill={true} alt={modalInfo!.data.title || "書籍封面"} className="ring-2 ring-main" /></div>
     <div className="flex flex-col w-full space-y-2 md:space-y-3 prose-h2:text-main/80 prose-h2:after:ml-1 prose-h2:after:content-[':']">
       <div className="flex flex-col md:flex-row gap-2 md:gap-6">
-        <InfoItems title="標題" content={modalInfo.title} />
-        <InfoItems title="檔案名稱" content={modalInfo.name} />
+        <InfoItems title="標題" content={modalInfo!.data.title} />
+        <InfoItems title="檔案名稱" content={modalInfo!.data.name} />
       </div>
-      <InfoItems title="簡述" content={modalInfo.description} />
+      <InfoItems title="簡述" content={modalInfo!.data.description} />
       <div className="flex flex-col md:flex-row justify-between gap-2 md:gap-4">
-        <InfoItems title="定價" content={modalInfo.locked ? `NTD $${modalInfo.price}` : "可供免費下載"} />
-        <InfoItems title="狀態" content={modalInfo.published ? "已發布" : "向未發布"} />
-        <InfoItems title="建立時間" content={timestamp2Chinese(modalInfo.timestamp)} />
+        <InfoItems title="定價" content={modalInfo!.data.locked ? `NTD $${modalInfo!.data.price}` : "可供免費下載"} />
+        <InfoItems title="狀態" content={modalInfo!.data.published ? "已發布" : "向未發布"} />
+        <InfoItems title="建立時間" content={timestamp2Chinese(modalInfo!.data.timestamp)} />
       </div>
-      {modalInfo.files &&
+      {modalInfo!.data.files &&
         <div className="w-full">
           <h2 className="text-lg font-medium">連結</h2>
           <ul>
-            <InfoItemsWithLink title={`蘋果 (${modalInfo.files.epub.size}MB)`} link={modalInfo.files.epub.link} />
-            <InfoItemsWithLink title={`蘋果-壓縮 (${modalInfo.files["epub-compressed"].size}MB)`} link={modalInfo.files["epub-compressed"].link} />
-            <InfoItemsWithLink title={`其他 (${modalInfo.files.pdf.size}MB)`} link={modalInfo.files.pdf.link} />
-            <InfoItemsWithLink title={`其他-壓縮 (${modalInfo.files["pdf-compressed"].size}MB)`} link={modalInfo.files["pdf-compressed"].link} />
+            <InfoItemsWithLink title={`蘋果 (${modalInfo!.data.files.epub.size}MB)`} link={modalInfo!.data.files.epub.link} />
+            <InfoItemsWithLink title={`蘋果-壓縮 (${modalInfo!.data.files["epub-compressed"].size}MB)`} link={modalInfo!.data.files["epub-compressed"].link} />
+            <InfoItemsWithLink title={`其他 (${modalInfo!.data.files.pdf.size}MB)`} link={modalInfo!.data.files.pdf.link} />
+            <InfoItemsWithLink title={`其他-壓縮 (${modalInfo!.data.files["pdf-compressed"].size}MB)`} link={modalInfo!.data.files["pdf-compressed"].link} />
           </ul>
         </div>
       }
@@ -233,7 +202,7 @@ const InfoItemsWithLink = ({ title, link }: { title: string; link: string }) => 
 )
 
 // Modal - Edit Or Add
-const ModalEditOrAdd = ({ modalId = false, modalInfo = false, setModal }: { modalId?: string | false, modalInfo?: EBooks | false, setModal: Dispatch<SetStateAction<boolean>> }) => {
+const ModalEditOrAdd = ({ modalInfo = false, setModal }: { modalInfo?: ModalInfo | false, setModal: Dispatch<SetStateAction<boolean>> }) => {
   const filePickerRef = useRef<HTMLInputElement | null>(null);
   const [lodaing, setLodaing] = useState<boolean>(false);
   const onChangeBookImage = (e: ChangeEvent<HTMLInputElement>) => {
@@ -279,45 +248,45 @@ const ModalEditOrAdd = ({ modalId = false, modalInfo = false, setModal }: { moda
     }
   }
   const data = {
-    name: DataState(modalInfo ? modalInfo.name : ""),
-    thumbnail: DataState(modalInfo ? modalInfo.thumbnail : ""),
-    title: DataState(modalInfo ? modalInfo.title : ""),
-    price: DataState(modalInfo ? modalInfo.price : 100),
-    description: DataState(modalInfo ? modalInfo.description : ""),
-    published: DataState(modalInfo ? modalInfo.published : false),
-    locked: DataState(modalInfo ? modalInfo.locked : true),
-    "file-pdf": DataState(modalInfo && modalInfo.files ? modalInfo.files.pdf.link : ""),
-    "file-pdf-compressed": DataState(modalInfo && modalInfo.files ? modalInfo.files["pdf-compressed"].link : ""),
-    "file-epub": DataState(modalInfo && modalInfo.files ? modalInfo.files.epub.link : ""),
-    "file-epub-compressed": DataState(modalInfo && modalInfo.files ? modalInfo.files["epub-compressed"].link : ""),
-    "size-pdf": DataState(modalInfo && modalInfo.files ? modalInfo.files.pdf.size : 0),
-    "size-pdf-compressed": DataState(modalInfo && modalInfo.files ? modalInfo.files["pdf-compressed"].size : 0),
-    "size-epub": DataState(modalInfo && modalInfo.files ? modalInfo.files.epub.size : 0),
-    "size-epub-compressed": DataState(modalInfo && modalInfo.files ? modalInfo.files["epub-compressed"].size : 0),
+    name: DataState(modalInfo ? modalInfo.data.name : ""),
+    thumbnail: DataState(modalInfo ? modalInfo.data.thumbnail : ""),
+    title: DataState(modalInfo ? modalInfo.data.title : ""),
+    price: DataState(modalInfo ? modalInfo.data.price : 100),
+    description: DataState(modalInfo ? modalInfo.data.description : ""),
+    published: DataState(modalInfo ? modalInfo.data.published : false),
+    locked: DataState(modalInfo ? modalInfo.data.locked : true),
+    "file-pdf": DataState(modalInfo && modalInfo.data.files ? modalInfo.data.files.pdf.link : ""),
+    "file-pdf-compressed": DataState(modalInfo && modalInfo.data.files ? modalInfo.data.files["pdf-compressed"].link : ""),
+    "file-epub": DataState(modalInfo && modalInfo.data.files ? modalInfo.data.files.epub.link : ""),
+    "file-epub-compressed": DataState(modalInfo && modalInfo.data.files ? modalInfo.data.files["epub-compressed"].link : ""),
+    "size-pdf": DataState(modalInfo && modalInfo.data.files ? modalInfo.data.files.pdf.size : 0),
+    "size-pdf-compressed": DataState(modalInfo && modalInfo.data.files ? modalInfo.data.files["pdf-compressed"].size : 0),
+    "size-epub": DataState(modalInfo && modalInfo.data.files ? modalInfo.data.files.epub.size : 0),
+    "size-epub-compressed": DataState(modalInfo && modalInfo.data.files ? modalInfo.data.files["epub-compressed"].size : 0),
   }
   const formOnSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLodaing(true);
-    if (modalId && modalInfo) {
+    if (modalInfo) {
       const file = {
         "epub": { link: data["file-epub"].value, size: parseInt(data["size-epub"].value) },
-        "bookId": modalId,
+        "bookId": modalInfo.id,
         "pdf-compressed": { link: data["file-pdf-compressed"].value, size: parseInt(data["size-pdf-compressed"].value) },
         "epub-compressed": { link: data["file-epub-compressed"].value, size: parseInt(data["size-epub-compressed"].value) },
         "pdf": { link: data["file-pdf"].value, size: parseInt(data["size-pdf"].value) },
       }
       const uploadData = removeEmpty({
-        thumbnail: modalInfo.thumbnail === data.thumbnail.value ? null : data.thumbnail.value,
-        title: modalInfo.title === data.title.value ? null : data.title.value,
-        name: modalInfo.name === data.name.value ? null : data.name.value,
-        description: modalInfo.description === data.description.value ? null : data.description.value,
-        files: _.isEqual(modalInfo.files, file) ? null : file,
-        price: modalInfo.price === parseInt(data.price.value) ? null : parseInt(data.price.value),
-        locked: modalInfo.locked === data.locked.value ? null : data.locked.value,
-        published: modalInfo.published === data.published.value ? null : data.published.value,
+        thumbnail: modalInfo.data.thumbnail === data.thumbnail.value ? null : data.thumbnail.value,
+        title: modalInfo.data.title === data.title.value ? null : data.title.value,
+        name: modalInfo.data.name === data.name.value ? null : data.name.value,
+        description: modalInfo.data.description === data.description.value ? null : data.description.value,
+        files: _.isEqual(modalInfo.data.files, file) ? null : file,
+        price: modalInfo.data.price === parseInt(data.price.value) ? null : parseInt(data.price.value),
+        locked: modalInfo.data.locked === data.locked.value ? null : data.locked.value,
+        published: modalInfo.data.published === data.published.value ? null : data.published.value,
       });
       if (!_.isEmpty(uploadData)) {
-        await updateDoc(doc(db, "books", modalId), uploadData as any);
+        await updateDoc(doc(db, "books", modalInfo.id), uploadData as any);
       }
     } else {
       const uploadData = {
@@ -351,7 +320,7 @@ const ModalEditOrAdd = ({ modalId = false, modalInfo = false, setModal }: { moda
     return (<form className="flex flex-col md:flex-row gap-4" onSubmit={formOnSubmit}>
       <div>
         <div className="relative w-auto h-[220px] aspect-[14.8/21] mb-2 cursor-pointer group" onClick={() => filePickerRef.current!.click()}>
-          <Image src={data.thumbnail.value || placeholder.thumbnail} fill={true} alt={modalInfo ? modalInfo.title : "書籍封面"} className="ring-2 ring-main" />
+          <Image src={data.thumbnail.value || placeholder.thumbnail} fill={true} alt={modalInfo ? modalInfo.data.title : "書籍封面"} className="ring-2 ring-main" />
           <div className='absolute opacity-0 group-hover:opacity-100 bottom-0 w-full h-6 bg-gray-600 bg-opacity-75 text-white text-xs text-center py-1 transition-opacity'>更換</div>
           <input name="thumbnail" type="file" accept="image/*" hidden={true} ref={filePickerRef} onChange={onChangeBookImage}></input>
         </div>
@@ -396,7 +365,7 @@ const ModalEditOrAdd = ({ modalId = false, modalInfo = false, setModal }: { moda
             <InputField name="size-pdf-compressed" className="basis-1/6" text={`檔案大小 (MB)`} value={data["size-pdf-compressed"].value} setValue={data["size-pdf-compressed"].setValue} onError={data["size-pdf-compressed"].error} />
           </div>
         </div>
-        <button type="submit" className='px-3 py-2 bg-green-600 text-xs text-background2 rounded-lg md:rounded mt-2 md:mt-0 disabled:bg-green-600/70'>{modalId ? "更改" : "新增"}</button>
+        <button type="submit" className='px-3 py-2 bg-green-600 text-xs text-background2 rounded-lg md:rounded mt-2 md:mt-0 disabled:bg-green-600/70'>{modalInfo ? "更改" : "新增"}</button>
       </div>
     </form>)
   }
@@ -443,13 +412,13 @@ const removeEmpty = (obj: any) => {
 }
 
 // Modal - Delete
-const ModalDelete = ({ modalId, modalInfo, setModal }: { modalId: string; modalInfo: EBooks; setModal: Dispatch<SetStateAction<boolean>> }) => {
+const ModalDelete = ({ modalInfo, setModal }: { modalInfo: ModalInfo; setModal: Dispatch<SetStateAction<boolean>> }) => {
   const [value, setValue] = useState("");
   const [lodaing, setLodaing] = useState<boolean>(false);
   const onDeleteSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLodaing(true);
-    await deleteDoc(doc(db, "books", modalId));
+    await deleteDoc(doc(db, "books", modalInfo!.id));
     setLodaing(false);
     setModal(false);
   }
@@ -458,15 +427,15 @@ const ModalDelete = ({ modalId, modalInfo, setModal }: { modalId: string; modalI
     <form className="flex flex-col space-y-2 max-w-xs" onSubmit={onDeleteSubmit}>
       <p className="w-full px-4 py-2 text-center text-background2 bg-main/60">若你未讀完以下資訊，你將會後悔莫及！</p>
       <h2>經過這個動作你將無法再透過網站找回最初的起點，所有人都不會再看到這個東西了！請問你確定嗎？</h2>
-      <h3>如果你確定要刪除本書籍的話，請在下方輸入框輸入：『{modalInfo.title}』</h3>
-      <input type="text" value={value} onChange={(e) => setValue(e.target.value)} pattern={modalInfo.title} placeholder={modalInfo.title} autoComplete="false" className="px-2 py-1 bg-transparent border-2 border-red-700 focus:border-red-900 rounded-lg focus:outline-none" />
-      <button disabled={value !== modalInfo.title} className="disabled:bg-red-600/40 bg-red-600/90 py-1 text-background2 rounded-md">刪除</button>
+      <h3>如果你確定要刪除本書籍的話，請在下方輸入框輸入：『{modalInfo?.data.title}』</h3>
+      <input type="text" value={value} onChange={(e) => setValue(e.target.value)} pattern={modalInfo?.data.title} placeholder={modalInfo?.data.title} autoComplete="false" className="px-2 py-1 bg-transparent border-2 border-red-700 focus:border-red-900 rounded-lg focus:outline-none" />
+      <button disabled={value !== modalInfo?.data.title} className="disabled:bg-red-600/40 bg-red-600/90 py-1 text-background2 rounded-md">刪除</button>
     </form>
   )
 }
 
 // Modal - Generate Voucher
-const ModalVoucher = ({ modalId, modalInfo, setModal }: { modalId: string; modalInfo: EBooks; setModal: Dispatch<SetStateAction<boolean>> }) => {
+const ModalVoucher = ({ modalInfo, setModal }: { modalInfo: ModalInfo; setModal: Dispatch<SetStateAction<boolean>> }) => {
   const [value, setValue] = useState(5);
   const [lodaing, setLodaing] = useState<boolean>(false);
   const [vouchers, setVouchers] = useState<string[]>([]);
@@ -474,7 +443,7 @@ const ModalVoucher = ({ modalId, modalInfo, setModal }: { modalId: string; modal
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLodaing(true);
-    const vouchers = await createEbookVoucher(modalId, value);
+    const vouchers = await createEbookVoucher(modalInfo!.id, value);
     setVouchers(vouchers);
     setLodaing(false);
   }
@@ -500,7 +469,7 @@ const ModalVoucher = ({ modalId, modalInfo, setModal }: { modalId: string; modal
   )
 }
 
-const ModalAnalytics = ({ modalId, modalInfo, setModal }: { modalId: string; modalInfo: EBooks; setModal: Dispatch<SetStateAction<boolean>> }) => {
+const ModalAnalytics = ({ modalInfo, setModal }: { modalInfo: ModalInfo; setModal: Dispatch<SetStateAction<boolean>> }) => {
   const dataFetchedRef = useRef<boolean>(false);
   const [data, setData] = useState<EbookLicenses[]>();
   const [account, setAccount] = useState<Account | null>();
@@ -508,7 +477,7 @@ const ModalAnalytics = ({ modalId, modalInfo, setModal }: { modalId: string; mod
   useEffect(() => {
     if (dataFetchedRef.current) return;
     dataFetchedRef.current = true;
-    getDocs(query(collection(db, "books", modalId, "license"))).then((data) => {
+    getDocs(query(collection(db, "books", modalInfo!.id, "license"))).then((data) => {
       setData(data.docs.map(d => d.data()) as EbookLicenses[])
     });
   })
@@ -552,7 +521,7 @@ const ModalAnalytics = ({ modalId, modalInfo, setModal }: { modalId: string; mod
                     const index = tmp.findIndex((t: any) => t.x === time);
                     index >= 0 ? tmp[index] = { x: time, y: tmp[index].y + 1 } : tmp.push({ x: time, y: 1 })
                     return tmp;
-                  }, [{ x: new Date(modalInfo.timestamp * 1000).toISOString().slice(0, 10), y: 0 }]),
+                  }, [{ x: new Date(modalInfo!.data.timestamp * 1000).toISOString().slice(0, 10), y: 0 }]),
                 }, {
                   label: "免費下載",
                   pointHitRadius: 25,
@@ -566,7 +535,7 @@ const ModalAnalytics = ({ modalId, modalInfo, setModal }: { modalId: string; mod
                     const index = tmp.findIndex((t: any) => t.x === time);
                     index >= 0 ? tmp[index] = { x: time, y: tmp[index].y + 1 } : tmp.push({ x: time, y: 1 })
                     return tmp;
-                  }, [{ x: new Date(modalInfo.timestamp * 1000).toISOString().slice(0, 10), y: 0 }]),
+                  }, [{ x: new Date(modalInfo!.data.timestamp * 1000).toISOString().slice(0, 10), y: 0 }]),
                 }, {
                   label: "序號兌換",
                   pointHitRadius: 25,
@@ -580,7 +549,7 @@ const ModalAnalytics = ({ modalId, modalInfo, setModal }: { modalId: string; mod
                     const index = tmp.findIndex((t: any) => t.x === time);
                     index >= 0 ? tmp[index] = { x: time, y: tmp[index].y + 1 } : tmp.push({ x: time, y: 1 })
                     return tmp;
-                  }, [{ x: new Date(modalInfo.timestamp * 1000).toISOString().slice(0, 10), y: 0 }]),
+                  }, [{ x: new Date(modalInfo!.data.timestamp * 1000).toISOString().slice(0, 10), y: 0 }]),
                 }]
               }}
             />
@@ -645,7 +614,7 @@ const ModalAnalytics = ({ modalId, modalInfo, setModal }: { modalId: string; mod
                     const index = tmp.findIndex((t: any) => t.x === time);
                     index >= 0 ? tmp[index] = { x: time, y: tmp[index].y + 1 } : tmp.push({ x: time, y: 1 })
                     return tmp;
-                  }, [{ x: new Date(modalInfo.timestamp * 1000).toISOString().slice(0, 10), y: 0 }]),
+                  }, [{ x: new Date(modalInfo!.data.timestamp * 1000).toISOString().slice(0, 10), y: 0 }]),
                 }, {
                   label: "未兌換",
                   pointHitRadius: 25,
@@ -659,7 +628,7 @@ const ModalAnalytics = ({ modalId, modalInfo, setModal }: { modalId: string; mod
                     const index = tmp.findIndex((t: any) => t.x === time);
                     index >= 0 ? tmp[index] = { x: time, y: tmp[index].y + 1 } : tmp.push({ x: time, y: 1 })
                     return tmp;
-                  }, [{ x: new Date(modalInfo.timestamp * 1000).toISOString().slice(0, 10), y: 0 }]),
+                  }, [{ x: new Date(modalInfo!.data.timestamp * 1000).toISOString().slice(0, 10), y: 0 }]),
                 }, {
                   label: "所有序號",
                   pointHitRadius: 25,
@@ -673,10 +642,56 @@ const ModalAnalytics = ({ modalId, modalInfo, setModal }: { modalId: string; mod
                     const index = tmp.findIndex((t: any) => t.x === time);
                     index >= 0 ? tmp[index] = { x: time, y: tmp[index].y + 1 } : tmp.push({ x: time, y: 1 })
                     return tmp;
-                  }, [{ x: new Date(modalInfo.timestamp * 1000).toISOString().slice(0, 10), y: 0 }]),
+                  }, [{ x: new Date(modalInfo!.data.timestamp * 1000).toISOString().slice(0, 10), y: 0 }]),
                 }]
               }}
             />
+            <div className="mt-4 text-main space-y-2">
+              <h2 className="text-xl font-bold">序號資訊</h2>
+              <table className="border-collapse border border-main/80 table-auto w-full font-normal">
+                <thead>
+                  <tr>
+                    <th className="border-collapse border border-main/80">狀態</th>
+                    <th className="border-collapse border border-main/80">序號</th>
+                    <th className="border-collapse border border-main/80">授權帳號ID</th>
+                    <th className="border-collapse border border-main/80">授權時間</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.filter(d => d.voucher).sort((a: any, b: any) => b.createdTimestamp - a.createdTimestamp).map((d, index) => {
+                    if (!d.voucher) return (<></>);
+                    return (
+                      <tr key={index}>
+                        <th className="border-collapse border border-main/80">{d.used ? "v" : "o"}</th>
+                        <th className="border-collapse border border-main/80">{d.code}</th>
+                        <th className="border-collapse border border-main/80">
+                          {d.used ? <Popover className="relative">
+                            <Popover.Button as="div" className="relative cursor-pointer group" onClick={() => onGetAccountClick(d.customer)}>
+                              <span>{d.customer.id}</span>
+                              <div className="absolute w-max px-2 py-1 text-xs z-40 bg-background2 rounded-md hidden opacity-0 group-hover:block group-hover:opacity-90 transition-opacity top-0 right-0">
+                                <span>點擊以獲取詳細用戶資訊</span>
+                              </div>
+                            </Popover.Button>
+                            <Popover.Panel as="div" className="absolute left-1/2 -translate-x-1/2 z-50 px-4 py-3 border-2 rounded-lg border-main bg-background2 shadow-xl flex flex-col items-center justify-center select-auto">
+                              <div className="relative text-main h-24 w-24">
+                                <Image placeholder='blur' blurDataURL="/assests/defaultProfile.png" src={account?.avatar || "/assests/defaultProfile.png"} fill={true} className="rounded-full overflow-hidden object-cover bg-background2" alt={`${account?.name}的大頭貼`} sizes="(max-width: 1024px) 272px, (max-width: 768px) 188vw, 268vw" />
+                              </div>
+                              <p>{account?.name}</p>
+                              <div className='flex flex-col mt-3 items-baseline font-serif'>
+                                <p className='text-main2 text-sm'>電子郵件</p>
+                                <p className='text-main whitespace-pre-line'>{account?.email || "無法取得電子郵件"}</p>
+                              </div>
+                            </Popover.Panel>
+                          </Popover> : "未使用"
+                          }
+                        </th>
+                        <th className="border-collapse border border-main/80">{timestamp2Chinese((d.createdTimestamp as any).seconds)}</th>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
           </Tab.Panel>
         </Tab.Panels>
       </Tab.Group>
@@ -689,5 +704,3 @@ type ModalInfo = {
   id: string;
   data: EBooks
 } | null;
-
-type ModalType = "add" | "edit" | "info" | "delete" | "voucher" | "analytics";

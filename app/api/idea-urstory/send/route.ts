@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 const key: string = process.env.LINE_KEY!;
-const groupId = "C339f7a4103df7938cb87dcf47b16f0fb";
+const groupId = "C9c9a91ba6bfacfc26366b9072f184445";
 export async function POST(req: Request) {
   const body = await req.json() as {
     message: string;

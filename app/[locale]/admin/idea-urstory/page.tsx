@@ -10,12 +10,9 @@ import { webInfo } from "@/utils/config";
 import { db } from "@/utils/firebase";
 import { timestamp2Chinese } from "@/utils/timestamp";
 import { Tab } from "@headlessui/react";
-import { arrayRemove } from "firebase/firestore";
-import { arrayUnion } from "firebase/firestore";
-import { collection, doc, onSnapshot, orderBy, query, updateDoc } from "firebase/firestore";
+import { arrayRemove, arrayUnion, collection, doc, onSnapshot, orderBy, query, updateDoc } from "firebase/firestore";
 import { toBlob } from 'html-to-image';
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { RiCheckLine, RiCloseLine, RiImage2Fill, RiImage2Line, RiMailCheckFill, RiMailCheckLine, RiMailCloseFill, RiMailCloseLine, RiMailUnreadFill, RiMailUnreadLine, RiMic2Fill, RiMic2Line, RiPlaneFill, RiQuillPenFill, RiQuillPenLine, RiSettings2Fill, RiSettings2Line, RiShareBoxFill, RiShareBoxLine } from "react-icons/ri";
 
@@ -232,6 +229,10 @@ const SettingsPanel = () => {
           <InputField text="版本" value={serverSnapshot.version} onClick={(value: string) => { onInputClick({ version: value }) }} />
         </div>
         <InputField text="電腦版才會出現的簡述" value={serverSnapshot.description} onClick={(value: string) => { onInputClick({ description: value }) }} />
+        <div className="flex flex-row items-center text-sm space-x-2">
+          <input type="checkbox" name="thumbnail_undecide" checked={serverSnapshot.anonymous} onChange={(e) => { onInputClick({ anonymous: !serverSnapshot.anonymous }) }} />
+          <label>匿名</label>
+        </div>
         <div className="flex flex-col md:flex-row gap-3">
           <div className="flex flex-row items-center text-sm space-x-2">
             <input type="checkbox" name="thumbnail_undecide" checked={serverSnapshot.accept.includes(1)} onChange={(e) => { onCheckedClick(e.target.checked, 1) }} />
