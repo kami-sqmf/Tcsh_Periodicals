@@ -18,6 +18,8 @@ const IdeaSectionFinish = ({ setSection, data }: { setSection: Dispatch<SetState
       const doc = await addDoc(collection(db, "idea-urstory"), {
         type: data.current?.type,
         content: data.current.content,
+        class: data.current?.class || "",
+        name: data.current?.name || "",
         createdTimestamp: data.current?.createdTimestamp,
       })
       fileRef.current = { docId: doc.id, key: key };
@@ -32,6 +34,8 @@ const IdeaSectionFinish = ({ setSection, data }: { setSection: Dispatch<SetState
           type: data.current?.type,
           url: downloadUrl,
           content: data.current?.content,
+          class: data.current?.class || "",
+          name: data.current?.name || "",
           createdTimestamp: data.current?.createdTimestamp,
         })
         fileRef.current = { docId: doc.id, imageRef: imageRef, downloadUrl: downloadUrl, key: key };
@@ -56,7 +60,7 @@ const IdeaSectionFinish = ({ setSection, data }: { setSection: Dispatch<SetState
       await fetch("/api/idea-urstory/send", {
         method: "POST",
         body: JSON.stringify({
-          message: `收到了一個新的匿名投稿！\n內容：${data.current.content}`,
+          message: `收到了一個新的${data.current.name ? "來自" + data.current.class + data.current.name + "的" : "匿名"}投稿！\n內容：${data.current.content}`,
           key: fileRef.current.key,
           id: fileRef.current.docId
         })
@@ -65,7 +69,7 @@ const IdeaSectionFinish = ({ setSection, data }: { setSection: Dispatch<SetState
       await fetch("/api/idea-urstory/send", {
         method: "POST",
         body: JSON.stringify({
-          message: `收到了一個新的匿名(語音)投稿！\n簡述：${data.current.content}`,
+          message: `收到了一個新的${data.current.name ? "來自" + data.current.class + data.current.name + "的" : "匿名"}(語音)投稿！\n簡述：${data.current.content}`,
           voiceUrl: fileRef.current!.downloadUrl,
           key: fileRef.current.key,
           id: fileRef.current.docId
@@ -75,7 +79,7 @@ const IdeaSectionFinish = ({ setSection, data }: { setSection: Dispatch<SetState
       await fetch("/api/idea-urstory/send", {
         method: "POST",
         body: JSON.stringify({
-          message: `收到了一個新的匿名(圖片)投稿！\n簡述：${data.current.content}`,
+          message: `收到了一個新的${data.current.name ? "來自" + data.current.class + data.current.name + "的" : "匿名"}(圖片)投稿！\n簡述：${data.current.content}`,
           imageUrl: fileRef.current!.downloadUrl,
           key: fileRef.current.key,
           id: fileRef.current.docId

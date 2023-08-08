@@ -7,6 +7,7 @@ import { RiArrowGoBackLine } from "react-icons/ri";
 import { IdeaSectionFinish } from "./idea-content-finish";
 import { IdeaSectionImage } from "./idea-section-image";
 import { IdeaSectionMain } from "./idea-section-main";
+import { IdeaSectionName } from "./idea-section-name";
 import { IdeaSectionText } from "./idea-section-text";
 import { IdeaSectionVoice } from "./idea-section-voice";
 
@@ -21,12 +22,15 @@ const IdeaUrStroryContentWrapper = ({ lang, className = "", config }: { lang: La
       case 0:
         setProgressbar(33);
         break;
-      case 4:
+      case 3:
+        setProgressbar(77);
+      case 5:
         setProgressbar(99);
         break;
       default:
         setProgressbar(66);
     }
+    if (config.anonymous === true && section === 4) setSection(5);
   }, [section])
   return (
     <div className={`${className}`}>
@@ -40,7 +44,8 @@ const IdeaUrStroryContentWrapper = ({ lang, className = "", config }: { lang: La
         {section === 1 && <IdeaSectionText setSection={setSection} data={data} />}
         {section === 2 && <IdeaSectionVoice setSection={setSection} data={data} />}
         {section === 3 && <IdeaSectionImage setSection={setSection} data={data} />}
-        {section === 4 && <IdeaSectionFinish setSection={setSection} data={data} />}
+        {section === 4 && <IdeaSectionName setSection={setSection} data={data} />}
+        {section === 5 && <IdeaSectionFinish setSection={setSection} data={data} />}
       </div>
     </div>
   )

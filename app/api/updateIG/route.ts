@@ -2,6 +2,8 @@ import { db } from '@/utils/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import { NextResponse } from 'next/server';
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   const options: RequestInit = {
     method: 'GET',

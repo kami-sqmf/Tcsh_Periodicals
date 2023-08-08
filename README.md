@@ -38,7 +38,10 @@
 > ⚠️ 注意：好像沒有什麼好注意的？
 > 💻 <- 代表曾發布到[正式伺服器](https://periodicals.kami.tw/)，其餘僅發布在[測試伺服器](https://periodicalsalpha.kami.tw/)。
 
-#### Stable 2.0.6 💻
+#### Stable 2.0.7 💻
+- 調整匿名投稿系統成投稿系統
+
+#### Stable Alpha 2.0.6
 - 新增序號管理
 - 模組化管理員內容
 

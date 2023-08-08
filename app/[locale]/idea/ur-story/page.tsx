@@ -1,4 +1,3 @@
-import { EbookContentWrapper } from "@/components/ebook/ebook-content-wrapper";
 import { IdeaUrStroryContentWrapper } from "@/components/idea/idea-content-wrapper";
 import { IdeaNavbarWrapper } from "@/components/idea/idea-navbar-wrapper";
 import { IdeaUrStoryConfig } from "@/types/firestore";

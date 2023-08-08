@@ -22,7 +22,7 @@ const IdeaNavbar = ({ lang, name, version, menu }: { lang: LangCode; name: strin
           <LogoPNG className="w-40 h-10 object-cover rounded-r-lg ring-main2 ring-1 md:ring-0" ring={true} />
         </div>
         <div className='right flex flex-col'>
-          <span className="font-medium text-sm text-main/70">匿名投稿系統</span>
+          <span className="font-medium text-sm text-main/70">後生投稿系統</span>
           <span className="text-[10px] text-main/70">{name} {version}</span>
         </div>
       </div>

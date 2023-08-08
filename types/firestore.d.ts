@@ -195,22 +195,29 @@ type IdeaUrStory = {
     type: "text";
     content: string;
     createdTimestamp: FieldValue,
+    class?: string;
+    name?: string;
 } | {
     type: "picture";
     file: File;
     url?: string;
     content: string;
     createdTimestamp: FieldValue,
+    class?: string;
+    name?: string;
 } | {
     type: "voice";
     file: File;
     url?: string;
     content: string;
     createdTimestamp: FieldValue,
+    class?: string;
+    name?: string;
 }
 
 interface IdeaUrStoryConfig {
     accept: number[];
+    anonymous: boolean;
     title: string;
     name: string;
     description: string;
