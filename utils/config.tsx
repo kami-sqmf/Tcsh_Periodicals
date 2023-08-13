@@ -1,6 +1,6 @@
 import { I18nConfig, LangCode, LangConfig } from "@/types/i18n";
 import Image from "next/image";
-import { RiAccountBoxFill, RiAccountBoxLine, RiAdminFill, RiAdminLine, RiBookFill, RiBookLine, RiChatForwardFill, RiChatForwardLine, RiEditFill, RiEditLine, RiFilePaper2Fill, RiFilePaper2Line, RiGroup2Fill, RiGroup2Line, RiHome2Fill, RiHome2Line, RiInstagramFill, RiInstagramLine, RiLock2Fill, RiLockLine, RiNotification2Line, RiProfileFill, RiProfileLine, RiQuestionnaireFill, RiQuestionnaireLine, RiSlideshowFill, RiSlideshowLine, RiUserSettingsFill, RiUserSettingsLine, RiWindow2Fill, RiWindow2Line, RiYoutubeFill, RiYoutubeLine } from "react-icons/ri";
+import { RiAccountBoxFill, RiAccountBoxLine, RiAdminFill, RiAdminLine, RiBookFill, RiBookLine, RiChatForwardFill, RiChatForwardLine, RiEditFill, RiEditLine, RiFilePaper2Fill, RiFilePaper2Line, RiGroup2Fill, RiGroup2Line, RiHome2Fill, RiHome2Line, RiInstagramFill, RiInstagramLine, RiLock2Fill, RiLockLine, RiNotification2Line, RiProfileFill, RiProfileLine, RiQuestionnaireFill, RiQuestionnaireLine, RiSlideshowFill, RiSlideshowLine, RiTeamFill, RiTeamLine, RiUserSettingsFill, RiUserSettingsLine, RiWindow2Fill, RiWindow2Line, RiYoutubeFill, RiYoutubeLine } from "react-icons/ri";
 import GermanIcon from "../public/language/de.svg";
 import EnglishIcon from "../public/language/en.svg";
 import JapaneseIcon from "../public/language/ja.svg";
@@ -176,6 +176,16 @@ export const webInfo = {
             admin: true,
             icon: RiUserSettingsLine,
             iconHover: RiUserSettingsFill
+          },
+        },
+        roles: {
+          href: "/admin/roles",
+          title: (locale: LangCode) => new i18n<typeof i18nDefault>(locale, "config")._("webmap-admin-role-title"),
+          nav: {
+            show: true,
+            admin: true,
+            icon: RiTeamLine,
+            iconHover: RiTeamFill
           },
         },
         website: {
