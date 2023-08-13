@@ -6,11 +6,12 @@ import { MembersContent } from "./member-content";
 
 const MembersContentWrapper = async ({ lang, className = "" }: { lang: LangCode; className?: string }) => {
   const teams = await getTeams();
-  const profiles = await getProfiles(teams[0].teamId);
+  const presentTeam = teams.filter((t) => t.present === true);
+  const profiles = await getProfiles(presentTeam[0] ? presentTeam[0].teamId : teams[0].teamId);
   return (
     <>
       <BreadcrumbServerWrapper args={[{ title: webInfo.webMap.member.title(lang) as string, href: webInfo.webMap.member.href, icon: webInfo.webMap.member.nav.icon }]} />
-      <MembersContent lang={lang} teamsInfo={teams} defaultProfiles={profiles} />
+      <MembersContent lang={lang} teamsInfo={presentTeam.length > 0 ? presentTeam : teams } defaultProfiles={profiles} />
     </>
   )
 }
@@ -21,4 +22,5 @@ export { MembersContentWrapper };
 export type TeamInfo = {
   team: number;
   teamId: string;
+  present: boolean;
 }

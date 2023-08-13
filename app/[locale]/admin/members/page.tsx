@@ -13,12 +13,12 @@ import { webInfo } from "@/utils/config";
 import { makeid } from "@/utils/ebook-voucher";
 import { db, storage } from "@/utils/firebase";
 import { classParser, MemberRole } from "@/utils/role";
-import { addDoc, collection, deleteDoc, doc, onSnapshot, orderBy, query, Unsubscribe, writeBatch } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, onSnapshot, orderBy, query, Unsubscribe, updateDoc, writeBatch } from "firebase/firestore";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import Image from "next/image";
 import Link from "next/link";
 import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useEffect, useRef, useState } from "react";
-import { RiAddBoxFill, RiAddBoxLine, RiAddCircleFill, RiAddCircleLine, RiDeleteBin5Fill, RiDeleteBin5Line, RiEdit2Fill, RiEdit2Line, RiInformationFill, RiInformationLine, RiInstagramLine } from "react-icons/ri";
+import { RiAddBoxFill, RiAddBoxLine, RiAddCircleFill, RiAddCircleLine, RiDeleteBin5Fill, RiDeleteBin5Line, RiEdit2Fill, RiEdit2Line, RiEyeOffFill, RiEyeOffLine, RiInformationFill, RiInformationLine, RiInstagramLine, RiTeamFill, RiTeamLine } from "react-icons/ri";
 
 export default function AdminMembers({ params }: { params: { locale: LangCode } }) {
   const dataFetchedRef = useRef<boolean>(false);
@@ -32,7 +32,7 @@ export default function AdminMembers({ params }: { params: { locale: LangCode } 
     if (dataFetchedRef.current) return;
     dataFetchedRef.current = true;
     onSnapshot(query(collection(db, 'members'), orderBy("team", "desc")), async snapshot => {
-      setTeamSnapshot(snapshot.docs.map((doc) => { return { team: doc.data().team, tId: doc.id } }));
+      setTeamSnapshot(snapshot.docs.map((doc) => { return { team: doc.data().team, tId: doc.id, present: doc.data().present } }));
       setTeamFilter(snapshot.docs[0].data().team);
     })
   })
@@ -40,10 +40,12 @@ export default function AdminMembers({ params }: { params: { locale: LangCode } 
     if (teamSnapshot.length === 0) return;
     if (unsubscribeSnapshot.current) unsubscribeSnapshot.current();
     const teamId = teamSnapshot.filter(team => team.team === teamFilter)[0].tId;
+    const teamPresent = teamSnapshot.filter(team => team.team === teamFilter)[0].present;
     unsubscribeSnapshot.current = onSnapshot(collection(db, "members", teamId, "profiles"), async snapshot => {
       setServerSnapshot({
         team: teamFilter,
         teamId: teamId,
+        present: teamPresent,
         profiles: snapshot.docs.map(doc => doc.data()) as Member[]
       });
     })
@@ -73,6 +75,12 @@ export default function AdminMembers({ params }: { params: { locale: LangCode } 
               level: [0],
               icon: RiDeleteBin5Line,
               iconHover: RiDeleteBin5Fill,
+            }, {
+              name: "hideTeam",
+              text: `${teamSnapshot.filter(t => t.tId === serverSnapshot.teamId)[0].present ? "隱藏" : "顯示"}${teamParser('zh', teamFilter)}`,
+              level: [0],
+              icon: RiEyeOffLine,
+              iconHover: RiEyeOffFill,
             }, {
               name: "edit",
               text: "編輯成員",
@@ -125,6 +133,10 @@ export default function AdminMembers({ params }: { params: { locale: LangCode } 
               name: "removeTeam",
               title: "確定要移除這屆嗎？",
               modal: <ModalDeleteTeam team={teamFilter} teamId={teamSnapshot.filter(team => team.team === teamFilter)[0].tId} setModal={setModalOpen} />,
+            }, {
+              name: "hideTeam",
+              title: `${teamSnapshot.filter(t => t.tId === serverSnapshot.teamId)[0].present ? "隱藏" : "顯示"}${teamParser('zh', teamFilter)}`,
+              modal: <ModalHideTeam team={teamFilter} teamId={teamSnapshot.filter(team => team.team === teamFilter)[0].tId} teamPresent={teamSnapshot.filter(team => team.team === teamFilter)[0].present} setModal={setModalOpen} />,
             }],
             modalInfo: modalInfo,
             setModalInfo: setModalInfo,
@@ -211,7 +223,7 @@ const ModalAddTeam = ({ team, setModal }: { team: number; setModal: Dispatch<Set
   const onAddSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLodaing(true);
-    await addDoc(collection(db, "members"), { team: team + 1 });
+    await addDoc(collection(db, "members"), { team: team + 1, present: false });
     setLodaing(false);
     setModal(false);
   }
@@ -239,6 +251,27 @@ const ModalDeleteTeam = ({ team, teamId, setModal }: { team: number; teamId: str
       <p className="w-full px-4 py-2 text-center text-background2 bg-main/60">若你未讀完以下資訊，你將會後悔莫及！</p>
       <h2>經過這個動作你將無法再透過網站找回最初的起點，所有人都不會再看到{teamParser('zh', team)}的所有成員了！請問你確定嗎？</h2>
       <h3>如果你確定要刪除本成員的話，請在下方輸入框輸入{teamParser('zh', team)}的 ID：『{teamId}』</h3>
+      <input type="text" value={value} onChange={(e) => setValue(e.target.value)} pattern={teamId} placeholder={teamId} autoComplete="false" className="px-2 py-1 bg-transparent border-2 border-red-700 focus:border-red-900 rounded-lg focus:outline-none" />
+      <button disabled={value !== teamId} className="disabled:bg-red-600/40 bg-red-600/90 py-1 text-background2 rounded-md">刪除</button>
+    </form>
+  )
+}
+const ModalHideTeam = ({ team, teamId, teamPresent, setModal }: { team: number; teamId: string; teamPresent: boolean; setModal: Dispatch<SetStateAction<boolean>> }) => {
+  const [value, setValue] = useState("");
+  const [lodaing, setLodaing] = useState<boolean>(false);
+  const onDeleteSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLodaing(true);
+    await updateDoc(doc(db, "members", teamId), { present: !teamPresent });
+    setLodaing(false);
+    setModal(false);
+  }
+  if (lodaing) return (<div className="w-full h-full flex justify-center items-center"><Loading text="刪除中" /></div>)
+  else return (
+    <form className="flex flex-col space-y-2 max-w-xs" onSubmit={onDeleteSubmit}>
+      <p className="w-full px-4 py-2 text-center text-background2 bg-main/60">若你未讀完以下資訊，你將會後悔莫及！</p>
+      <h2>經過這個動作所有人都{teamPresent ? "暫時不會" : "會"}看到{teamParser('zh', team)}的成員了！請問你確定嗎？</h2>
+      <h3>如果你確定要{teamPresent ? "隱藏" : "顯示"}本屆的話，請在下方輸入框輸入{teamParser('zh', team)}的 ID：『{teamId}』</h3>
       <input type="text" value={value} onChange={(e) => setValue(e.target.value)} pattern={teamId} placeholder={teamId} autoComplete="false" className="px-2 py-1 bg-transparent border-2 border-red-700 focus:border-red-900 rounded-lg focus:outline-none" />
       <button disabled={value !== teamId} className="disabled:bg-red-600/40 bg-red-600/90 py-1 text-background2 rounded-md">刪除</button>
     </form>
@@ -384,7 +417,7 @@ const ModalEditOrAdd = ({ teamId, modalInfo, setModal }: { teamId: string, modal
             {data.role.error && <span className="text-xs text-red-600">{data.role.error}</span>}
           </div>
           <InputField name="email" text="登入信箱" value={data.email.value} setValue={data.email.setValue} onError={data.email.error} pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$" />
-          <InputField name="insta" text="Instagram 帳號" value={data.insta.value} setValue={data.insta.setValue} onError={data.insta.error} pattern="^[\w](?!.*?\.{2})[\w.]{1,28}[\w]$" />
+          <InputField name="insta" text="Instagram 帳號" value={data.insta.value} setValue={data.insta.setValue} onError={data.insta.error} pattern="^[\w](?!.*?\.{2})[\w.]{1,28}[\w]$" required={false} />
           <button type="submit" className='px-3 py-2 bg-green-600 text-xs text-background2 rounded-lg md:rounded mt-2 md:mt-0 disabled:bg-green-600/70'>{modalInfo ? "更改" : "新增"}</button>
         </div>
       </form>
@@ -404,7 +437,7 @@ const InputField = ({ className = "", name, text, value, setValue, onError, requ
 
 type ModalInfo = Member | null;
 
-type TeamSnapshot = { team: number; tId: string }[];
+type TeamSnapshot = { team: number; tId: string, present: boolean }[];
 
 const removeEmpty = (obj: any) => {
   return Object.fromEntries(Object.entries(obj).filter(([_, v]) => v != null));

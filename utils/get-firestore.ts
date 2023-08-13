@@ -83,11 +83,12 @@ export function isAdmin(firestore: AccountsUni): boolean {
 }
 
 export const getTeams = cache(async () => {
-  const data = await getDocsFromCacheOrServer<{ id: string, team: number }[]>("members", "team", false);
+  const data = await getDocsFromCacheOrServer<{ id: string, team: number; present: boolean }[]>("members", "team", false);
   return data.map((doc) => {
     return {
       team: doc.team,
-      teamId: doc.id
+      teamId: doc.id,
+      present: doc.present
     }
   }) as TeamInfo[];
 });

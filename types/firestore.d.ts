@@ -86,6 +86,7 @@ type Class = `J${classLevel}${"1" | "2" | "3" | "4" | "5" | "6" | "7"}` | `S${cl
 interface Members {
     team: number;
     teamId: string;
+    present: boolean;
     profiles: Member[];
 }
 interface Member {
