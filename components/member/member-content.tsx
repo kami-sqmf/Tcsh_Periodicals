@@ -14,7 +14,7 @@ import { Profile } from "./profile";
 
 
 const MembersContent = ({ lang, className = "", teamsInfo, defaultProfiles }: { lang: LangCode; className?: string; teamsInfo: TeamInfo[]; defaultProfiles: Member[] }) => {
-  const serverList = useRef<Members[]>([{ team: teamsInfo[0].team, teamId: teamsInfo[0].teamId, profiles: defaultProfiles }]);
+  const serverList = useRef<Members[]>([{ team: teamsInfo[0].team, teamId: teamsInfo[0].teamId, profiles: defaultProfiles, present: teamsInfo[0].present }]);
   const [renderList, setRenderList] = useState<Member[]>(defaultProfiles);
   const [teamFilter, setTeamFilter] = useState<number>(teamsInfo[0].team);
   const [roleFilter, setRoleFilter] = useState<MemberRoleKey>(1);
@@ -62,7 +62,7 @@ const MembersContent = ({ lang, className = "", teamsInfo, defaultProfiles }: { 
     const queryTeamId = teamsInfo.filter(team => team.team === teamFilter)[0].teamId;
     const chachedList = serverList.current.find((team) => team.teamId === queryTeamId);
     if (chachedList) setRenderList(chachedList.profiles);
-    else getProfiles(teamFilter, queryTeamId, serverList, setRenderList);
+    else getProfiles(teamFilter, queryTeamId,  serverList, setRenderList);
     return () => { }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [teamFilter])
@@ -140,5 +140,5 @@ async function getProfiles(team: number, teamId: string, serverListRef: MutableR
   }
   const list = col.docs.map((doc) => doc.data()) as Member[];
   setProfiles(list);
-  serverListRef.current.push({ team: team, teamId: teamId, profiles: list });
+  serverListRef.current.push({ team: team, teamId: teamId, present: true, profiles: list });
 }
