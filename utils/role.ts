@@ -38,7 +38,7 @@ export const MemberRole = {
   },
   203: {
     "name": (lang: LangCode) => new i18n<typeof i18nDefault>(lang, "role")._("203"),
-    "id": 201
+    "id": 203
   },
   202: {
     "name": (lang: LangCode) => new i18n<typeof i18nDefault>(lang, "role")._("202"),

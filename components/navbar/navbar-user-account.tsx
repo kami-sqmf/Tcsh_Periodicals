@@ -9,10 +9,9 @@ import { NavbarAccountMenu } from "./navbar-user-account-menu";
 
 const NavbarUserAccount = async ({ lang }: { lang: LangCode }) => {
   const session = await getServerSession(authOptions);
-  if (_.isObject(session?.firestore.data.memberRef)) if (session?.firestore.data.memberRef.path) session!.firestore.data.memberRef = session?.firestore.data.memberRef.path as any;
   return (
     <>
-      {session ? <NavbarAccountMenu user={session.firestore.data} size={{ less: 7, md: 10 }} lang={lang} /> : <NavbarAccountUnlogged size={{ less: 7, md: 10 }} lang={lang} />}
+      {session ? <NavbarAccountMenu user={session.account} size={{ less: 7, md: 10 }} lang={lang} /> : <NavbarAccountUnlogged size={{ less: 7, md: 10 }} lang={lang} />}
     </>
   )
 }

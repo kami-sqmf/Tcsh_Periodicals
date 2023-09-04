@@ -23,7 +23,8 @@ export default async function AdminLayout({ children, params }: {
   const headersList = headers();
   const header_url = new URL(headersList.get('x-url') || "");
   const session = await getServerSession(authOptions);
-  if (!session?.firestore || !isAdmin(session?.firestore)) {
+  const admin = session?.account ? await isAdmin(session.account) : false;
+  if (!admin) {
     if (header_url.pathname === "/admin/idea-urstory") {
       return (
         <PageWrapper withNavbar={true} withNotifications={false} lang={params.locale}>

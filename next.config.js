@@ -2,6 +2,9 @@
 const { withPlaiceholder } = require("@plaiceholder/next");
 
 const nextConfig = withPlaiceholder({
+  experimental: {
+    serverActions: true,
+  },
   reactStrictMode: true,
   swcMinify: true,
   images: {

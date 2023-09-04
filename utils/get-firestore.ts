@@ -1,7 +1,8 @@
+'use server';
 const _ = require('lodash');
 import { TeamInfo } from "@/components/member/member-content-wrapper";
-import { About, AccountsUni, Member, Notification, Posts, Slide } from "@/types/firestore";
-import { collection, CollectionReference, doc, DocumentData, DocumentSnapshot, getDoc, getDocFromCache, getDocs, getDocsFromCache, orderBy, query, QuerySnapshot, where } from "firebase/firestore";
+import { About, Account, AccountFB, Member, Notification, Posts, Role, Slide } from "@/types/firestore";
+import { collection, CollectionReference, doc, DocumentData, DocumentReference, DocumentSnapshot, getDoc, getDocFromCache, getDocs, getDocsFromCache, orderBy, query, QuerySnapshot, updateDoc, where, writeBatch } from "firebase/firestore";
 import { getPlaiceholder } from "plaiceholder";
 import { cache } from "react";
 import { db } from "./firebase";
@@ -15,14 +16,25 @@ const getThumbnailsBlurData = async (imageUrl: string, errorThumbnail?: string) 
   }
 }
 
+export async function getRefDocFromCacheOrServer<T>(docRef: DocumentReference<DocumentData>): Promise<T> {
+  let doc: DocumentSnapshot<DocumentData>;
+  try {
+    doc = await getDocFromCache(docRef);
+    if (!doc.exists()) throw false;
+  } catch (e) {
+    doc = await getDoc(docRef);
+  }
+  return { id: doc.id, ...doc.data() } as T;
+}
 
-export async function getRefDocsFromCacheOrServer<T>(docRef: CollectionReference<DocumentData>): Promise<T> {
+
+export async function getRefDocsFromCacheOrServer<T>(colRef: CollectionReference<DocumentData>): Promise<T> {
   let col: QuerySnapshot<DocumentData>;
   try {
-    col = await getDocsFromCache(docRef);
+    col = await getDocsFromCache(colRef);
     if (col.empty) throw false;
   } catch (e) {
-    col = await getDocs(docRef);
+    col = await getDocs(colRef);
   }
   return col.docs.map((doc) => {
     return { id: doc.id, ...doc.data() };
@@ -55,7 +67,7 @@ export async function getDocFromCacheOrServer<T>(docColection: string, docId: st
   return docSnap.data() as T;
 }
 
-export async function getAccount(email: string): Promise<AccountsUni | null> {
+export async function getAccount(email: string): Promise<AccountFB | null> {
   const docRef = query(collection(db, "accounts"), where("email", "==", email));
   let result: QuerySnapshot<DocumentData>;
   try {
@@ -66,21 +78,27 @@ export async function getAccount(email: string): Promise<AccountsUni | null> {
   }
   const profile = result.docs[0];
   if (!result.empty) {
-    const typeName = (_.isObject(profile.data().memberRef) && profile.data().memberRef.id) ? "Member" : "Account";
-    const res: AccountsUni = {
-      type: typeName,
-      data: { ...profile.data() as any, uid: profile.id }
-    };
+    const res: AccountFB = { ...profile.data() as any, uid: profile.id };
     return res;
   }
   return null;
 }
 
-export function isAdmin(firestore: AccountsUni): boolean {
-  if (firestore.type != "Member") return false;
-  if (_.isObject(firestore.data.memberRef) && firestore.data.memberRef.id) return true;
+export async function isAdmin(firestore: Account): Promise<boolean> {
+  if (!firestore.rolePath) return false;
+  const roleInfo = await getRefDocFromCacheOrServer<Role>(doc(db, firestore.rolePath));
+  if (roleInfo.premissions) return true;
   return false;
 }
+
+export const getRoles = cache(async () => {
+  const data = await getDocsFromCacheOrServer<Role[]>("roles", "order", true);
+  return data.map(role => {
+    if (!role.childs) return role;
+    role.childs = role.childs.map(ro => ro.path) as any;
+    return role;
+  });
+});
 
 export const getTeams = cache(async () => {
   const data = await getDocsFromCacheOrServer<{ id: string, team: number; present: boolean }[]>("members", "team", false);
@@ -93,9 +111,16 @@ export const getTeams = cache(async () => {
   }) as TeamInfo[];
 });
 
-export const getProfiles = cache(async (teamId: string) => {
+export const getRolesProfiles = cache(async (teamId: string) => {
+  const roles = await getRoles();
   const docRef = collection(db, "members", teamId, "profiles");
-  return await getRefDocsFromCacheOrServer<Member[]>(docRef);
+  const profilesRaw = await getRefDocsFromCacheOrServer<Member[]>(docRef);
+  const profiles = profilesRaw.map(member => {
+    member.roleInfo = roles.find(role => member.role.path.includes(role.id));
+    member.role = member.role.path as any;
+    return member;
+  });
+  return { roles, profiles };
 });
 
 export const getSlides = cache(async () => {
