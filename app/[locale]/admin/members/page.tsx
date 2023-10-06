@@ -23,7 +23,7 @@ import { RiAddBoxFill, RiAddBoxLine, RiAddCircleFill, RiAddCircleLine, RiDeleteB
 export default function AdminMembers({ params }: { params: { locale: LangCode } }) {
   const dataFetchedRef = useRef<boolean>(false);
   const unsubscribeSnapshot = useRef<Unsubscribe>();
-  const [roles, setRoles] = useState<Role[]>([{ parent: false, childs: [], order: 0, id: "", name: { zh: "", ja: "", en: "", de: "", }, premission: false, }]);
+  const [roles, setRoles] = useState<Role[]>([{ parent: false, childs: [], order: 0, id: "", name: { zh: "", ja: "", en: "", de: "", }, premissions: false, }]);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [modalInfo, setModalInfo] = useState<ModalInfo>(null);
   const [teamFilter, setTeamFilter] = useState<number>(0);
