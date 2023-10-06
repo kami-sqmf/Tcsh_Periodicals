@@ -15,7 +15,7 @@ export const NavbarMenuWrapper = async ({ lang }: { lang: LangCode }) => {
     return `${header_url.pathname}/`.startsWith(lang);
   }) ? `${header_url.pathname}/`.slice(3) : `${header_url.pathname}/`;
   const session = await getServerSession(authOptions);
-  const admin = session ? isAdmin(session.firestore) : false;
+  const admin = session ? await isAdmin(session.account) : false;
   const NavbarMenuLink = ({ nav }: { nav: WebMapIndex<"Parent"> }) => {
     if (!nav.nav) return (<></>);
     return (

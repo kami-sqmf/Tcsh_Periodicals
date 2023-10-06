@@ -1,12 +1,12 @@
 import i18nDefault from '@/translation/ebook/zh.json';
-import { AccountsUni, EBooks } from "@/types/firestore";
+import { Account, EBooks } from "@/types/firestore";
 import { LangCode } from '@/types/i18n';
 import i18n from '@/utils/i18n';
 import { EbookBookCover } from './ebook-book-cover';
 import { EbookModalWrapper } from './ebook-modal-wrapper';
 import { EbookShelfHolder } from './ebook-shelf-holder';
 
-const EbookCurrentBook = ({ lang, className = "", currentBook, account }: { lang: LangCode; className?: string; currentBook: EBooks; account: AccountsUni | undefined }) => {
+const EbookCurrentBook = ({ lang, className = "", currentBook, account }: { lang: LangCode; className?: string; currentBook: EBooks; account: Account | undefined }) => {
   const t = new i18n<typeof i18nDefault>(lang, "ebook");
   return (
     <div className={`${className} block w-full mt-4`}>
@@ -25,11 +25,11 @@ const EbookCurrentBook = ({ lang, className = "", currentBook, account }: { lang
   )
 }
 
-export const checkOwnedBook = (profile: AccountsUni, bookId: string) => {
+export const checkOwnedBook = (profile: Account, bookId: string) => {
   if (profile) {
-    if (profile.type === "Member") return true;
-    else if (!profile.data.ownedBooks) return false;
-    else if (profile.data.ownedBooks.includes(bookId)) return true;
+    if (profile.memberRef === "Member") return true;
+    else if (!profile.ownedBooks) return false;
+    else if (profile.ownedBooks.includes(bookId)) return true;
   }
   return false;
 }

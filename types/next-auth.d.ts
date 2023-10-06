@@ -1,9 +1,9 @@
 import NextAuth from "next-auth"
-import { AccountsUni } from "./firestore";
+import { Account } from "./firestore";
 
 declare module "next-auth" {
   interface Session {
-    firestore: AccountsUni
+    account: Account;
   }
   interface Profile {
     hd: string;
@@ -13,6 +13,6 @@ declare module "next-auth" {
 
 declare module "next-auth/jwt" {
   interface JWT {
-    firestore: AccountsUni
+    account: Account;
   }
 }

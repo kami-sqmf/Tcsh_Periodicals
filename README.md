@@ -38,6 +38,13 @@
 > ⚠️ 注意：好像沒有什麼好注意的？
 > 💻 <- 代表曾發布到[正式伺服器](https://periodicals.kami.tw/)，其餘僅發布在[測試伺服器](https://periodicalsalpha.kami.tw/)。
 
+#### Stable 2.1.1
+- 修正 Deploy 錯誤 (TypeError)
+
+#### Stable Alpha 2.1.0
+- 更改身分組系統 （資料結構）
+- 電子書下載對話問題修復
+
 #### Stable 2.0.8 💻
 - 調整成員陣容管理（顯示/隱藏屆）
 - 新增組別管理介面

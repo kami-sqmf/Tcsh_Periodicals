@@ -6,23 +6,24 @@ import { AdminManageWrapper } from "@/components/admin/admin";
 import { BreadcrumbWrapper } from "@/components/breadcumb/breadcumb";
 import { Loading } from "@/components/global/loading";
 import { teamParser } from "@/components/member/member-content";
-import { Member, Members } from "@/types/firestore";
+import { Member, Members, Role } from "@/types/firestore";
 import { LangCode } from "@/types/i18n";
-import { MemberRoleKey } from "@/types/role";
 import { webInfo } from "@/utils/config";
 import { makeid } from "@/utils/ebook-voucher";
 import { db, storage } from "@/utils/firebase";
-import { classParser, MemberRole } from "@/utils/role";
+import { getRoles } from "@/utils/get-firestore";
+import { classParser } from "@/utils/role";
 import { addDoc, collection, deleteDoc, doc, onSnapshot, orderBy, query, Unsubscribe, updateDoc, writeBatch } from "firebase/firestore";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import Image from "next/image";
 import Link from "next/link";
 import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useEffect, useRef, useState } from "react";
-import { RiAddBoxFill, RiAddBoxLine, RiAddCircleFill, RiAddCircleLine, RiDeleteBin5Fill, RiDeleteBin5Line, RiEdit2Fill, RiEdit2Line, RiEyeOffFill, RiEyeOffLine, RiInformationFill, RiInformationLine, RiInstagramLine, RiTeamFill, RiTeamLine } from "react-icons/ri";
+import { RiAddBoxFill, RiAddBoxLine, RiAddCircleFill, RiAddCircleLine, RiDeleteBin5Fill, RiDeleteBin5Line, RiEdit2Fill, RiEdit2Line, RiEyeOffFill, RiEyeOffLine, RiInformationFill, RiInformationLine, RiInstagramLine } from "react-icons/ri";
 
 export default function AdminMembers({ params }: { params: { locale: LangCode } }) {
   const dataFetchedRef = useRef<boolean>(false);
   const unsubscribeSnapshot = useRef<Unsubscribe>();
+  const [roles, setRoles] = useState<Role[]>([{ parent: false, childs: [], order: 0, id: "", name: { zh: "", ja: "", en: "", de: "", }, premissions: false, }]);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [modalInfo, setModalInfo] = useState<ModalInfo>(null);
   const [teamFilter, setTeamFilter] = useState<number>(0);
@@ -31,10 +32,14 @@ export default function AdminMembers({ params }: { params: { locale: LangCode } 
   useEffect(() => {
     if (dataFetchedRef.current) return;
     dataFetchedRef.current = true;
-    onSnapshot(query(collection(db, 'members'), orderBy("team", "desc")), async snapshot => {
-      setTeamSnapshot(snapshot.docs.map((doc) => { return { team: doc.data().team, tId: doc.id, present: doc.data().present } }));
-      setTeamFilter(snapshot.docs[0].data().team);
-    })
+    const roles = getRoles();
+    roles.then(res => {
+      setRoles(res);
+      onSnapshot(query(collection(db, 'members'), orderBy("team", "desc")), async snapshot => {
+        setTeamSnapshot(snapshot.docs.map((doc) => { return { team: doc.data().team, tId: doc.id, present: doc.data().present } }));
+        setTeamFilter(snapshot.docs[0].data().team);
+      })
+    });
   })
   useEffect(() => {
     if (teamSnapshot.length === 0) return;
@@ -46,7 +51,12 @@ export default function AdminMembers({ params }: { params: { locale: LangCode } 
         team: teamFilter,
         teamId: teamId,
         present: teamPresent,
-        profiles: snapshot.docs.map(doc => doc.data()) as Member[]
+        profiles: snapshot.docs.map(doc => {
+          return {
+            ...doc.data(),
+            roleInfo: roles.find(role => doc.data().role.path.includes(role.id))
+          };
+        }).sort((a,b)=> a.roleInfo!.order - b.roleInfo!.order) as Member[]
       });
     })
   }, [teamFilter])
@@ -112,11 +122,11 @@ export default function AdminMembers({ params }: { params: { locale: LangCode } 
             infos: [{
               name: "add",
               title: "新增成員",
-              modal: <ModalEditOrAdd teamId={teamSnapshot.filter(team => team.team === teamFilter)[0].tId} modalInfo={false} setModal={setModalOpen} />,
+              modal: <ModalEditOrAdd roles={roles} teamId={teamSnapshot.filter(team => team.team === teamFilter)[0].tId} modalInfo={false} setModal={setModalOpen} />,
             }, {
               name: "edit",
               title: "編輯成員",
-              modal: <ModalEditOrAdd teamId={teamSnapshot.filter(team => team.team === teamFilter)[0].tId} modalInfo={modalInfo!} setModal={setModalOpen} />,
+              modal: <ModalEditOrAdd roles={roles} teamId={teamSnapshot.filter(team => team.team === teamFilter)[0].tId} modalInfo={modalInfo!} setModal={setModalOpen} />,
             }, {
               name: "remove",
               title: `確定要移除『${modalInfo?.name}』嗎？`,
@@ -124,7 +134,7 @@ export default function AdminMembers({ params }: { params: { locale: LangCode } 
             }, {
               name: "preview",
               title: "成員卡片",
-              modal: <ModalInfo modalInfo={modalInfo!} />,
+              modal: <ModalInfo modalInfo={modalInfo!} roles={roles} />,
             }, {
               name: "addTeam",
               title: "新增下一屆",
@@ -145,13 +155,13 @@ export default function AdminMembers({ params }: { params: { locale: LangCode } 
           }}
         >
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 justify-items-center my-4 h-full'>
-            {serverSnapshot.profiles.sort((a, b) => a.role - b.role).map((profile, key) => (
+            {serverSnapshot.profiles.map((profile, key) => (
               <div key={key} className={`cursor-pointer relative flex flex-col items-center px-6 py-4 space-y-2 rounded-lg ${modalInfo?.uid === profile.uid ? "bg-background/60" : "hover:bg-background/60"} transition-all duration-500 group`} onClick={() => { setModalInfo(profile); }}>
                 <div className={`relative text-main cursor-pointer group h-24 w-24`}>
                   <Image placeholder='blur' blurDataURL="/assests/defaultProfile.png" src={profile.avatar} fill={true} className="rounded-full overflow-hidden object-cover bg-background2" alt={`${profile.name}的大頭貼`} sizes="(max-width: 1024px) 272px, (max-width: 768px) 188vw, 268vw" />
                 </div>
                 <p>{profile.name}</p>
-                <p className="text-sm text-main/80">{MemberRole[profile.role as MemberRoleKey].name("zh")}</p>
+                <p className="text-sm text-main/80">{profile.roleInfo?.name.zh}</p>
               </div>
             ))}
           </div>
@@ -163,7 +173,7 @@ export default function AdminMembers({ params }: { params: { locale: LangCode } 
 }
 
 // Modal - Info
-const ModalInfo = ({ modalInfo }: { modalInfo: Member }) => (
+const ModalInfo = ({ modalInfo, roles }: { modalInfo: Member, roles: Role[] }) => (
   <div className={`w-72 flex flex-col min-h-[32em] max-h-[38em] rounded-2xl bg-white-light shadow-xl overflow-hidden bg-background2/90`}>
     <div className="relative aspect-square h-72">
       <Image alt={`${modalInfo.name}的大頭貼`} src={modalInfo.avatar} fill={true} className="object-cover" />
@@ -171,7 +181,7 @@ const ModalInfo = ({ modalInfo }: { modalInfo: Member }) => (
     <div className='flex flex-col px-5 py-6 space-y-4 font-["GenJyuuGothic"] w-full'>
       <div className='flex flex-row items-baseline font-serif'>
         <p className='basis-5/12 text-2xl font-bold text-main'>{modalInfo.name}</p>
-        <p className='basis-7/12 text-main/80 text-sm'>{MemberRole[modalInfo.role as MemberRoleKey].name("zh")}</p>
+        <p className='basis-7/12 text-main/80 text-sm'>{roles.find(role => role.id === modalInfo.roleInfo?.id)?.name["zh"]}</p>
       </div>
       <div className='flex flex-col mt-3 space-y-2'>
         {modalInfo.class && <div className='flex flex-col'>
@@ -279,7 +289,7 @@ const ModalHideTeam = ({ team, teamId, teamPresent, setModal }: { team: number; 
 }
 
 // Modal - Edit Or Add
-const ModalEditOrAdd = ({ teamId, modalInfo, setModal }: { teamId: string, modalInfo: Member | false, setModal: Dispatch<SetStateAction<boolean>> }) => {
+const ModalEditOrAdd = ({ roles, teamId, modalInfo, setModal }: { roles: Role[]; teamId: string, modalInfo: Member | false, setModal: Dispatch<SetStateAction<boolean>> }) => {
   const filePickerRef = useRef<HTMLInputElement | null>(null);
   const [lodaing, setLodaing] = useState<boolean>(false);
   const onChangeAvatar = (e: ChangeEvent<HTMLInputElement>) => {
@@ -322,7 +332,7 @@ const ModalEditOrAdd = ({ teamId, modalInfo, setModal }: { teamId: string, modal
     email: DataState(modalInfo ? modalInfo.email : null),
     insta: DataState(modalInfo ? modalInfo.insta : null),
     name: DataState(modalInfo ? modalInfo.name : null),
-    role: DataState(modalInfo ? modalInfo.role : 1),
+    role: DataState(modalInfo ? modalInfo.roleInfo!.id : 1),
   }
   const formOnSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -338,7 +348,7 @@ const ModalEditOrAdd = ({ teamId, modalInfo, setModal }: { teamId: string, modal
         email: data.email.value,
         insta: data.insta.value,
         name: data.name.value,
-        role: data.role.value,
+        role: doc(db, `roles/${data.role.value}`),
       });
       const uploadDataForAccount = removeEmpty({
         avatar: data.avatar.value,
@@ -348,7 +358,7 @@ const ModalEditOrAdd = ({ teamId, modalInfo, setModal }: { teamId: string, modal
         email: data.email.value,
         insta: data.insta.value,
         name: data.name.value,
-        username: MemberRole[data.role.value as MemberRoleKey].name("zh"),
+        username: roles.find(role => role.id === data.role.value)!.name.zh,
       });
       if (!_.isEmpty(uploadData)) {
         batch.update(doc(db, "members", teamId, "profiles", data.uid.value), uploadData as any);
@@ -364,7 +374,7 @@ const ModalEditOrAdd = ({ teamId, modalInfo, setModal }: { teamId: string, modal
         email: data.email.value,
         insta: data.insta.value,
         name: data.name.value,
-        role: data.role.value,
+        role: doc(db, `roles/${data.role.value}`),
       };
       const docRef = doc(db, "members", teamId, "profiles", data.uid.value)
       batch.set(docRef, uploadData);
@@ -376,7 +386,7 @@ const ModalEditOrAdd = ({ teamId, modalInfo, setModal }: { teamId: string, modal
         email: data.email.value,
         insta: data.insta.value,
         name: data.name.value,
-        username: MemberRole[data.role.value as MemberRoleKey].name("zh"),
+        username: roles.find(role => role.id === data.role.value)!.name.zh,
         isSchool: true,
         memberRef: docRef,
         ownedBooks: []
@@ -409,9 +419,9 @@ const ModalEditOrAdd = ({ teamId, modalInfo, setModal }: { teamId: string, modal
         <div className="flex flex-col w-72 gap-3">
           <div className="flex flex-col gap-1 justify-center text-main2">
             <h2 className='text-lg font-medium text-main'>組別</h2>
-            <select value={data.role.value} onChange={(e) => { data.role.setValue(parseInt(e.target.value)) }} className="text-sm text-main bg-transparent border-[1.5px] border-main px-2 py-1 rounded select-none outline-none">
-              {Object.values(MemberRole).map((role, index) => (
-                <option key={index} value={role.id}>{role.name("zh")}</option>
+            <select value={data.role.value} onChange={(e) => { data.role.setValue(e.target.value) }} className="text-sm text-main bg-transparent border-[1.5px] border-main px-2 py-1 rounded select-none outline-none">
+              {roles.map((role, index) => (
+                <option key={index} value={role.id}>{role.name["zh"]}</option>
               ))}
             </select>
             {data.role.error && <span className="text-xs text-red-600">{data.role.error}</span>}

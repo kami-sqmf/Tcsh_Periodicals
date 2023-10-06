@@ -20,10 +20,9 @@ export function generateMetadata({ params }: { params: { locale: LangCode } }): 
 async function Account({ params }: { params: { locale: LangCode } }) {
   const lang = params.locale;
   const session = await getServerSession(authOptions);
-  if (!session?.firestore) {
+  if (!session?.account) {
     redirect('/accounts/signin');
   }
-  if (_.isObject(session?.firestore.data.memberRef)) if (session?.firestore.data.memberRef.path) session!.firestore.data.memberRef = session?.firestore.data.memberRef.path as any;
   return (
     <PageWrapper withNavbar={true} withNotifications={false} lang={params.locale}>
       <BreadcrumbServerWrapper args={[{ title: webInfo.webMap.accounts.title(lang) as string, href: webInfo.webMap.accounts.href, icon: webInfo.webMap.accounts.nav.icon }]} />
@@ -36,7 +35,7 @@ async function Account({ params }: { params: { locale: LangCode } }) {
         </Suspense>
         <Suspense fallback={<div className="min-h-[50vh] w-full flex justify-center items-center"><Loading className="" text="帳戶資訊載入中" /></div>}>
           <div className='inline-grid mt-2 md:mt-0 md:ml-2 border-2 border-main justify-center overflow-hidden'>
-            <Profile profile={session.firestore.data} lang={lang} />
+            <Profile profile={session.account} lang={lang} />
           </div>
         </Suspense>
       </div>

@@ -1,5 +1,4 @@
 import { OutputData } from "@editorjs/editorjs";
-import { MemberRoleKey } from "../../tcsh_periodicals/types/role";
 import { DocumentData, FieldValue } from "firebase/firestore";
 import { CategoriesDocument } from "@/../tcsh_periodicals/types/firestore";
 import { LangCode } from "./i18n";
@@ -73,16 +72,39 @@ interface Post {
     url: string;
 };
 
-/** Col: Accounts or Member */
-type AccountsUni = Accounts<"Account"> | Accounts<"Member">;
-interface Accounts<Type extends "Member" | "Account"> {
-    type: Type;
-    data: Account;
-};
-
 type classLevel = "1" | "2" | "3";
 type Class = `J${classLevel}${"1" | "2" | "3" | "4" | "5" | "6" | "7"}` | `S${classLevel}${"1" | "2" | "3" | "4" | "5"}`
 /** Col: Members' Doc */
+interface AccountFB {
+    uid: string;
+    avatar: string;
+    bio: string | null;
+    class: Class | null;
+    customTitle: string | null | undefined;
+    email: string | null;
+    insta: string | null;
+    name: string;
+    username: string;
+    isSchool: boolean;
+    memberRef: DocumentReference<DocumentData> | null;
+    ownedBooks: string[];
+};
+
+interface Account {
+    uid: string;
+    avatar: string;
+    bio: string | null;
+    class: Class | null;
+    customTitle: string | null | undefined;
+    email: string | null;
+    insta: string | null;
+    name: string;
+    username: string;
+    isSchool: boolean;
+    memberRef: string | null;
+    rolePath?: string;
+    ownedBooks: string[];
+};
 interface Members {
     team: number;
     teamId: string;
@@ -98,22 +120,22 @@ interface Member {
     email: string | null;
     insta: string;
     name: string;
-    role: MemberRoleKey;
+    role: DocumentReference<DocumentData>;
+    roleInfo?: Role;
 };
-/** Col: Accounts' Doc */
-interface Account {
-    uid: string;
-    avatar: string;
-    bio: string | null;
-    class: Class | null;
-    customTitle: string | null | undefined;
-    email: string | null;
-    insta: string | null;
-    name: string;
-    username: string;
-    isSchool: boolean;
-    memberRef: DocumentReference<DocumentData>;
-    ownedBooks: string[];
+
+interface Role {
+    parent: boolean;
+    childs: DocumentReference<DocumentData>[];
+    order: number;
+    id: string;
+    name: {
+        zh: string;
+        ja: string;
+        en: string;
+        de: string;
+    };
+    premissions: boolean;
 };
 
 /** Col: Ebooks' Doc */

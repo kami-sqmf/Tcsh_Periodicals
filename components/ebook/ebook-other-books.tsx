@@ -1,12 +1,12 @@
 import i18nDefault from '@/translation/ebook/zh.json';
-import { AccountsUni, EBooks } from "@/types/firestore";
+import { Account, EBooks } from "@/types/firestore";
 import { LangCode } from '@/types/i18n';
 import i18n from '@/utils/i18n';
 import { EbookBookCover } from './ebook-book-cover';
 import { checkOwnedBook } from './ebook-current-book';
 import { EbookModalWrapper } from './ebook-modal-wrapper';
 
-const EbookOtherBooks = ({ lang, className = "", otherBooks, account }: { lang: LangCode; className?: string; otherBooks: EBooks[]; account: AccountsUni | undefined }) => {
+const EbookOtherBooks = ({ lang, className = "", otherBooks, account }: { lang: LangCode; className?: string; otherBooks: EBooks[]; account: Account | undefined }) => {
   const t = new i18n<typeof i18nDefault>(lang, "ebook");
   return (
     <div className={`${className} grid ${otherBooks.length === 1 ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-4"} gap-6 justify-items-center my-4 px-8 py-12 bg-background2 rounded`}>

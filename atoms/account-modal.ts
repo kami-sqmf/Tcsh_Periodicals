@@ -1,5 +1,5 @@
 import { atom } from "recoil";
-import { Account, AccountsUni } from "../types/firestore";
+import { Account } from "../types/firestore";
 
 export const profileModal = atom({
     key: "modalOpen",
