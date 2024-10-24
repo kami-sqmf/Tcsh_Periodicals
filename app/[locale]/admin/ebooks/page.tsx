@@ -19,7 +19,7 @@ import { addDoc, collection, deleteDoc, doc, DocumentData, DocumentReference, ge
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import Image from "next/image";
 import Link from "next/link";
-import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, Dispatch, FormEvent, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 import { Line } from 'react-chartjs-2';
 import { RiAddCircleFill, RiAddCircleLine, RiCheckDoubleFill, RiClipboardFill, RiClipboardLine, RiDeleteBin5Fill, RiDeleteBin5Line, RiEdit2Fill, RiEdit2Line, RiInformationFill, RiInformationLine, RiKey2Fill, RiKey2Line, RiLineChartFill, RiLineChartLine } from "react-icons/ri";
 
@@ -31,8 +31,9 @@ const EbookBookCover = ({ className = "", thumbnail, title, size }: { className?
   </div>)
 }
 
-export default function AdminEbooks({ params }: { params: { locale: LangCode } }) {
-  const t = new i18n<typeof i18nDefault>(params.locale, "ebook");
+export default function Page({ params }) {
+  const { locale }: { locale: LangCode } = React.use(params)
+  const t = new i18n<typeof i18nDefault>(locale, "ebook");
   const dataFetchedRef = useRef<boolean>(false);
   const [modalInfo, setModalInfo] = useState<ModalInfo>(null);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -68,7 +69,7 @@ export default function AdminEbooks({ params }: { params: { locale: LangCode } }
   }
   return (
     <>
-      <BreadcrumbWrapper args={[{ title: webInfo.webMap.admin.title(params.locale) as string, href: webInfo.webMap.admin.href, icon: webInfo.webMap.admin.nav.icon }, { title: webInfo.webMap.admin.child.ebooks.title(params.locale) as string, href: webInfo.webMap.admin.child.ebooks.href, icon: webInfo.webMap.admin.child.ebooks.nav.icon }]} />
+      <BreadcrumbWrapper args={[{ title: webInfo.webMap.admin.title(locale) as string, href: webInfo.webMap.admin.href, icon: webInfo.webMap.admin.nav.icon }, { title: webInfo.webMap.admin.child.ebooks.title(locale) as string, href: webInfo.webMap.admin.child.ebooks.href, icon: webInfo.webMap.admin.child.ebooks.nav.icon }]} />
       {serverSnapshot ?
         <AdminManageWrapper
           ready={!!serverSnapshot}

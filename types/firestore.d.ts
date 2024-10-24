@@ -135,7 +135,7 @@ interface Role {
         en: string;
         de: string;
     };
-    premissions: boolean;
+    premissions: string[];
 };
 
 /** Col: Ebooks' Doc */

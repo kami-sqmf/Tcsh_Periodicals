@@ -15,7 +15,7 @@ import Image from "next/image";
 import { ChangeEvent, Dispatch, FormEvent, Fragment, MouseEvent, SetStateAction, useEffect, useRef, useState } from "react";
 import { RiAddCircleFill, RiAddCircleLine, RiArrowDownCircleFill, RiArrowDownCircleLine, RiArrowUpCircleFill, RiArrowUpCircleLine, RiCloseFill, RiCloseLine, RiDeleteBin5Fill, RiDeleteBin5Line, RiEdit2Fill, RiEdit2Line } from "react-icons/ri";
 
-export default function AdminSlide({ params }: { params: { locale: LangCode } }) {
+export default function Page({ params }: { params: { locale: LangCode } }) {
   const dataFetchedRef = useRef<boolean>(false);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [modalInfo, setModalInfo] = useState<ModalInfo>(null);

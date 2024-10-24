@@ -1,3 +1,4 @@
+"use server";
 import { BreadcrumbServerWrapper } from "@/components/breadcumb/breadcumb-server";
 import { LangCode } from "@/types/i18n";
 import { webInfo } from "@/utils/config";
@@ -148,10 +149,10 @@ const content: {
   ],
 }
 
-export default function CookiePolicy({ params }: { params: { locale: LangCode } }) {
+export default async function Page({ params }: { params: { locale: LangCode } }) {
   return (
     <>
-      <BreadcrumbServerWrapper args={[{ title: webInfo.webMap.policy.title(params.locale) as string, href: webInfo.webMap.policy.href, icon: webInfo.webMap.policy.nav.icon }, { title: webInfo.webMap.policy.child.cookie.title(params.locale) as string, href: webInfo.webMap.policy.child.cookie.href, icon: webInfo.webMap.policy.child.cookie.nav.icon }]} />
+      <BreadcrumbServerWrapper args={[{ title: webInfo.webMap.policy.title(await params.locale) as string, href: webInfo.webMap.policy.href, icon: webInfo.webMap.policy.nav.icon }, { title: webInfo.webMap.policy.child.cookie.title(await params.locale) as string, href: webInfo.webMap.policy.child.cookie.href, icon: webInfo.webMap.policy.child.cookie.nav.icon }]} />
       <div className="relative flex flex-col text-main mt-6 prose-h1:font-black prose-h1:text-4xl prose-h1:mb-4 prose-h2:font-bold prose-h2:text-xl prose-h2:mb-2 prose-h3:font-semibold prose-h3:text-base prose-h4:ml-4 prose-h4:font-normal prose-h4:text-base prose-h5:indent-4 prose-h5:ml-4 prose-h5:mb-3 prose-h5:font-normal prose-h5:text-base prose-a:text-main2">
         <span className="absolute top-0 right-0 text-xs text-main/40 mt-4">This webpage only provided in Mandarin and English.</span>
         {content[params.locale === "zh" ? "zh" : "en"].map((content, key) => {

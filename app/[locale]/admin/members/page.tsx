@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 const _ = require('lodash');
@@ -20,10 +19,10 @@ import Link from "next/link";
 import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useEffect, useRef, useState } from "react";
 import { RiAddBoxFill, RiAddBoxLine, RiAddCircleFill, RiAddCircleLine, RiDeleteBin5Fill, RiDeleteBin5Line, RiEdit2Fill, RiEdit2Line, RiEyeOffFill, RiEyeOffLine, RiInformationFill, RiInformationLine, RiInstagramLine } from "react-icons/ri";
 
-export default function AdminMembers({ params }: { params: { locale: LangCode } }) {
+export default function Page({ params }: { params: { locale: LangCode } }) {
   const dataFetchedRef = useRef<boolean>(false);
   const unsubscribeSnapshot = useRef<Unsubscribe>();
-  const [roles, setRoles] = useState<Role[]>([{ parent: false, childs: [], order: 0, id: "", name: { zh: "", ja: "", en: "", de: "", }, premissions: false, }]);
+  const [roles, setRoles] = useState<Role[]>([{ parent: false, childs: [], order: 0, id: "", name: { zh: "", ja: "", en: "", de: "", }, premissions: [], }]);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [modalInfo, setModalInfo] = useState<ModalInfo>(null);
   const [teamFilter, setTeamFilter] = useState<number>(0);
@@ -56,7 +55,7 @@ export default function AdminMembers({ params }: { params: { locale: LangCode } 
             ...doc.data(),
             roleInfo: roles.find(role => doc.data().role.path.includes(role.id))
           };
-        }).sort((a,b)=> a.roleInfo!.order - b.roleInfo!.order) as Member[]
+        }).sort((a, b) => a.roleInfo!.order - b.roleInfo!.order) as Member[]
       });
     })
   }, [teamFilter])
@@ -276,14 +275,14 @@ const ModalHideTeam = ({ team, teamId, teamPresent, setModal }: { team: number; 
     setLodaing(false);
     setModal(false);
   }
-  if (lodaing) return (<div className="w-full h-full flex justify-center items-center"><Loading text="刪除中" /></div>)
+  if (lodaing) return (<div className="w-full h-full flex justify-center items-center"><Loading text="更改狀態中" /></div>)
   else return (
     <form className="flex flex-col space-y-2 max-w-xs" onSubmit={onDeleteSubmit}>
       <p className="w-full px-4 py-2 text-center text-background2 bg-main/60">若你未讀完以下資訊，你將會後悔莫及！</p>
       <h2>經過這個動作所有人都{teamPresent ? "暫時不會" : "會"}看到{teamParser('zh', team)}的成員了！請問你確定嗎？</h2>
       <h3>如果你確定要{teamPresent ? "隱藏" : "顯示"}本屆的話，請在下方輸入框輸入{teamParser('zh', team)}的 ID：『{teamId}』</h3>
-      <input type="text" value={value} onChange={(e) => setValue(e.target.value)} pattern={teamId} placeholder={teamId} autoComplete="false" className="px-2 py-1 bg-transparent border-2 border-red-700 focus:border-red-900 rounded-lg focus:outline-none" />
-      <button disabled={value !== teamId} className="disabled:bg-red-600/40 bg-red-600/90 py-1 text-background2 rounded-md">刪除</button>
+      <input type="text" value={value} onChange={(e) => setValue(e.target.value)} pattern={teamId} placeholder={teamId} autoComplete="false" className="px-2 py-1 bg-transparent border-2 border-green-700 focus:border-green-900 rounded-lg focus:outline-none" />
+      <button disabled={value !== teamId} className="disabled:bg-green-600/40 bg-green-600/90 py-1 text-background2 rounded-md">更改為{teamPresent ? "非公開" : "公開"}</button>
     </form>
   )
 }

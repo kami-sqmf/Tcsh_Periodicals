@@ -33,7 +33,7 @@ const sections = [{
   iconHover: RiImage2Fill,
 },]
 
-export default function AdminUrStory({ params }: { params: { locale: LangCode } }) {
+export default function Page({ params }: { params: { locale: LangCode } }) {
   const dataFetchedRef = useRef<boolean>(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [serverSnapshot, setServerSnapshot] = useState<{ id: string; data: IdeaUrStory }[]>();

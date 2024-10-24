@@ -9,7 +9,11 @@ import { db } from "./firebase";
 
 const getThumbnailsBlurData = async (imageUrl: string, errorThumbnail?: string) => {
   try {
-    const { base64 } = await getPlaiceholder(imageUrl);
+    if (imageUrl.startsWith("/assests/ebook")) return "N9J8Cf9$5F~W-=4.0F$1v{E2IU%L00x@x=IUjs-;";
+    const buffer = await fetch(imageUrl).then(async (res) =>
+      Buffer.from(await res.arrayBuffer())
+    );
+    const { base64 } = await getPlaiceholder(buffer);
     return base64;
   } catch (err) {
     return errorThumbnail || "N9J8Cf9$5F~W-=4.0F$1v{E2IU%L00x@x=IUjs-;";
@@ -84,11 +88,14 @@ export async function getAccount(email: string): Promise<AccountFB | null> {
   return null;
 }
 
-export async function isAdmin(firestore: Account): Promise<boolean> {
+export async function getPremissions(firestore: Account): Promise<string[] | false> {
   if (!firestore.rolePath) return false;
   const roleInfo = await getRefDocFromCacheOrServer<Role>(doc(db, firestore.rolePath));
-  if (roleInfo.premissions) return true;
-  return false;
+  if (!roleInfo.premissions) return false;
+  if (roleInfo.premissions.length === 0) return false;
+  if (roleInfo.premissions as any === true) return ["ALL_ALLOWED"]
+  const premissions = roleInfo.premissions;
+  return premissions;
 }
 
 export const getRoles = cache(async () => {

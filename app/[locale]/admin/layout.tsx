@@ -1,48 +1,41 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
-import { LoginInner } from "@/components/global/login-inner"
+import { auth } from "@/app/api/auth/[...nextauth]/auth"
+import { AccessDenied } from "@/components/global/access-denied"
 import { PageWrapper } from "@/components/global/page-wrapper"
-import DefaultError from "@/public/assests/defaultProfile.png"
 import { LangCode } from "@/types/i18n"
 import { webInfo } from "@/utils/config"
-import { isAdmin } from "@/utils/get-firestore"
+import { getPremissions } from "@/utils/get-firestore"
 import { MetadataDefaultGenerator } from "@/utils/head"
 import { Metadata } from "next"
-import { getServerSession } from "next-auth"
 import { headers } from "next/headers"
-import Image from "next/image"
 import { notFound } from "next/navigation"
 
-export function generateMetadata({ params }: { params: { locale: LangCode } }): Metadata {
-  return MetadataDefaultGenerator(webInfo.webMap.admin, params.locale);
+export async function generateMetadata({ params }: { params: { locale: LangCode } }): Promise<Metadata> {
+  return MetadataDefaultGenerator(webInfo.webMap.admin, await params.locale);
 }
 
 export default async function AdminLayout({ children, params }: {
   children: React.ReactNode,
-  params: { locale: LangCode }
+  params: { locale: LangCode; }
 }) {
-  const headersList = headers();
+  const headersList = await headers();
   const header_url = new URL(headersList.get('x-url') || "");
-  const session = await getServerSession(authOptions);
-  const admin = session?.account ? await isAdmin(session.account) : false;
-  if (!admin) {
-    if (header_url.pathname === "/admin/idea-urstory") {
-      return (
-        <PageWrapper withNavbar={true} withNotifications={false} lang={params.locale}>
-          <div className="h-[50vh] flex flex-col justify-center gap-4 items-center">
-            <Image src={DefaultError} className="rounded-full overflow-hidden object-cover bg-background2 w-32 h-32" alt="大頭貼" />
-            <div className="flex flex-col justify-center items-center text-main px-4 py-3 border-2 border-main2 rounded">
-              <h1 className="text-lg">錯誤 403</h1>
-              <h2 className="text-main/80">抱歉，請您先登入您的管理員帳號！</h2>
-              <LoginInner userAgent={"Kamibroswer/AKAH AdminSite/2.0.2"} callback="/admin/idea-urstory" lang={params.locale} />
-            </div>
-          </div>
-        </PageWrapper>
-      )
-    }
-    notFound();
+  const session = await auth()
+  const premissions = session?.account ? await getPremissions(session.account) : false;
+  if (!premissions) {
+    if (header_url.pathname === "/admin/idea-urstory") return (
+      <PageWrapper withNavbar={true} withNotifications={false} lang={await params.locale}>
+        <AccessDenied locale={params.locale} text="抱歉，請您先登入您的管理員帳號！" />
+      </PageWrapper>
+    );
+    return notFound();
   }
+  if (!premissions.includes("ALL_ALLOWED") && !premissions.includes("ADMIN_OVERVIEW")) return (
+    <PageWrapper withNavbar={true} withNotifications={false} lang={await params.locale}>
+      <AccessDenied locale={params.locale} />
+    </PageWrapper>
+  );
   return (
-    <PageWrapper withNavbar={true} withNotifications={false} lang={params.locale}>
+    <PageWrapper withNavbar={true} withNotifications={false} lang={await params.locale}>
       {children}
     </PageWrapper>
   )

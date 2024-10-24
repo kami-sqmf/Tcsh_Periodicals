@@ -22,7 +22,7 @@ const defaultNotification: Notification = {
   type: "alert"
 }
 
-export default function AdminNotifications({ params }: { params: { locale: LangCode } }) {
+export default function Page({ params }: { params: { locale: LangCode } }) {
   // const t = new i18n<typeof i18nDefault>(params.locale, "index");
   const dataFetchedRef = useRef<boolean>(false);
   const [serverSnapshot, setServerSnapshot] = useState<{ id: string; data: Notification }[]>();
@@ -137,11 +137,11 @@ const OperationsWrapper = ({ nId = "", noti, order, serverSnapshot }: { nId?: st
 const NotiTypeSelect = ({ defaultValue = "success", Ref, onChange }: { defaultValue?: string; Ref: RefObject<any>; onChange: (e: ChangeEvent<HTMLSelectElement>) => void; }) => {
   const [value, setValue] = useState(defaultValue);
   useEffect(() => setValue(defaultValue), [defaultValue]);
-  return <select className='flex mr-4 md:mr-0 text-main bg-transparent border-b border-main outline-none focus:text-main2 rounded-lg' placeholder='選取模式！' value={value} ref={Ref} onChange={(e) => { setValue(e.target.value); onChange; }}>
+  return (<select className='flex mr-4 md:mr-0 text-main bg-transparent border-b border-main outline-none focus:text-main2 rounded-lg' value={value} ref={Ref} onChange={(e) => { setValue(e.target.value); onChange; }}>
     <option key={1} value={"alert"}>{"警示"}</option>
     <option key={2} value={"success"}>{"成功"}</option>
     <option key={3} value={"error"}>{"失敗"}</option>
-  </select>
+  </select>)
 }
 
 const InputField = ({ className = "", placeholder, defaultValue = "", Ref, onChange }: { className?: string; placeholder: string, defaultValue?: string; Ref: RefObject<any>; onChange: (e: ChangeEvent<HTMLInputElement>) => void; }) => {

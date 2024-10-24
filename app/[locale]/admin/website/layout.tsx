@@ -1,15 +1,21 @@
+import { auth } from "@/app/api/auth/[...nextauth]/auth";
+import { AccessDenied } from "@/components/global/access-denied";
 import { LangCode } from "@/types/i18n";
 import { webInfo } from "@/utils/config";
+import { getPremissions } from "@/utils/get-firestore";
 import { MetadataDefaultGenerator } from "@/utils/head";
 import { Metadata } from "next";
 
-export function generateMetadata({ params }: { params: { locale: LangCode } }): Metadata {
-  return MetadataDefaultGenerator(webInfo.webMap.admin.child.website, params.locale)
+export async function generateMetadata({ params }: { params: { locale: LangCode } }): Promise<Metadata> {
+  return MetadataDefaultGenerator(webInfo.webMap.admin.child.website, await params.locale)
 }
 
-export default function AdminNotificationsLayout({ children }: {
+export default async function AdminNotificationsLayout({ children, params }: {
   children: React.ReactNode,
   params: { locale: LangCode }
 }) {
+  const session = await auth();
+  const premissions = session?.account ? await getPremissions(session.account) : false;
+  if (!premissions || (!premissions.includes("ALL_ALLOWED") && !premissions.includes("WEBSITE_READABLE"))) return <AccessDenied locale={params.locale} />;
   return children;
 }

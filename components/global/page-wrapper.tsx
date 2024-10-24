@@ -6,7 +6,6 @@ export const PageWrapper = ({ children, className = "", operating = false, withN
   <div className='min-h-screen bg-background/90 py-4'>
     <div className={`${className} max-w-xs md:max-w-2xl lg:max-w-4xl xl:max-w-6xl mx-auto`}>
       {withNavbar ? <NavbarWrapper lang={lang} /> : <></>}
-      {/* @ts-expect-error Server Component */}
       {withNotifications && <NotificationWrapper className="mt-2" lang={lang} />}
       {children && children}
     </div>
