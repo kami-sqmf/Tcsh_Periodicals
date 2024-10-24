@@ -20,6 +20,7 @@ import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useEffect, useRef, us
 import { RiAddBoxFill, RiAddBoxLine, RiAddCircleFill, RiAddCircleLine, RiDeleteBin5Fill, RiDeleteBin5Line, RiEdit2Fill, RiEdit2Line, RiEyeOffFill, RiEyeOffLine, RiInformationFill, RiInformationLine, RiInstagramLine } from "react-icons/ri";
 
 export default function Page({ params }: { params: { locale: LangCode } }) {
+  const locale = params.locale;
   const dataFetchedRef = useRef<boolean>(false);
   const unsubscribeSnapshot = useRef<Unsubscribe>();
   const [roles, setRoles] = useState<Role[]>([{ parent: false, childs: [], order: 0, id: "", name: { zh: "", ja: "", en: "", de: "", }, premissions: [], }]);
@@ -61,7 +62,7 @@ export default function Page({ params }: { params: { locale: LangCode } }) {
   }, [teamFilter])
   return (
     <>
-      <BreadcrumbWrapper args={[{ title: webInfo.webMap.admin.title(params.locale) as string, href: webInfo.webMap.admin.href, icon: webInfo.webMap.admin.nav.icon }, { title: webInfo.webMap.admin.child.members.title(params.locale) as string, href: webInfo.webMap.admin.child.members.href, icon: webInfo.webMap.admin.child.members.nav.icon }]} />
+      <BreadcrumbWrapper args={[{ title: webInfo.webMap.admin.title(locale) as string, href: webInfo.webMap.admin.href, icon: webInfo.webMap.admin.nav.icon }, { title: webInfo.webMap.admin.child.members.title(locale) as string, href: webInfo.webMap.admin.child.members.href, icon: webInfo.webMap.admin.child.members.nav.icon }]} />
       {serverSnapshot ?
         <AdminManageWrapper
           ready={!!serverSnapshot}

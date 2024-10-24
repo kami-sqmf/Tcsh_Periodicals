@@ -13,7 +13,7 @@ import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import { RiPlaneFill } from "react-icons/ri";
 
 export default function Page({ params }: { params: { locale: LangCode } }) {
-  // const t = new i18n<typeof i18nDefault>(params.locale, "index");
+  const locale = params.locale;
   const dataFetchedRef = useRef<boolean>(false);
   const [uploading, setUploading] = useState<boolean>(false);
   const [serverSnapshot, setServerSnapshot] = useState<About>();
@@ -26,7 +26,7 @@ export default function Page({ params }: { params: { locale: LangCode } }) {
   })
   return (
     <>
-      <BreadcrumbWrapper args={[{ title: webInfo.webMap.admin.title(params.locale) as string, href: webInfo.webMap.admin.href, icon: webInfo.webMap.admin.nav.icon }, { title: webInfo.webMap.admin.child.website.title(params.locale) as string, href: webInfo.webMap.admin.child.website.href, icon: webInfo.webMap.admin.child.website.nav.icon }]} />
+      <BreadcrumbWrapper args={[{ title: webInfo.webMap.admin.title(locale) as string, href: webInfo.webMap.admin.href, icon: webInfo.webMap.admin.nav.icon }, { title: webInfo.webMap.admin.child.website.title(locale) as string, href: webInfo.webMap.admin.child.website.href, icon: webInfo.webMap.admin.child.website.nav.icon }]} />
       {serverSnapshot && !uploading ?
         <div className='flex flex-col text-main mt-4'>
           <div className="flex flex-col md:flex-row gap-8">

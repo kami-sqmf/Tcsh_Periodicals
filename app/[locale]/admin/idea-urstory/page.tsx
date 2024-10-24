@@ -34,6 +34,7 @@ const sections = [{
 },]
 
 export default function Page({ params }: { params: { locale: LangCode } }) {
+  const locale = params.locale;
   const dataFetchedRef = useRef<boolean>(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [serverSnapshot, setServerSnapshot] = useState<{ id: string; data: IdeaUrStory }[]>();
@@ -49,7 +50,7 @@ export default function Page({ params }: { params: { locale: LangCode } }) {
 
   return (
     <div>
-      <BreadcrumbWrapper args={[{ title: webInfo.webMap.admin.title(params.locale) as string, href: webInfo.webMap.admin.href, icon: webInfo.webMap.admin.nav.icon }, { title: webInfo.webMap.admin.child.ideaUrStory.title(params.locale) as string, href: webInfo.webMap.admin.child.ideaUrStory.href, icon: webInfo.webMap.admin.child.ideaUrStory.nav.icon }]} />
+      <BreadcrumbWrapper args={[{ title: webInfo.webMap.admin.title(locale) as string, href: webInfo.webMap.admin.href, icon: webInfo.webMap.admin.nav.icon }, { title: webInfo.webMap.admin.child.ideaUrStory.title(locale) as string, href: webInfo.webMap.admin.child.ideaUrStory.href, icon: webInfo.webMap.admin.child.ideaUrStory.nav.icon }]} />
       {!serverSnapshot && <div className="min-h-[74vh] w-full flex justify-center items-center"><Loading text="正在載入中" /></div>}
       {serverSnapshot && <div className='max-w-[21.5em] md:max-w-2xl lg:max-w-4xl xl:max-w-6xl mx-auto my-8'>
         <Tab.Group selectedIndex={selectedIndex} onChange={setSelectedIndex}>

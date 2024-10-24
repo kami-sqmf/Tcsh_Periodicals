@@ -14,13 +14,14 @@ export async function generateMetadata({ params }: { params: { locale: LangCode 
 }
 
 export default async function Page({ params }: { params: { locale: LangCode } }) {
+  const locale = params.locale;
   return (
-    <PageWrapper withNavbar={true} withNotifications={true} lang={await params.locale}>
+    <PageWrapper withNavbar={true} withNotifications={true} lang={locale}>
       <SlideWrapper className="!mt-6 md:mt-16" />
-      <BookshelfWrapper className="md:col-span-2" lang={await params.locale} />
+      <BookshelfWrapper className="md:col-span-2" lang={locale} />
       <div className="grid grid-cols-1 md:grid-cols-3 mt-9 md:mt-16 justify-end items-end">
-        <RecommendWrapper className="md:col-span-2" lang={await params.locale} />
-        <AboutWrapper className="md:ml-11" lang={await params.locale} />
+        <RecommendWrapper className="md:col-span-2" lang={locale} />
+        <AboutWrapper className="md:ml-11" lang={locale} />
       </div>
     </PageWrapper>
   )

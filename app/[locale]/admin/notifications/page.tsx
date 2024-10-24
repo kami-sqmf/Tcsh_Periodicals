@@ -23,7 +23,7 @@ const defaultNotification: Notification = {
 }
 
 export default function Page({ params }: { params: { locale: LangCode } }) {
-  // const t = new i18n<typeof i18nDefault>(params.locale, "index");
+  const locale = params.locale;
   const dataFetchedRef = useRef<boolean>(false);
   const [serverSnapshot, setServerSnapshot] = useState<{ id: string; data: Notification }[]>();
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function Page({ params }: { params: { locale: LangCode } }) {
   })
   return (
     <>
-      <BreadcrumbWrapper args={[{ title: webInfo.webMap.admin.title(params.locale) as string, href: webInfo.webMap.admin.href, icon: webInfo.webMap.admin.nav.icon }, { title: webInfo.webMap.admin.child.notification.title(params.locale) as string, href: webInfo.webMap.admin.child.notification.href, icon: webInfo.webMap.admin.child.notification.nav.icon }]} />
+      <BreadcrumbWrapper args={[{ title: webInfo.webMap.admin.title(locale) as string, href: webInfo.webMap.admin.href, icon: webInfo.webMap.admin.nav.icon }, { title: webInfo.webMap.admin.child.notification.title(locale) as string, href: webInfo.webMap.admin.child.notification.href, icon: webInfo.webMap.admin.child.notification.nav.icon }]} />
       {serverSnapshot ?
         <div className='flex flex-col text-main mt-4 space-y-6'>
           <div>

@@ -31,8 +31,8 @@ const EbookBookCover = ({ className = "", thumbnail, title, size }: { className?
   </div>)
 }
 
-export default function Page({ params }) {
-  const { locale }: { locale: LangCode } = React.use(params)
+export default function Page({ params }: { params: { locale: LangCode } }) {
+  const locale = params.locale as LangCode;
   const t = new i18n<typeof i18nDefault>(locale, "ebook");
   const dataFetchedRef = useRef<boolean>(false);
   const [modalInfo, setModalInfo] = useState<ModalInfo>(null);

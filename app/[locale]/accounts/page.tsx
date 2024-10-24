@@ -17,8 +17,8 @@ export async function generateMetadata({ params: { locale } }: { params: { local
   return MetadataDefaultGenerator(webInfo.webMap.accounts, locale)
 }
 
-export default async function Page({ params: { locale } }: { params: { locale: LangCode } }) {
-  const lang = await locale;
+export default async function Page({ params }: { params: { locale: LangCode } }) {
+  const lang = params.locale;
   const session = await auth();
   if (!session?.account) {
     redirect('/accounts/signin');

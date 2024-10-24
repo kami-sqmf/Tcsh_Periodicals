@@ -16,6 +16,7 @@ import { ChangeEvent, Dispatch, FormEvent, Fragment, MouseEvent, SetStateAction,
 import { RiAddCircleFill, RiAddCircleLine, RiArrowDownCircleFill, RiArrowDownCircleLine, RiArrowUpCircleFill, RiArrowUpCircleLine, RiCloseFill, RiCloseLine, RiDeleteBin5Fill, RiDeleteBin5Line, RiEdit2Fill, RiEdit2Line } from "react-icons/ri";
 
 export default function Page({ params }: { params: { locale: LangCode } }) {
+  const locale = params.locale;
   const dataFetchedRef = useRef<boolean>(false);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [modalInfo, setModalInfo] = useState<ModalInfo>(null);
@@ -45,7 +46,7 @@ export default function Page({ params }: { params: { locale: LangCode } }) {
   }
   return (
     <>
-      <BreadcrumbWrapper args={[{ title: webInfo.webMap.admin.title(params.locale) as string, href: webInfo.webMap.admin.href, icon: webInfo.webMap.admin.nav.icon }, { title: webInfo.webMap.admin.child.banner.title(params.locale) as string, href: webInfo.webMap.admin.child.banner.href, icon: webInfo.webMap.admin.child.banner.nav.icon }]} />
+      <BreadcrumbWrapper args={[{ title: webInfo.webMap.admin.title(locale) as string, href: webInfo.webMap.admin.href, icon: webInfo.webMap.admin.nav.icon }, { title: webInfo.webMap.admin.child.banner.title(locale) as string, href: webInfo.webMap.admin.child.banner.href, icon: webInfo.webMap.admin.child.banner.nav.icon }]} />
       {serverSnapshot ?
         <div className='mx-auto my-6 w-full bg-background2 rounded-md min-h-[70vh] px-8 py-6' onClickCapture={onEbookContainerClicked}>
           <ToolBar toolbarStatus={toolbarStatus} setModalOpen={setModalOpen} setModalType={setModalType} modalInfo={modalInfo} serverSnapshot={serverSnapshot} />

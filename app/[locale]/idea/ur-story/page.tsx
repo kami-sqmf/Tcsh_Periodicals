@@ -9,11 +9,12 @@ import { MetadataDefaultGenerator } from "@/utils/head";
 import { Metadata } from "next";
 
 export async function generateMetadata({ params }: { params: { locale: LangCode } }): Promise<Metadata> {
+  const locale = params.locale;
   const config = await getDocFromCacheOrServer<IdeaUrStoryConfig>("idea-urstory", "config");
   return MetadataDefaultGenerator({
     ...webInfo.webMap.ideaUrStory,
     title: () => config.name
-  }, await params.locale)
+  }, locale)
 }
 
 async function getIdeaUrStoryConfig() {
@@ -22,11 +23,12 @@ async function getIdeaUrStoryConfig() {
 }
 
 export default async function Page({ params }: { params: { locale: LangCode } }) {
+  const locale = params.locale;
   const config = await getIdeaUrStoryConfig();
   return (
     <>
-      <IdeaNavbarWrapper lang={await params.locale} name={config.name} version={config.version} />
-      <IdeaUrStroryContentWrapper config={config} lang={await params.locale} className="mt-3" />
+      <IdeaNavbarWrapper lang={locale} name={config.name} version={config.version} />
+      <IdeaUrStroryContentWrapper config={config} lang={locale} className="mt-3" />
     </>
   )
 }
