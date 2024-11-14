@@ -14,13 +14,11 @@ import { Account, Member } from "@/types/firestore";
 import lz from "lz-string";
 
 function accountEncoding(str) {
-  // console.log(str);
   return lz.compressToEncodedURIComponent(JSON.stringify(str));
 }
-export function accountDecoding(str): Account {
-  // console.log(str);
+export function accountDecoding(str: string | null): Account | null {
+  if (!str) return null;
   return JSON.parse(lz.decompressFromEncodedURIComponent(str));
-  return null;
 }
 
 export const config = {

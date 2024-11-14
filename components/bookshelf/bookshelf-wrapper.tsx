@@ -7,7 +7,7 @@ import { BookshelfElement } from "./bookshelf";
 const BookshelfWrapper = async ({ className, lang }: { className?: string; lang: LangCode }) => {
   const books = await getEbooks();
   const session = await auth();
-  const account = accountDecoding(session.account);
+  const account = accountDecoding(session?.account);
   return (
     <div className={`${className} space-y-4`}>
       <BookshelfElement books={books} account={account} lang={lang} />

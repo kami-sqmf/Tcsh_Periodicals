@@ -37,7 +37,7 @@ export async function getEbooks() {
 const EbookContentWrapper = async ({ lang, className = "" }: { lang: LangCode; className?: string }) => {
   const books = await getEbooks();
   const session = await auth();
-  const account = accountDecoding(session.account);
+  const account = accountDecoding(session?.account);
   const currentBook = books.filter(b => !b.locked)[0];
   return (
     <>

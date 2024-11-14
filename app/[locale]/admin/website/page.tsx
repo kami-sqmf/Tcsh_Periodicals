@@ -67,7 +67,7 @@ const TextAreaField = ({ text, value, onClick }: { text: string; value: string; 
   useEffect(() => { setTextareaValue(value); }, [value])
   const clickWithPremissionsCheck = async () => {
     const session = await getSession();
-    const account = accountDecoding(session.account);
+    const account = accountDecoding(session?.account);
     const premissions = session?.account ? await getPremissions(account) : false;
     if (!premissions || (!premissions.includes("ALL_ALLOWED") && !premissions.includes("WEBSITE_EDITABLE"))) {
       const originalText = rowTextareaValue;
@@ -94,7 +94,7 @@ const InputField = ({ text, value, onClick }: { text: string; value: string; onC
   useEffect(() => { setTextValue(value); }, [value])
   const clickWithPremissionsCheck = async () => {
     const session = await getSession();
-    const account = accountDecoding(session.account);
+    const account = accountDecoding(session?.account);
     const premissions = session?.account ? await getPremissions(account) : false;
     if (!premissions || (!premissions.includes("ALL_ALLOWED") && !premissions.includes("WEBSITE_EDITABLE"))) {
       const originalText = textValue;

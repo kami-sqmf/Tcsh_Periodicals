@@ -24,7 +24,7 @@ export default async function AdminNotificationsLayout(
   } = props;
 
   const session = await auth();
-  const account = accountDecoding(session.account);
+  const account = accountDecoding(session?.account);
   const premissions = session?.account ? await getPremissions(account) : false;
   if (!premissions || (!premissions.includes("ALL_ALLOWED") && !premissions.includes("WEBSITE_READABLE"))) return <AccessDenied locale={params.locale} />;
   return children;

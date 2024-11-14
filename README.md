@@ -38,7 +38,10 @@
 > ⚠️ 注意：好像沒有什麼好注意的？
 > 💻 <- 代表曾發布到[正式伺服器](https://periodicals.kami.tw/)，其餘僅發布在[測試伺服器](https://periodicalsalpha.kami.tw/)。
 
-#### Stable 2.1.3
+#### Stable Alpha 2.1.4
+- 修正無登入資訊的錯誤
+
+#### Stable Alpha 2.1.3
 - Update to Next 15.0.3
 - 壓縮用戶資訊以節省流量
 

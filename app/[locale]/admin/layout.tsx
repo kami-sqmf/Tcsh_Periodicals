@@ -29,8 +29,8 @@ export default async function AdminLayout(
   const headersList = await headers();
   const header_url = new URL(headersList.get('x-url') || "");
   const session = await auth();
-  const account = accountDecoding(session.account);
-  const premissions = session?.account ? await getPremissions(account) : false;
+  const account = accountDecoding(session?.account);
+  const premissions = session?.account ? await getPremissions(account || null) : false;
   if (!premissions) {
     if (header_url.pathname === "/admin/idea-urstory") return (
       <PageWrapper withNavbar={true} withNotifications={false} lang={await params.locale}>

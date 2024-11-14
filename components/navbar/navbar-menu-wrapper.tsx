@@ -14,7 +14,7 @@ export const NavbarMenuWrapper = async ({ lang }: { lang: LangCode }) => {
     return `${header_url.pathname}/`.startsWith(lang);
   }) ? `${header_url.pathname}/`.slice(3) : `${header_url.pathname}/`;
   const session = await auth();
-  const account = accountDecoding(session.account);
+  const account = accountDecoding(session?.account);
   const admin = session ? await getPremissions(account) : false;
   const NavbarMenuLink = ({ nav }: { nav: WebMapIndex<"Parent"> }) => {
     if (!nav.nav) return (<></>);
