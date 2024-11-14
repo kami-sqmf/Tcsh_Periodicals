@@ -1,12 +1,11 @@
-/** @type {import('next').NextConfig} */
-const { withPlaiceholder } = require("@plaiceholder/next");
+// @ts-check
+import withPlaiceholder from "@plaiceholder/next";
 
-const nextConfig = withPlaiceholder({
-  experimental: {
-    serverActions: true,
-  },
+/**
+ * @type {import('next').NextConfig}
+*/
+const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
   images: {
     remotePatterns: [
       {
@@ -32,6 +31,11 @@ const nextConfig = withPlaiceholder({
       },
     ],
   },
-});
+  experimental: {
+    turbo: {
+      // ...
+    },
+  },
+};
 
-module.exports = nextConfig
+export default withPlaiceholder(nextConfig);

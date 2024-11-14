@@ -1,12 +1,15 @@
+"use server";
 import { BreadcrumbServerWrapper } from "@/components/breadcumb/breadcumb-server";
 import { LangCode } from "@/types/i18n";
 import { webInfo } from "@/utils/config";
 import Link from "next/link";
 
-export default function PolicyPrivacy({ params }: { params: { locale: LangCode } }) {
+export default async function Page(props: { params: Promise<{ locale: LangCode }> }) {
+  const params = await props.params;
+  const locale = params.locale;
   return (
     <>
-      <BreadcrumbServerWrapper args={[{ title: webInfo.webMap.policy.title(params.locale) as string, href: webInfo.webMap.policy.href, icon: webInfo.webMap.policy.nav.icon }, { title: webInfo.webMap.policy.child.privacy.title(params.locale) as string, href: webInfo.webMap.policy.child.privacy.href, icon: webInfo.webMap.policy.child.privacy.nav.icon }]} />
+      <BreadcrumbServerWrapper args={[{ title: webInfo.webMap.policy.title(locale) as string, href: webInfo.webMap.policy.href, icon: webInfo.webMap.policy.nav.icon }, { title: webInfo.webMap.policy.child.privacy.title(locale) as string, href: webInfo.webMap.policy.child.privacy.href, icon: webInfo.webMap.policy.child.privacy.nav.icon }]} />
       <div className="flex flex-col text-main mt-6 prose-h1:font-black prose-h1:text-4xl prose-h1:mb-4 prose-h2:font-bold prose-h2:text-xl prose-h2:mb-2 prose-h3:mb-4 prose-h3:font-medium prose-h3:text-base prose-h4:ml-4 prose-h4:font-normal prose-h4:text-base prose-h5:indent-4 prose-h5:ml-4 prose-h5:mb-3 prose-h5:font-normal prose-h5:text-base">
         <div className="flex flex-row w-full justify-between items-baseline">
           <h1>隱私條款</h1>

@@ -1,15 +1,21 @@
-import { Analytics } from '@vercel/analytics/react';
-
 // export async function generateStaticParams() {
 //   return Object.keys(languages).map((locale) => ({ locale }))
 // }
 
-export default async function RootLayout({ children, params }: {
-  children: React.ReactNode,
-  params: { locale: string }
-}) {
+export default async function RootLayout(
+  props: {
+    children: React.ReactNode,
+    params: Promise<{ locale: string }>
+  }
+) {
+  const params = await props.params;
+
+  const {
+    children
+  } = props;
+
   return (
-    <html lang={params.locale}>
+    <html lang={await params.locale}>
       <head>
         <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
@@ -21,7 +27,6 @@ export default async function RootLayout({ children, params }: {
       <meta property="fb:app_id" content="5964310810278637" />
       <body >
         {children}
-        <Analytics />
       </body>
     </html>
   )

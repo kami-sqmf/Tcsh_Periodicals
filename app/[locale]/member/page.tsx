@@ -1,13 +1,14 @@
+"use server";
 import { MembersContentWrapper } from "@/components/member/member-content-wrapper";
 import { LangCode } from "@/types/i18n";
 
 
-export default function Member({ params }: { params: { locale: LangCode } }) {
-  // const t = new i18n<typeof i18nDefault>(params.locale, "index");
+export default async function Page(props: { params: Promise<{ locale: LangCode }> }) {
+  const params = await props.params;
+  const locale = params.locale;
   return (
     <>
-      {/* @ts-expect-error Server Component */}
-      <MembersContentWrapper lang={params.locale} />
+      <MembersContentWrapper lang={locale} />
     </> 
   )
 }

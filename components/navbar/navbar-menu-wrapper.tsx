@@ -1,21 +1,21 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { accountDecoding, auth } from "@/app/api/auth/[...nextauth]/auth";
 import { LangCode } from "@/types/i18n";
 import { WebMapIndex } from "@/types/webmap";
 import { languages, webInfo } from "@/utils/config";
-import { isAdmin } from "@/utils/get-firestore";
-import { getServerSession } from "next-auth";
+import { getPremissions } from "@/utils/get-firestore";
 import { headers } from 'next/headers';
 import Link from "next/link";
 import { HoverICON } from "../global/hover-icon";
 
 export const NavbarMenuWrapper = async ({ lang }: { lang: LangCode }) => {
-  const headersList = headers();
+  const headersList = await headers();
   const header_url = new URL(headersList.get('x-url') || `https://${webInfo.subdomian ? webInfo.subdomian + "." : ""}${webInfo.domain}/`);
   const header_pathname = Object.keys(languages).map(lang => `/${lang}/`).some((lang) => {
     return `${header_url.pathname}/`.startsWith(lang);
   }) ? `${header_url.pathname}/`.slice(3) : `${header_url.pathname}/`;
-  const session = await getServerSession(authOptions);
-  const admin = session ? await isAdmin(session.account) : false;
+  const session = await auth();
+  const account = accountDecoding(session?.account);
+  const admin = session ? await getPremissions(account) : false;
   const NavbarMenuLink = ({ nav }: { nav: WebMapIndex<"Parent"> }) => {
     if (!nav.nav) return (<></>);
     return (

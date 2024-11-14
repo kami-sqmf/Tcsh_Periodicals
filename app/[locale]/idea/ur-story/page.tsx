@@ -1,3 +1,4 @@
+"use server";
 import { IdeaUrStroryContentWrapper } from "@/components/idea/idea-content-wrapper";
 import { IdeaNavbarWrapper } from "@/components/idea/idea-navbar-wrapper";
 import { IdeaUrStoryConfig } from "@/types/firestore";
@@ -7,14 +8,14 @@ import { getDocFromCacheOrServer } from "@/utils/get-firestore";
 import { MetadataDefaultGenerator } from "@/utils/head";
 import { Metadata } from "next";
 
-export const revalidate = 300;
-
-export async function generateMetadata({ params }: { params: { locale: LangCode } }): Promise<Metadata> {
+export async function generateMetadata(props: { params: Promise<{ locale: LangCode }> }): Promise<Metadata> {
+  const params = await props.params;
+  const locale = params.locale;
   const config = await getDocFromCacheOrServer<IdeaUrStoryConfig>("idea-urstory", "config");
   return MetadataDefaultGenerator({
     ...webInfo.webMap.ideaUrStory,
     title: () => config.name
-  }, params.locale)
+  }, locale)
 }
 
 async function getIdeaUrStoryConfig() {
@@ -22,12 +23,14 @@ async function getIdeaUrStoryConfig() {
   return config;
 }
 
-export default async function IdeaUrStory({ params }: { params: { locale: LangCode } }) {
+export default async function Page(props: { params: Promise<{ locale: LangCode }> }) {
+  const params = await props.params;
+  const locale = params.locale;
   const config = await getIdeaUrStoryConfig();
   return (
     <>
-      <IdeaNavbarWrapper lang={params.locale} name={config.name} version={config.version} />
-      <IdeaUrStroryContentWrapper config={config} lang={params.locale} className="mt-3" />
+      <IdeaNavbarWrapper lang={locale} name={config.name} version={config.version} />
+      <IdeaUrStroryContentWrapper config={config} lang={locale} className="mt-3" />
     </>
   )
 }

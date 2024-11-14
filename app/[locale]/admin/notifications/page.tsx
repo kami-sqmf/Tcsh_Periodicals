@@ -9,7 +9,7 @@ import { LangCode } from "@/types/i18n";
 import { webInfo } from "@/utils/config";
 import { db } from "@/utils/firebase";
 import { addDoc, collection, deleteDoc, doc, onSnapshot, orderBy, query, updateDoc, writeBatch } from "firebase/firestore";
-import { ChangeEvent, RefObject, useEffect, useRef, useState } from "react";
+import { ChangeEvent, RefObject, useEffect, useRef, useState, use } from "react";
 import { RiArrowDownCircleFill, RiArrowDownCircleLine, RiArrowUpCircleFill, RiArrowUpCircleLine } from "react-icons/ri";
 
 const defaultNotification: Notification = {
@@ -22,8 +22,9 @@ const defaultNotification: Notification = {
   type: "alert"
 }
 
-export default function AdminNotifications({ params }: { params: { locale: LangCode } }) {
-  // const t = new i18n<typeof i18nDefault>(params.locale, "index");
+export default function Page(props: { params: Promise<{ locale: LangCode }> }) {
+  const params = use(props.params);
+  const locale = params.locale;
   const dataFetchedRef = useRef<boolean>(false);
   const [serverSnapshot, setServerSnapshot] = useState<{ id: string; data: Notification }[]>();
   useEffect(() => {
@@ -37,7 +38,7 @@ export default function AdminNotifications({ params }: { params: { locale: LangC
   })
   return (
     <>
-      <BreadcrumbWrapper args={[{ title: webInfo.webMap.admin.title(params.locale) as string, href: webInfo.webMap.admin.href, icon: webInfo.webMap.admin.nav.icon }, { title: webInfo.webMap.admin.child.notification.title(params.locale) as string, href: webInfo.webMap.admin.child.notification.href, icon: webInfo.webMap.admin.child.notification.nav.icon }]} />
+      <BreadcrumbWrapper args={[{ title: webInfo.webMap.admin.title(locale) as string, href: webInfo.webMap.admin.href, icon: webInfo.webMap.admin.nav.icon }, { title: webInfo.webMap.admin.child.notification.title(locale) as string, href: webInfo.webMap.admin.child.notification.href, icon: webInfo.webMap.admin.child.notification.nav.icon }]} />
       {serverSnapshot ?
         <div className='flex flex-col text-main mt-4 space-y-6'>
           <div>
@@ -137,11 +138,11 @@ const OperationsWrapper = ({ nId = "", noti, order, serverSnapshot }: { nId?: st
 const NotiTypeSelect = ({ defaultValue = "success", Ref, onChange }: { defaultValue?: string; Ref: RefObject<any>; onChange: (e: ChangeEvent<HTMLSelectElement>) => void; }) => {
   const [value, setValue] = useState(defaultValue);
   useEffect(() => setValue(defaultValue), [defaultValue]);
-  return <select className='flex mr-4 md:mr-0 text-main bg-transparent border-b border-main outline-none focus:text-main2 rounded-lg' placeholder='選取模式！' value={value} ref={Ref} onChange={(e) => { setValue(e.target.value); onChange; }}>
+  return (<select className='flex mr-4 md:mr-0 text-main bg-transparent border-b border-main outline-none focus:text-main2 rounded-lg' value={value} ref={Ref} onChange={(e) => { setValue(e.target.value); onChange; }}>
     <option key={1} value={"alert"}>{"警示"}</option>
     <option key={2} value={"success"}>{"成功"}</option>
     <option key={3} value={"error"}>{"失敗"}</option>
-  </select>
+  </select>)
 }
 
 const InputField = ({ className = "", placeholder, defaultValue = "", Ref, onChange }: { className?: string; placeholder: string, defaultValue?: string; Ref: RefObject<any>; onChange: (e: ChangeEvent<HTMLInputElement>) => void; }) => {

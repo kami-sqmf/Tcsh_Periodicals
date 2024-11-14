@@ -11,39 +11,41 @@ import { encrypt } from "@/utils/crypt"
 const IdeaSectionFinish = ({ setSection, data }: { setSection: Dispatch<SetStateAction<number>>; data: MutableRefObject<IdeaUrStory | undefined> }) => {
   const fileRef = useRef<any>();
   const [uploading, setUploading] = useState(0);
-  const onRefChange = useCallback(async (node: HTMLDivElement) => {
+  const onRefChange = useCallback((node: HTMLDivElement) => {
     if (node === null) return;
-    if (data.current?.type === "text") {
-      const key = encrypt(data.current.content.slice(0, 6));
-      const doc = await addDoc(collection(db, "idea-urstory"), {
-        type: data.current?.type,
-        content: data.current.content,
-        class: data.current?.class || "",
-        name: data.current?.name || "",
-        createdTimestamp: data.current?.createdTimestamp,
-      })
-      fileRef.current = { docId: doc.id, key: key };
-      setUploading(1);
-    } else {
-      try {
-        const imageRef = ref(storage, `/idea-urstory/${makeid(18)}`);
-        const snapshot = await uploadBytes(imageRef, data.current!.file);
-        const downloadUrl = await getDownloadURL(imageRef);
-        const key = encrypt(data.current?.content.slice(0, 6) || downloadUrl.slice(0, 6));
+    (async () => {
+      if (data.current?.type === "text") {
+        const key = encrypt(data.current.content.slice(0, 6));
         const doc = await addDoc(collection(db, "idea-urstory"), {
           type: data.current?.type,
-          url: downloadUrl,
-          content: data.current?.content,
+          content: data.current.content,
           class: data.current?.class || "",
           name: data.current?.name || "",
           createdTimestamp: data.current?.createdTimestamp,
         })
-        fileRef.current = { docId: doc.id, imageRef: imageRef, downloadUrl: downloadUrl, key: key };
+        fileRef.current = { docId: doc.id, key: key };
         setUploading(1);
-      } catch (e) {
-        setUploading(1);
+      } else {
+        try {
+          const imageRef = ref(storage, `/idea-urstory/${makeid(18)}`);
+          const snapshot = await uploadBytes(imageRef, data.current!.file);
+          const downloadUrl = await getDownloadURL(imageRef);
+          const key = encrypt(data.current?.content.slice(0, 6) || downloadUrl.slice(0, 6));
+          const doc = await addDoc(collection(db, "idea-urstory"), {
+            type: data.current?.type,
+            url: downloadUrl,
+            content: data.current?.content,
+            class: data.current?.class || "",
+            name: data.current?.name || "",
+            createdTimestamp: data.current?.createdTimestamp,
+          })
+          fileRef.current = { docId: doc.id, imageRef: imageRef, downloadUrl: downloadUrl, key: key };
+          setUploading(1);
+        } catch (e) {
+          setUploading(1);
+        }
       }
-    }
+    })();
   }, []);
   const onCancelClicked = async () => {
     if (fileRef.current.imageRef) {

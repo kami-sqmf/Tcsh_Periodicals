@@ -11,8 +11,8 @@ export const metadata: Metadata = {
   description: '抱歉，目前小精靈找不到您想要查看的資源！',
 };
 
-export default function NotFound() {
-  const cookieStore = cookies();
+export default async function NotFound() {
+  const cookieStore = await cookies();
   const lang = cookieStore.get('prefered_language');
   return (
     <html lang={lang?.value || "zh"}>

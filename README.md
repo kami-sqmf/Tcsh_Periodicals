@@ -38,6 +38,18 @@
 > ⚠️ 注意：好像沒有什麼好注意的？
 > 💻 <- 代表曾發布到[正式伺服器](https://periodicals.kami.tw/)，其餘僅發布在[測試伺服器](https://periodicalsalpha.kami.tw/)。
 
+#### Stable Alpha 2.1.4
+- 修正無登入資訊的錯誤
+
+#### Stable Alpha 2.1.3
+- Update to Next 15.0.3
+- 壓縮用戶資訊以節省流量
+
+#### Stable Alpha 2.1.2 (不可運行)
+- 新增首頁電子書預覽功能！
+- 修正成員陣容管理中（顯示/隱藏屆）的文字錯誤
+- Preparetion of Migration of Next.js 14/15 (dynamic routes require empty git commit)
+
 #### Stable 2.1.1
 - 修正 Deploy 錯誤 (TypeError)
 

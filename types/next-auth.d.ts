@@ -3,7 +3,7 @@ import { Account } from "./firestore";
 
 declare module "next-auth" {
   interface Session {
-    account: Account;
+    account: string;
   }
   interface Profile {
     hd: string;
@@ -13,6 +13,6 @@ declare module "next-auth" {
 
 declare module "next-auth/jwt" {
   interface JWT {
-    account: Account;
+    account: string;
   }
 }

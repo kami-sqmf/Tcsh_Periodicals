@@ -1,3 +1,4 @@
+"use server";
 import { getSlides } from "@/utils/get-firestore";
 import { SlideElement } from "./slide";
 
@@ -10,5 +11,4 @@ const SlideWrapper = async ({ className }: { className?: string; }) => {
   )
 }
 
-export const revalidate = 300;
 export { SlideWrapper };
