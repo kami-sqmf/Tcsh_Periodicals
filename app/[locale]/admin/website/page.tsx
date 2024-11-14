@@ -1,5 +1,6 @@
 "use client";
 
+import { accountDecoding } from "@/app/api/auth/[...nextauth]/auth";
 import { BreadcrumbWrapper } from "@/components/breadcumb/breadcumb";
 import { Loading } from "@/components/global/loading";
 import { About } from "@/types/firestore";
@@ -9,10 +10,11 @@ import { db } from "@/utils/firebase";
 import { getPremissions } from "@/utils/get-firestore";
 import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { getSession } from "next-auth/react";
-import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useRef, useState, use } from "react";
 import { RiPlaneFill } from "react-icons/ri";
 
-export default function Page({ params }: { params: { locale: LangCode } }) {
+export default function Page(props: { params: Promise<{ locale: LangCode }> }) {
+  const params = use(props.params);
   const locale = params.locale;
   const dataFetchedRef = useRef<boolean>(false);
   const [uploading, setUploading] = useState<boolean>(false);
@@ -65,7 +67,8 @@ const TextAreaField = ({ text, value, onClick }: { text: string; value: string; 
   useEffect(() => { setTextareaValue(value); }, [value])
   const clickWithPremissionsCheck = async () => {
     const session = await getSession();
-    const premissions = session?.account ? await getPremissions(session.account) : false;
+    const account = accountDecoding(session.account);
+    const premissions = session?.account ? await getPremissions(account) : false;
     if (!premissions || (!premissions.includes("ALL_ALLOWED") && !premissions.includes("WEBSITE_EDITABLE"))) {
       const originalText = rowTextareaValue;
       setTextareaValue("您的權限無法進行修改!!");
@@ -91,7 +94,8 @@ const InputField = ({ text, value, onClick }: { text: string; value: string; onC
   useEffect(() => { setTextValue(value); }, [value])
   const clickWithPremissionsCheck = async () => {
     const session = await getSession();
-    const premissions = session?.account ? await getPremissions(session.account) : false;
+    const account = accountDecoding(session.account);
+    const premissions = session?.account ? await getPremissions(account) : false;
     if (!premissions || (!premissions.includes("ALL_ALLOWED") && !premissions.includes("WEBSITE_EDITABLE"))) {
       const originalText = textValue;
       setTextValue("您的權限無法進行修改!!");

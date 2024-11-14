@@ -10,10 +10,11 @@ import { webInfo } from "@/utils/config";
 import { db } from "@/utils/firebase";
 import i18n from "@/utils/i18n";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, use } from "react";
 
 
-export default function Page({ params }: { params: { locale: LangCode } }) {
+export default function Page(props: { params: Promise<{ locale: LangCode }> }) {
+  const params = use(props.params);
   const locale = params.locale;
   const dataFetchedRef = useRef<boolean>(false);
   const [serverSnapshot, setServerSnapshot] = useState<Role[]>();

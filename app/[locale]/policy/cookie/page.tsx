@@ -149,7 +149,8 @@ const content: {
   ],
 }
 
-export default async function Page({ params }: { params: { locale: LangCode } }) {
+export default async function Page(props: { params: Promise<{ locale: LangCode }> }) {
+  const params = await props.params;
   const locale = params.locale;
   return (
     <>

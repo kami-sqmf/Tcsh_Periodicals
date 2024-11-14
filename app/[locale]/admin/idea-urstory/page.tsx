@@ -13,7 +13,7 @@ import { Tab } from "@headlessui/react";
 import { arrayRemove, arrayUnion, collection, doc, onSnapshot, orderBy, query, updateDoc } from "firebase/firestore";
 import { toBlob } from 'html-to-image';
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, use } from "react";
 import { RiCheckLine, RiCloseLine, RiImage2Fill, RiImage2Line, RiMailCheckFill, RiMailCheckLine, RiMailCloseFill, RiMailCloseLine, RiMailUnreadFill, RiMailUnreadLine, RiMic2Fill, RiMic2Line, RiPlaneFill, RiQuillPenFill, RiQuillPenLine, RiSettings2Fill, RiSettings2Line, RiShareBoxFill, RiShareBoxLine } from "react-icons/ri";
 
 const sections = [{
@@ -33,7 +33,8 @@ const sections = [{
   iconHover: RiImage2Fill,
 },]
 
-export default function Page({ params }: { params: { locale: LangCode } }) {
+export default function Page(props: { params: Promise<{ locale: LangCode }> }) {
+  const params = use(props.params);
   const locale = params.locale;
   const dataFetchedRef = useRef<boolean>(false);
   const [selectedIndex, setSelectedIndex] = useState(0);

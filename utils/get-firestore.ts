@@ -89,13 +89,17 @@ export async function getAccount(email: string): Promise<AccountFB | null> {
 }
 
 export async function getPremissions(firestore: Account): Promise<string[] | false> {
-  if (!firestore.rolePath) return false;
-  const roleInfo = await getRefDocFromCacheOrServer<Role>(doc(db, firestore.rolePath));
-  if (!roleInfo.premissions) return false;
-  if (roleInfo.premissions.length === 0) return false;
-  if (roleInfo.premissions as any === true) return ["ALL_ALLOWED"]
-  const premissions = roleInfo.premissions;
-  return premissions;
+  try {
+    if (!firestore.rolePath) return false;
+    const roleInfo = await getRefDocFromCacheOrServer<Role>(doc(db, firestore.rolePath));
+    if (!roleInfo.premissions) return false;
+    if (roleInfo.premissions.length === 0) return false;
+    if (roleInfo.premissions as any === true) return ["ALL_ALLOWED"]
+    const premissions = roleInfo.premissions;
+    return premissions;
+  } catch (error) {
+    return false;
+  }
 }
 
 export const getRoles = cache(async () => {

@@ -1,4 +1,4 @@
-import { auth } from "@/app/api/auth/[...nextauth]/auth";
+import { accountDecoding, auth } from "@/app/api/auth/[...nextauth]/auth";
 import { LangCode } from "@/types/i18n";
 import { WebMapIndex } from "@/types/webmap";
 import { languages, webInfo } from "@/utils/config";
@@ -14,7 +14,8 @@ export const NavbarMenuWrapper = async ({ lang }: { lang: LangCode }) => {
     return `${header_url.pathname}/`.startsWith(lang);
   }) ? `${header_url.pathname}/`.slice(3) : `${header_url.pathname}/`;
   const session = await auth();
-  const admin = session ? await getPremissions(session.account) : false;
+  const account = accountDecoding(session.account);
+  const admin = session ? await getPremissions(account) : false;
   const NavbarMenuLink = ({ nav }: { nav: WebMapIndex<"Parent"> }) => {
     if (!nav.nav) return (<></>);
     return (

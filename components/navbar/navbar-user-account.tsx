@@ -1,5 +1,5 @@
 const _ = require('lodash');
-import { auth } from "@/app/api/auth/[...nextauth]/auth";
+import { auth, accountDecoding } from "@/app/api/auth/[...nextauth]/auth";
 import { LangCode } from "@/types/i18n";
 import { webInfo } from "@/utils/config";
 import Link from "next/link";

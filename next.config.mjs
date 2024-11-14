@@ -31,6 +31,11 @@ const nextConfig = {
       },
     ],
   },
+  experimental: {
+    turbo: {
+      // ...
+    },
+  },
 };
 
 export default withPlaiceholder(nextConfig);

@@ -13,11 +13,18 @@ import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
-export async function generateMetadata({ params: { locale } }: { params: { locale: LangCode } }): Promise<Metadata> {
+export async function generateMetadata(props: { params: Promise<{ locale: LangCode }> }): Promise<Metadata> {
+  const params = await props.params;
+
+  const {
+    locale
+  } = params;
+
   return MetadataDefaultGenerator(webInfo.webMap.accounts, locale)
 }
 
-export default async function Page({ params }: { params: { locale: LangCode } }) {
+export default async function Page(props: { params: Promise<{ locale: LangCode }> }) {
+  const params = await props.params;
   const lang = params.locale;
   const session = await auth();
   if (!session?.account) {
@@ -34,7 +41,7 @@ export default async function Page({ params }: { params: { locale: LangCode } })
         </Suspense>
         <Suspense fallback={<div className="min-h-[50vh] w-full flex justify-center items-center"><Loading className="" text="帳戶資訊載入中" /></div>}>
           <div className='inline-grid mt-2 md:mt-0 md:ml-2 border-2 border-main justify-center overflow-hidden'>
-            <Profile profile={session.account} lang={lang} />
+            <Profile user={session.account} lang={lang} />
           </div>
         </Suspense>
       </div>

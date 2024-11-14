@@ -7,12 +7,14 @@ import { Metadata } from "next";
 import { headers } from "next/headers";
 import Image from "next/image";
 
-export async function generateMetadata({ params }: { params: { locale: LangCode } }): Promise<Metadata> {
+export async function generateMetadata(props: { params: Promise<{ locale: LangCode }> }): Promise<Metadata> {
+  const params = await props.params;
   return MetadataDefaultGenerator(webInfo.webMap.accounts.child.signIn, await params.locale)
 }
 
 
-export default async function Page({ params }: { params: { locale: LangCode } }) {
+export default async function Page(props: { params: Promise<{ locale: LangCode }> }) {
+  const params = await props.params;
   const locale = params.locale;
   const headersList = await headers();
   const userAgent = headersList.get('user-agent');

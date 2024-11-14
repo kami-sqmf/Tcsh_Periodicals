@@ -5,14 +5,23 @@ import { webInfo } from "@/utils/config"
 import { MetadataDefaultGenerator } from "@/utils/head"
 import { Metadata } from "next"
 
-export async function generateMetadata({ params }: { params: { locale: LangCode } }): Promise<Metadata> {
+export async function generateMetadata(props: { params: Promise<{ locale: LangCode }> }): Promise<Metadata> {
+  const params = await props.params;
   return MetadataDefaultGenerator(webInfo.webMap.postIt, await params.locale)
 }
 
-export default async function PolicyLayout({ children, params }: {
-  children: React.ReactNode,
-  params: { locale: LangCode }
-}) {
+export default async function PolicyLayout(
+  props: {
+    children: React.ReactNode,
+    params: Promise<{ locale: LangCode }>
+  }
+) {
+  const params = await props.params;
+
+  const {
+    children
+  } = props;
+
   return (
     <PageWrapper withNavbar={true} withNotifications={false} lang={await params.locale}>
       {children}

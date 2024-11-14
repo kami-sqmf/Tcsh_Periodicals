@@ -2,10 +2,18 @@
 //   return Object.keys(languages).map((locale) => ({ locale }))
 // }
 
-export default async function RootLayout({ children, params }: {
-  children: React.ReactNode,
-  params: { locale: string }
-}) {
+export default async function RootLayout(
+  props: {
+    children: React.ReactNode,
+    params: Promise<{ locale: string }>
+  }
+) {
+  const params = await props.params;
+
+  const {
+    children
+  } = props;
+
   return (
     <html lang={await params.locale}>
       <head>

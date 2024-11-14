@@ -11,7 +11,7 @@ export const MetadataDefaultGenerator = (pageInfo: WebMapIndex<"Parent"> | WebMa
   robots?: { index: false; follow: boolean; };
   authors?: null | Author | Array<Author>;
   keywords?: string[];
-}): Promise<Metadata> => {
+}): Metadata => {
   const name = lang == "zh" ? "慈中後生 - 文學季刊" : (lang == "ja" ? "慈中後生 - 季刊文芸誌" : "Tzuchi Senior Periodicals");
 return {
   metadataBase: new URL(url),

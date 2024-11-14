@@ -8,7 +8,8 @@ import { getDocFromCacheOrServer } from "@/utils/get-firestore";
 import { MetadataDefaultGenerator } from "@/utils/head";
 import { Metadata } from "next";
 
-export async function generateMetadata({ params }: { params: { locale: LangCode } }): Promise<Metadata> {
+export async function generateMetadata(props: { params: Promise<{ locale: LangCode }> }): Promise<Metadata> {
+  const params = await props.params;
   const locale = params.locale;
   const config = await getDocFromCacheOrServer<IdeaUrStoryConfig>("idea-urstory", "config");
   return MetadataDefaultGenerator({
@@ -22,7 +23,8 @@ async function getIdeaUrStoryConfig() {
   return config;
 }
 
-export default async function Page({ params }: { params: { locale: LangCode } }) {
+export default async function Page(props: { params: Promise<{ locale: LangCode }> }) {
+  const params = await props.params;
   const locale = params.locale;
   const config = await getIdeaUrStoryConfig();
   return (

@@ -1,5 +1,6 @@
 'use client';
 
+import { accountDecoding } from '@/app/api/auth/[...nextauth]/auth';
 import i18nDefault from '@/translation/profile/zh.json';
 import { Account } from "@/types/firestore";
 import { LangCode } from "@/types/i18n";
@@ -11,11 +12,11 @@ import { useState } from 'react';
 import { RiInstagramLine } from "react-icons/ri";
 import { ProfileEditModal } from './profile-edit-modal';
 
-export const Profile = ({ profile, lang }: { profile: Account; lang: LangCode; }) => {
+export const Profile = ({ user, lang }: { user: string; lang: LangCode; }) => {
   const t = new i18n<typeof i18nDefault>(lang, "profile");
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [option, setOption] = useState<(keyof Account)[]>([]);
-  const [profileData, setProfileData] = useState<Account>(profile);
+  const [profileData, setProfileData] = useState<Account>(accountDecoding(user));
   const setChange = (sec: Array<keyof Account>) => {
     setOption(sec);
     setModalOpen(true);

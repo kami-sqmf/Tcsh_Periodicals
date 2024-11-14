@@ -9,7 +9,7 @@ import { LangCode } from "@/types/i18n";
 import { webInfo } from "@/utils/config";
 import { db } from "@/utils/firebase";
 import { addDoc, collection, deleteDoc, doc, onSnapshot, orderBy, query, updateDoc, writeBatch } from "firebase/firestore";
-import { ChangeEvent, RefObject, useEffect, useRef, useState } from "react";
+import { ChangeEvent, RefObject, useEffect, useRef, useState, use } from "react";
 import { RiArrowDownCircleFill, RiArrowDownCircleLine, RiArrowUpCircleFill, RiArrowUpCircleLine } from "react-icons/ri";
 
 const defaultNotification: Notification = {
@@ -22,7 +22,8 @@ const defaultNotification: Notification = {
   type: "alert"
 }
 
-export default function Page({ params }: { params: { locale: LangCode } }) {
+export default function Page(props: { params: Promise<{ locale: LangCode }> }) {
+  const params = use(props.params);
   const locale = params.locale;
   const dataFetchedRef = useRef<boolean>(false);
   const [serverSnapshot, setServerSnapshot] = useState<{ id: string; data: Notification }[]>();

@@ -1,4 +1,4 @@
-import { auth } from "@/app/api/auth/[...nextauth]/auth"
+import { accountDecoding, auth } from "@/app/api/auth/[...nextauth]/auth"
 import { AccessDenied } from "@/components/global/access-denied"
 import { PageWrapper } from "@/components/global/page-wrapper"
 import { LangCode } from "@/types/i18n"
@@ -9,18 +9,28 @@ import { Metadata } from "next"
 import { headers } from "next/headers"
 import { notFound } from "next/navigation"
 
-export async function generateMetadata({ params }: { params: { locale: LangCode } }): Promise<Metadata> {
+export async function generateMetadata(props: { params: Promise<{ locale: LangCode }> }): Promise<Metadata> {
+  const params = await props.params;
   return MetadataDefaultGenerator(webInfo.webMap.admin, await params.locale);
 }
 
-export default async function AdminLayout({ children, params }: {
-  children: React.ReactNode,
-  params: { locale: LangCode; }
-}) {
+export default async function AdminLayout(
+  props: {
+    children: React.ReactNode,
+    params: Promise<{ locale: LangCode; }>
+  }
+) {
+  const params = await props.params;
+
+  const {
+    children
+  } = props;
+
   const headersList = await headers();
   const header_url = new URL(headersList.get('x-url') || "");
-  const session = await auth()
-  const premissions = session?.account ? await getPremissions(session.account) : false;
+  const session = await auth();
+  const account = accountDecoding(session.account);
+  const premissions = session?.account ? await getPremissions(account) : false;
   if (!premissions) {
     if (header_url.pathname === "/admin/idea-urstory") return (
       <PageWrapper withNavbar={true} withNotifications={false} lang={await params.locale}>

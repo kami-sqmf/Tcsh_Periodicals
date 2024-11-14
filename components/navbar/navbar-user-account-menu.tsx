@@ -1,5 +1,6 @@
 'use client';
 
+import { accountDecoding } from "@/app/api/auth/[...nextauth]/auth";
 import { Account, Member } from "@/types/firestore";
 import { LangCode } from "@/types/i18n";
 import { webInfo } from "@/utils/config";
@@ -13,14 +14,15 @@ import { RiBookletFill, RiBookletLine, RiLogoutBoxRFill, RiLogoutBoxRLine, RiUse
 import i18nDefault from "../../translation/accounts/zh.json";
 import { HoverICON } from "../global/hover-icon";
 
-export const NavbarAccountMenu = ({ user, lang, size }: { user: Account | Member; lang: LangCode; size: { less: number; md: number } }) => {
+export const NavbarAccountMenu = ({ user, lang, size }: { user: string; lang: LangCode; size: { less: number; md: number } }) => {
   const t = new i18n<typeof i18nDefault>(lang, "accounts");
+  const profile = accountDecoding(user);
   return (
     <Menu as="div" className="relative z-50">
       <Menu.Button className={`relative text-main cursor-pointer group h-${size.less} w-${size.less} md:w-${size.md} md:h-${size.md}`}>
-        <Image placeholder='blur' blurDataURL="/assests/defaultProfile.png" src={user.avatar} fill={true} className="rounded-full overflow-hidden object-cover bg-background2" alt="大頭貼" sizes="(max-width: 1024px) 272px, (max-width: 768px) 188vw, 268vw" />
+        <Image placeholder='blur' blurDataURL="/assests/defaultProfile.png" src={profile.avatar} fill={true} className="rounded-full overflow-hidden object-cover bg-background2" alt="大頭貼" sizes="(max-width: 1024px) 272px, (max-width: 768px) 188vw, 268vw" />
         <div className="absolute w-max px-2 py-1 text-xs z-40 bg-background2 rounded-md hidden opacity-0 group-hover:block group-hover:opacity-90 transition-opacity -translate-x-[10%] -bottom-7">
-          <span>{user.name}</span>
+          <span>{profile.name}</span>
         </div>
       </Menu.Button>
       <Transition

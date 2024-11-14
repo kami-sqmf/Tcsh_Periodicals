@@ -9,11 +9,13 @@ import { webInfo } from "@/utils/config";
 import { MetadataDefaultGenerator } from "@/utils/head";
 import { Metadata } from "next";
 
-export async function generateMetadata({ params }: { params: { locale: LangCode } }): Promise<Metadata> {
+export async function generateMetadata(props: { params: Promise<{ locale: LangCode }> }): Promise<Metadata> {
+  const params = await props.params;
   return MetadataDefaultGenerator(webInfo.webMap.index, await params.locale)
 }
 
-export default async function Page({ params }: { params: { locale: LangCode } }) {
+export default async function Page(props: { params: Promise<{ locale: LangCode }> }) {
+  const params = await props.params;
   const locale = params.locale;
   return (
     <PageWrapper withNavbar={true} withNotifications={true} lang={locale}>

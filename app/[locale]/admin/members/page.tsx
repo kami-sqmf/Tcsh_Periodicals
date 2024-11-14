@@ -16,10 +16,20 @@ import { addDoc, collection, deleteDoc, doc, onSnapshot, orderBy, query, Unsubsc
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import Image from "next/image";
 import Link from "next/link";
-import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useEffect, useRef, useState } from "react";
+import {
+  ChangeEvent,
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+  use,
+} from "react";
 import { RiAddBoxFill, RiAddBoxLine, RiAddCircleFill, RiAddCircleLine, RiDeleteBin5Fill, RiDeleteBin5Line, RiEdit2Fill, RiEdit2Line, RiEyeOffFill, RiEyeOffLine, RiInformationFill, RiInformationLine, RiInstagramLine } from "react-icons/ri";
 
-export default function Page({ params }: { params: { locale: LangCode } }) {
+export default function Page(props: { params: Promise<{ locale: LangCode }> }) {
+  const params = use(props.params);
   const locale = params.locale;
   const dataFetchedRef = useRef<boolean>(false);
   const unsubscribeSnapshot = useRef<Unsubscribe>();
@@ -56,7 +66,7 @@ export default function Page({ params }: { params: { locale: LangCode } }) {
             ...doc.data(),
             roleInfo: roles.find(role => doc.data().role.path.includes(role.id))
           };
-        }).sort((a, b) => a.roleInfo!.order - b.roleInfo!.order) as Member[]
+        }) as Member[]
       });
     })
   }, [teamFilter])
@@ -155,7 +165,7 @@ export default function Page({ params }: { params: { locale: LangCode } }) {
           }}
         >
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 justify-items-center my-4 h-full'>
-            {serverSnapshot.profiles.map((profile, key) => (
+            {serverSnapshot.profiles.sort((a, b) => a.roleInfo!.order - b.roleInfo!.order).map((profile, key) => (
               <div key={key} className={`cursor-pointer relative flex flex-col items-center px-6 py-4 space-y-2 rounded-lg ${modalInfo?.uid === profile.uid ? "bg-background/60" : "hover:bg-background/60"} transition-all duration-500 group`} onClick={() => { setModalInfo(profile); }}>
                 <div className={`relative text-main cursor-pointer group h-24 w-24`}>
                   <Image placeholder='blur' blurDataURL="/assests/defaultProfile.png" src={profile.avatar} fill={true} className="rounded-full overflow-hidden object-cover bg-background2" alt={`${profile.name}的大頭貼`} sizes="(max-width: 1024px) 272px, (max-width: 768px) 188vw, 268vw" />
